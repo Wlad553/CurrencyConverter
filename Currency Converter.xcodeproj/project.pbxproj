@@ -14,6 +14,7 @@
 		F5AE85A429F0209900A1B4E0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F5AE85A329F0209900A1B4E0 /* Assets.xcassets */; };
 		F5AE85A729F0209900A1B4E0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F5AE85A529F0209900A1B4E0 /* LaunchScreen.storyboard */; };
 		F5AE85AF29F020D400A1B4E0 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = F5AE85AE29F020D400A1B4E0 /* .gitignore */; };
+		F5AE85B729F0412F00A1B4E0 /* EllipseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5AE85B629F0412F00A1B4E0 /* EllipseView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 		F5AE85A629F0209900A1B4E0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F5AE85A829F0209900A1B4E0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F5AE85AE29F020D400A1B4E0 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		F5AE85B629F0412F00A1B4E0 /* EllipseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EllipseView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,6 +81,7 @@
 		F5AE85B129F0210C00A1B4E0 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				F5AE85B629F0412F00A1B4E0 /* EllipseView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -176,6 +179,7 @@
 			files = (
 				F5AE859F29F0209800A1B4E0 /* MainViewController.swift in Sources */,
 				F5AE859B29F0209800A1B4E0 /* AppDelegate.swift in Sources */,
+				F5AE85B729F0412F00A1B4E0 /* EllipseView.swift in Sources */,
 				F5AE859D29F0209800A1B4E0 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
