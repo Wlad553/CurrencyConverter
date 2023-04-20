@@ -8,11 +8,18 @@
 import UIKit
 
 class MainViewController: UIViewController {
+    @IBOutlet weak var mainView: MainView!
+    
     let elipseView = EllipseView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         elipseView.layoutViewIn(view)
+        setUpMainView()
+    }
+    
+    func setUpMainView() {
+        mainView.setUpButtons()
     }
 }
 

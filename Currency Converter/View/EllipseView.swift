@@ -51,7 +51,7 @@ class EllipseView: UIView {
     
     func layoutViewIn(_ view: UIView) {
         translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(self)
+        view.insertSubview(self, at: 0)
         NSLayoutConstraint.activate([
             topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
             leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
