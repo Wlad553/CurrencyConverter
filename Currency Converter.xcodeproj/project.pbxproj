@@ -25,10 +25,10 @@
 
 /* Begin PBXFileReference section */
 		F504FB1829F2C77E00E58C11 /* MainTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTableViewCell.swift; sourceTree = "<group>"; };
-		F552E75129F3FD5B00F652E7 /* Lato-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Lato-Light.ttf"; path = "../../Lato/Lato-Light.ttf"; sourceTree = "<group>"; };
-		F552E75429F3FD5B00F652E7 /* Lato-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Lato-Bold.ttf"; path = "../../Lato/Lato-Bold.ttf"; sourceTree = "<group>"; };
-		F552E75629F3FD5B00F652E7 /* Lato-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Lato-Black.ttf"; path = "../../Lato/Lato-Black.ttf"; sourceTree = "<group>"; };
-		F552E76529F42D9D00F652E7 /* Lato-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Lato-Regular.ttf"; path = "../../../.Trash/Lato-Regular.ttf"; sourceTree = "<group>"; };
+		F552E75129F3FD5B00F652E7 /* Lato-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Lato-Light.ttf"; path = "Fonts/Lato-Light.ttf"; sourceTree = "<group>"; };
+		F552E75429F3FD5B00F652E7 /* Lato-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Lato-Bold.ttf"; path = "Fonts/Lato-Bold.ttf"; sourceTree = "<group>"; };
+		F552E75629F3FD5B00F652E7 /* Lato-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Lato-Black.ttf"; path = "Fonts/Lato-Black.ttf"; sourceTree = "<group>"; };
+		F552E76529F42D9D00F652E7 /* Lato-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Lato-Regular.ttf"; path = "Fonts/Lato-Regular.ttf"; sourceTree = "<group>"; };
 		F5A370AB29F13D790066BFBD /* MainWindowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainWindowView.swift; sourceTree = "<group>"; };
 		F5AE859729F0209800A1B4E0 /* Currency Converter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Currency Converter.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F5AE859A29F0209800A1B4E0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -56,6 +56,7 @@
 		F552E75029F3FD1800F652E7 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				F5F0ABE329F42F9A00EA6ED4 /* Fonts */,
 				F552E75629F3FD5B00F652E7 /* Lato-Black.ttf */,
 				F552E75429F3FD5B00F652E7 /* Lato-Bold.ttf */,
 				F552E75129F3FD5B00F652E7 /* Lato-Light.ttf */,
@@ -70,7 +71,6 @@
 			children = (
 				F5AE85AE29F020D400A1B4E0 /* .gitignore */,
 				F5AE859929F0209800A1B4E0 /* Currency Converter */,
-				F552E75029F3FD1800F652E7 /* Resources */,
 				F5AE859829F0209800A1B4E0 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -92,6 +92,7 @@
 				F5AE85B129F0210C00A1B4E0 /* View */,
 				F5AE85B229F0211200A1B4E0 /* Controller */,
 				F5AE85B329F0211900A1B4E0 /* Supporting Files */,
+				F552E75029F3FD1800F652E7 /* Resources */,
 			);
 			path = "Currency Converter";
 			sourceTree = "<group>";
@@ -129,6 +130,13 @@
 				F5AE85A829F0209900A1B4E0 /* Info.plist */,
 			);
 			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		F5F0ABE329F42F9A00EA6ED4 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Fonts;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
