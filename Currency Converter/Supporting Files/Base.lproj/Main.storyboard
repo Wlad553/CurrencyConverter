@@ -9,6 +9,14 @@
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="Lato-Black.ttf">
+            <string>Lato-Black</string>
+        </array>
+        <array key="Lato-Regular.ttf">
+            <string>Lato-Regular</string>
+        </array>
+    </customFonts>
     <scenes>
         <!--Main View Controller-->
         <scene sceneID="tne-QT-ifu">
@@ -22,11 +30,11 @@
                                 <rect key="frame" x="0.0" y="59" width="393" height="759"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="F3B-kL-2Bh">
-                                        <rect key="frame" x="0.0" y="0.0" width="393" height="590"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="393" height="580"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Currency Converter" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nfH-WK-Fw5">
-                                                <rect key="frame" x="23.999999999999986" y="63.999999999999993" width="225.66666666666663" height="27.666666666666664"/>
-                                                <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="24"/>
+                                                <rect key="frame" x="23.999999999999986" y="64" width="217.66666666666663" height="29"/>
+                                                <fontDescription key="fontDescription" name="Lato-Black" family="Lato" pointSize="24"/>
                                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                                 <userDefinedRuntimeAttributes>
@@ -36,16 +44,16 @@
                                                 </userDefinedRuntimeAttributes>
                                             </label>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jy0-Pl-SKQ" customClass="MainWindowView" customModule="Currency_Converter" customModuleProvider="target">
-                                                <rect key="frame" x="16" y="120" width="361" height="400"/>
+                                                <rect key="frame" x="16" y="120" width="361" height="390"/>
                                                 <subviews>
                                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="44" translatesAutoresizingMaskIntoConstraints="NO" id="5m2-55-DwA">
                                                         <rect key="frame" x="16" y="16" width="329" height="44"/>
                                                         <subviews>
                                                             <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cMO-E3-XcD">
                                                                 <rect key="frame" x="0.0" y="0.0" width="142.66666666666666" height="44"/>
-                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                <fontDescription key="fontDescription" name="Lato-Regular" family="Lato" pointSize="18"/>
                                                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                                <state key="normal" title="Buy">
+                                                                <state key="normal" title="Bid">
                                                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 </state>
                                                                 <state key="disabled">
@@ -60,9 +68,9 @@
                                                             </button>
                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XWR-mh-efT">
                                                                 <rect key="frame" x="186.66666666666663" y="0.0" width="142.33333333333337" height="44"/>
-                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                <fontDescription key="fontDescription" name="Lato-Regular" family="Lato" pointSize="18"/>
                                                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                                <state key="normal" title="Sell">
+                                                                <state key="normal" title="Ask">
                                                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 </state>
                                                                 <state key="disabled">
@@ -80,7 +88,7 @@
                                                         <variation key="heightClass=compact-widthClass=compact" spacing="80"/>
                                                     </stackView>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gcV-eW-5Vf">
-                                                        <rect key="frame" x="313" y="347.66666666666669" width="32" height="39.666666666666686"/>
+                                                        <rect key="frame" x="313" y="337.66666666666669" width="32" height="39.666666666666686"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="32" id="0k7-B6-yy3"/>
                                                             <constraint firstAttribute="height" constant="32" id="uTi-VN-MUf"/>
@@ -91,15 +99,8 @@
                                                             <imageReference key="backgroundImage" image="square.and.arrow.up" catalog="system" symbolScale="large"/>
                                                         </state>
                                                     </button>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AeH-WM-9aa">
-                                                        <rect key="frame" x="104.66666666666667" y="307.66666666666669" width="151.66666666666663" height="34.333333333333314"/>
-                                                        <state key="normal" title="Button"/>
-                                                        <buttonConfiguration key="configuration" style="plain" title="Add Currency" imagePadding="7">
-                                                            <imageReference key="image" image="plus.circle.fill" catalog="system" symbolScale="small"/>
-                                                        </buttonConfiguration>
-                                                    </button>
                                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="41h-pd-2S8">
-                                                        <rect key="frame" x="16" y="75.999999999999986" width="329" height="223.66666666666663"/>
+                                                        <rect key="frame" x="16" y="76" width="329" height="237"/>
                                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" relation="lessThanOrEqual" constant="329" id="KF2-Gf-nC7"/>
@@ -115,14 +116,27 @@
                                                             </tableViewCell>
                                                         </prototypes>
                                                     </tableView>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mlv-jE-deL">
+                                                        <rect key="frame" x="120.66666666666666" y="313" width="119.66666666666666" height="21"/>
+                                                        <fontDescription key="fontDescription" name="Lato-Regular" family="Lato" pointSize="17"/>
+                                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                        <state key="normal" title="Add Currency">
+                                                            <imageReference key="image" image="plus.circle.fill" catalog="system" symbolScale="small"/>
+                                                        </state>
+                                                        <state key="highlighted">
+                                                            <color key="titleColor" red="0.20392156862745098" green="0.47058826679999999" blue="0.96470588450000005" alpha="0.60012755102040816" colorSpace="custom" customColorSpace="displayP3"/>
+                                                            <imageReference key="image" image="plus.circle.fill" catalog="system" symbolScale="small"/>
+                                                        </state>
+                                                    </button>
                                                 </subviews>
                                                 <color key="backgroundColor" systemColor="systemFillColor"/>
                                                 <constraints>
-                                                    <constraint firstItem="AeH-WM-9aa" firstAttribute="centerX" secondItem="jy0-Pl-SKQ" secondAttribute="centerX" id="1YR-K3-PQA"/>
+                                                    <constraint firstItem="Mlv-jE-deL" firstAttribute="centerX" secondItem="jy0-Pl-SKQ" secondAttribute="centerX" id="0Yh-rw-RN7"/>
                                                     <constraint firstItem="5m2-55-DwA" firstAttribute="leading" secondItem="jy0-Pl-SKQ" secondAttribute="leading" constant="16" id="4Nv-mA-Xqu"/>
                                                     <constraint firstAttribute="trailing" secondItem="41h-pd-2S8" secondAttribute="trailing" priority="999" constant="16" id="6YD-N8-LAe"/>
-                                                    <constraint firstAttribute="height" constant="400" id="FJn-Pr-yGD"/>
-                                                    <constraint firstItem="gcV-eW-5Vf" firstAttribute="top" secondItem="AeH-WM-9aa" secondAttribute="bottom" constant="10" id="LJv-pN-kK0"/>
+                                                    <constraint firstItem="gcV-eW-5Vf" firstAttribute="top" secondItem="Mlv-jE-deL" secondAttribute="bottom" constant="8" id="F49-a6-oI6"/>
+                                                    <constraint firstAttribute="height" constant="390" id="FJn-Pr-yGD"/>
+                                                    <constraint firstItem="Mlv-jE-deL" firstAttribute="top" secondItem="41h-pd-2S8" secondAttribute="bottom" id="Jyd-lv-w5x"/>
                                                     <constraint firstItem="gcV-eW-5Vf" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="jy0-Pl-SKQ" secondAttribute="leading" constant="16" id="OsE-5w-3EE"/>
                                                     <constraint firstItem="41h-pd-2S8" firstAttribute="leading" secondItem="jy0-Pl-SKQ" secondAttribute="leading" priority="999" constant="16" id="ZaM-zq-k93"/>
                                                     <constraint firstAttribute="trailing" secondItem="5m2-55-DwA" secondAttribute="trailing" constant="16" id="aEl-ES-CPL"/>
@@ -130,7 +144,6 @@
                                                     <constraint firstItem="5m2-55-DwA" firstAttribute="top" secondItem="jy0-Pl-SKQ" secondAttribute="top" constant="16" id="kaW-Ds-esR"/>
                                                     <constraint firstItem="41h-pd-2S8" firstAttribute="top" secondItem="5m2-55-DwA" secondAttribute="bottom" constant="16" id="nja-w8-5fj"/>
                                                     <constraint firstItem="41h-pd-2S8" firstAttribute="centerX" secondItem="jy0-Pl-SKQ" secondAttribute="centerX" id="t88-5R-RjC"/>
-                                                    <constraint firstItem="AeH-WM-9aa" firstAttribute="top" secondItem="41h-pd-2S8" secondAttribute="bottom" constant="8" id="tT5-RP-9yd"/>
                                                     <constraint firstAttribute="bottom" secondItem="gcV-eW-5Vf" secondAttribute="bottom" constant="16" id="vfB-5M-NWP"/>
                                                 </constraints>
                                                 <userDefinedRuntimeAttributes>
@@ -142,25 +155,25 @@
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                                 <connections>
-                                                    <outlet property="addCurrencyButton" destination="AeH-WM-9aa" id="zFZ-2F-9Da"/>
-                                                    <outlet property="buyButton" destination="cMO-E3-XcD" id="Y1t-Zl-wDg"/>
-                                                    <outlet property="sellButton" destination="XWR-mh-efT" id="KXN-4e-XcV"/>
+                                                    <outlet property="addCurrencyButton" destination="Mlv-jE-deL" id="b7c-BP-TE9"/>
+                                                    <outlet property="askButton" destination="XWR-mh-efT" id="KXN-4e-XcV"/>
+                                                    <outlet property="bidButton" destination="cMO-E3-XcD" id="Y1t-Zl-wDg"/>
                                                     <outlet property="shareButton" destination="gcV-eW-5Vf" id="Ofl-aH-ocX"/>
                                                     <outlet property="tableView" destination="41h-pd-2S8" id="va7-ie-w2D"/>
                                                 </connections>
                                             </view>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="Zeg-G1-wZP">
-                                                <rect key="frame" x="16" y="540" width="137.33333333333334" height="42"/>
+                                                <rect key="frame" x="16" y="530" width="136" height="42"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Last updated" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kRT-3m-NNS">
-                                                        <rect key="frame" x="0.0" y="0.0" width="137.33333333333334" height="17"/>
-                                                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="14"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="136" height="17"/>
+                                                        <fontDescription key="fontDescription" name="Lato-Regular" family="Lato" pointSize="14"/>
                                                         <color key="textColor" red="0.3411764705882353" green="0.3411764705882353" blue="0.3411764705882353" alpha="1" colorSpace="calibratedRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="22 May 2021 7:03 PM" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="avV-ox-buq">
-                                                        <rect key="frame" x="0.0" y="25" width="137.33333333333334" height="17"/>
-                                                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="14"/>
+                                                        <rect key="frame" x="0.0" y="25" width="136" height="17"/>
+                                                        <fontDescription key="fontDescription" name="Lato-Regular" family="Lato" pointSize="14"/>
                                                         <color key="textColor" red="0.3411764705882353" green="0.3411764705882353" blue="0.3411764705882353" alpha="1" colorSpace="calibratedRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>

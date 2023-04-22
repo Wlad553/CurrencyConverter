@@ -8,8 +8,8 @@
 import UIKit
 
 class MainWindowView: UIView {
-    @IBOutlet weak var sellButton: UIButton!
-    @IBOutlet weak var buyButton: UIButton!
+    @IBOutlet weak var askButton: UIButton!
+    @IBOutlet weak var bidButton: UIButton!
     @IBOutlet weak var shareButton: UIButton!
     @IBOutlet weak var addCurrencyButton: UIButton!
     @IBOutlet weak var tableView: UITableView!
@@ -32,10 +32,21 @@ class MainWindowView: UIView {
     }
     
     private func setUpButtons() {
-        buyButton.layer.backgroundColor = CGColor(red: 10/255, green: 95/255, blue: 255/255, alpha: 1)
-        [sellButton, buyButton].forEach { button in
-            button?.layer.cornerRadius = 10
+        bidButton.layer.backgroundColor = CGColor(red: 10/255, green: 95/255, blue: 255/255, alpha: 1)
+        askButton.layer.backgroundColor = UIColor.white.cgColor
+        [askButton, bidButton].forEach { button in
+            guard let button = button else { return }
+            button.layer.cornerRadius = 10
         }
+
+        if #available(iOS 15.0, *) {
+            var configuration = UIButton.Configuration.plain()
+            configuration.imagePadding = 5
+            addCurrencyButton.configuration = configuration
+        } else {
+            addCurrencyButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: -10, bottom: 0, right: 0)
+        }
+        
     }
     
     private func setUpMainWindowView() {
@@ -45,19 +56,20 @@ class MainWindowView: UIView {
     }
     
     @IBAction func sellBuyButtonAction(sender: UIButton) {
+        UIView.animate(withDuration: 0.2) {
+            sender.layer.backgroundColor = CGColor(red: 10/255, green: 95/255, blue: 255/255, alpha: 1)
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            // we disable a button in the middle of animation duration so that the color smoothly changed from black to white
+            sender.isEnabled = false
+        }
+        for button in [bidButton, askButton] {
+            guard button != sender, let button = button else { continue }
             UIView.animate(withDuration: 0.2) {
-                sender.layer.backgroundColor = CGColor(red: 10/255, green: 95/255, blue: 255/255, alpha: 1)
+                button.layer.backgroundColor = UIColor.white.cgColor
             }
-            Timer.scheduledTimer(withTimeInterval: 0.1, repeats: false) { _ in
-                sender.isEnabled = false
-            }
-        for button in [sellButton, buyButton] {
-            guard button != sender else { continue }
-            UIView.animate(withDuration: 0.2) {
-                button!.layer.backgroundColor = UIColor.white.cgColor
-            }
-            Timer.scheduledTimer(withTimeInterval: 0.1, repeats: false) { _ in
-                button!.isEnabled = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                button.isEnabled = true
             }
         }
     }

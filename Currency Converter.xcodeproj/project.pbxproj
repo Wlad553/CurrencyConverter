@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		F504FB1929F2C77E00E58C11 /* MainTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F504FB1829F2C77E00E58C11 /* MainTableViewCell.swift */; };
+		F552E75B29F3FD5B00F652E7 /* Lato-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F552E75129F3FD5B00F652E7 /* Lato-Light.ttf */; };
+		F552E75E29F3FD5B00F652E7 /* Lato-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F552E75429F3FD5B00F652E7 /* Lato-Bold.ttf */; };
+		F552E76029F3FD5B00F652E7 /* Lato-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F552E75629F3FD5B00F652E7 /* Lato-Black.ttf */; };
+		F552E76629F42DF200F652E7 /* Lato-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F552E76529F42D9D00F652E7 /* Lato-Regular.ttf */; };
 		F5A370AC29F13D790066BFBD /* MainWindowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5A370AB29F13D790066BFBD /* MainWindowView.swift */; };
 		F5AE859B29F0209800A1B4E0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5AE859A29F0209800A1B4E0 /* AppDelegate.swift */; };
 		F5AE859D29F0209800A1B4E0 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5AE859C29F0209800A1B4E0 /* SceneDelegate.swift */; };
@@ -21,6 +25,10 @@
 
 /* Begin PBXFileReference section */
 		F504FB1829F2C77E00E58C11 /* MainTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTableViewCell.swift; sourceTree = "<group>"; };
+		F552E75129F3FD5B00F652E7 /* Lato-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Lato-Light.ttf"; path = "../../Lato/Lato-Light.ttf"; sourceTree = "<group>"; };
+		F552E75429F3FD5B00F652E7 /* Lato-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Lato-Bold.ttf"; path = "../../Lato/Lato-Bold.ttf"; sourceTree = "<group>"; };
+		F552E75629F3FD5B00F652E7 /* Lato-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Lato-Black.ttf"; path = "../../Lato/Lato-Black.ttf"; sourceTree = "<group>"; };
+		F552E76529F42D9D00F652E7 /* Lato-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Lato-Regular.ttf"; path = "../../../.Trash/Lato-Regular.ttf"; sourceTree = "<group>"; };
 		F5A370AB29F13D790066BFBD /* MainWindowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainWindowView.swift; sourceTree = "<group>"; };
 		F5AE859729F0209800A1B4E0 /* Currency Converter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Currency Converter.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F5AE859A29F0209800A1B4E0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -45,11 +53,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		F552E75029F3FD1800F652E7 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				F552E75629F3FD5B00F652E7 /* Lato-Black.ttf */,
+				F552E75429F3FD5B00F652E7 /* Lato-Bold.ttf */,
+				F552E75129F3FD5B00F652E7 /* Lato-Light.ttf */,
+				F552E76529F42D9D00F652E7 /* Lato-Regular.ttf */,
+				F5AE85A329F0209900A1B4E0 /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		F5AE858E29F0209800A1B4E0 = {
 			isa = PBXGroup;
 			children = (
 				F5AE85AE29F020D400A1B4E0 /* .gitignore */,
 				F5AE859929F0209800A1B4E0 /* Currency Converter */,
+				F552E75029F3FD1800F652E7 /* Resources */,
 				F5AE859829F0209800A1B4E0 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -106,7 +127,6 @@
 				F5AE85A029F0209800A1B4E0 /* Main.storyboard */,
 				F5AE85A529F0209900A1B4E0 /* LaunchScreen.storyboard */,
 				F5AE85A829F0209900A1B4E0 /* Info.plist */,
-				F5AE85A329F0209900A1B4E0 /* Assets.xcassets */,
 			);
 			path = "Supporting Files";
 			sourceTree = "<group>";
@@ -169,10 +189,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F552E75B29F3FD5B00F652E7 /* Lato-Light.ttf in Resources */,
 				F5AE85AF29F020D400A1B4E0 /* .gitignore in Resources */,
 				F5AE85A729F0209900A1B4E0 /* LaunchScreen.storyboard in Resources */,
+				F552E76629F42DF200F652E7 /* Lato-Regular.ttf in Resources */,
 				F5AE85A429F0209900A1B4E0 /* Assets.xcassets in Resources */,
 				F5AE85A229F0209800A1B4E0 /* Main.storyboard in Resources */,
+				F552E76029F3FD5B00F652E7 /* Lato-Black.ttf in Resources */,
+				F552E75E29F3FD5B00F652E7 /* Lato-Bold.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -60,7 +60,6 @@ class MainViewController: UIViewController {
         } else {
             scrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardFrame.height, right: 0)
             scrollView.scrollIndicatorInsets = scrollView.contentInset
-            scrollView.contentOffset = CGPoint(x: 0, y: keyboardFrame.height)
         }
     }
     
@@ -99,10 +98,12 @@ extension MainViewController: UITextFieldDelegate {
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
         textField.layer.borderWidth = 1
+        textField.textColor = UIColor(red: 1/255, green: 35/255, blue: 83/255, alpha: 1)
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
         textField.layer.borderWidth = 0
+        textField.textColor = UIColor(red: 69/255, green: 69/255, blue: 69/255, alpha: 1)
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
