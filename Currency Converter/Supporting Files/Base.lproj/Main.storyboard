@@ -128,7 +128,7 @@
                                                             <imageReference key="image" image="plus.circle.fill" catalog="system" symbolScale="small"/>
                                                         </state>
                                                         <connections>
-                                                            <segue destination="vit-9C-x3P" kind="show" identifier="showAddCurrencyVC" id="3ut-Zr-1wm"/>
+                                                            <segue destination="zr8-dh-lc3" kind="show" id="Bnz-F6-Q8f"/>
                                                         </connections>
                                                     </button>
                                                 </subviews>
@@ -235,69 +235,36 @@
             <point key="canvasLocation" x="1988.5496183206105" y="-23.239436619718312"/>
         </scene>
         <!--Currency-->
-        <scene sceneID="m4t-3p-l0i">
+        <scene sceneID="aUp-rg-q4x">
             <objects>
-                <viewController id="rOE-Qy-SCk" customClass="AddCurrencyViewController" customModule="Currency_Converter" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="Un6-1u-Ula">
+                <tableViewController id="Zk4-Ah-Fli" customClass="AddCurrencyTableVC" customModule="Currency_Converter" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" estimatedSectionHeaderHeight="-1" sectionFooterHeight="18" estimatedSectionFooterHeight="-1" id="p8g-Vr-TrG">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="40" estimatedSectionHeaderHeight="-1" sectionFooterHeight="18" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="jgA-R0-xfm">
-                                <rect key="frame" x="0.0" y="103" width="393" height="749"/>
-                                <color key="backgroundColor" red="0.94901960784313721" green="0.94901960784313721" blue="0.94901960784313721" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
-                                <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="addCurrencyCell" id="LK0-zp-Cah">
-                                        <rect key="frame" x="20" y="55.333332061767578" width="353" height="43.666667938232422"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="LK0-zp-Cah" id="8n4-Qw-uqC">
-                                            <rect key="frame" x="0.0" y="0.0" width="353" height="43.666667938232422"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                        </tableViewCellContentView>
-                                    </tableViewCell>
-                                </prototypes>
-                            </tableView>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="d8m-zf-Isa"/>
-                        <color key="backgroundColor" red="0.94901960784313721" green="0.94901960784313721" blue="0.94901960784313721" alpha="1" colorSpace="calibratedRGB"/>
-                        <constraints>
-                            <constraint firstAttribute="bottom" secondItem="jgA-R0-xfm" secondAttribute="bottom" id="GSL-gf-tRD"/>
-                            <constraint firstItem="jgA-R0-xfm" firstAttribute="leading" secondItem="d8m-zf-Isa" secondAttribute="leading" id="MV2-Ze-Bmf"/>
-                            <constraint firstItem="d8m-zf-Isa" firstAttribute="trailing" secondItem="jgA-R0-xfm" secondAttribute="trailing" id="cSy-Cv-IdU"/>
-                            <constraint firstItem="jgA-R0-xfm" firstAttribute="top" secondItem="d8m-zf-Isa" secondAttribute="top" id="yJZ-A0-d9u"/>
-                        </constraints>
-                    </view>
-                    <navigationItem key="navigationItem" title="Currency" id="5gX-1H-eeR"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="addCurrencyCell" id="28U-l1-lWL">
+                                <rect key="frame" x="20" y="55.333332061767578" width="353" height="43.666667938232422"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="28U-l1-lWL" id="eW0-Hy-kds">
+                                    <rect key="frame" x="0.0" y="0.0" width="353" height="43.666667938232422"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="Zk4-Ah-Fli" id="eFn-L3-Kzs"/>
+                            <outlet property="delegate" destination="Zk4-Ah-Fli" id="1mx-aP-TlB"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Currency" id="Bl2-ib-ZBl"/>
                     <connections>
-                        <outlet property="tableView" destination="jgA-R0-xfm" id="A4o-pA-Vq1"/>
+                        <segue destination="Xt5-vj-gi3" kind="unwind" identifier="goBack" unwindAction="unwindSegueToTextFieldsVCWithSegue:" id="6Nj-UX-J9I"/>
                     </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="wPN-N2-S9L" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="hma-z6-7RT" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <exit id="Xt5-vj-gi3" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="3510.6870229007632" y="-23.239436619718312"/>
-        </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="9z7-Ka-ibf">
-            <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="vit-9C-x3P" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <navigationItem key="navigationItem" id="GPR-qv-ifs"/>
-                    <nil key="simulatedBottomBarMetrics"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="d50-nn-aYN">
-                        <rect key="frame" x="0.0" y="59" width="393" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                        <navigationBarAppearance key="scrollEdgeAppearance"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="U1y-vL-cp3">
-                        <autoresizingMask key="autoresizingMask"/>
-                    </toolbar>
-                    <connections>
-                        <segue destination="rOE-Qy-SCk" kind="relationship" relationship="rootViewController" id="Rch-xK-c7D"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="osZ-wn-Ajj" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="2788.5496183206105" y="-23.239436619718312"/>
+            <point key="canvasLocation" x="3553" y="-23"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="g17-8x-WCm">
@@ -316,7 +283,26 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="k9w-wU-M9w" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1061.8320610687022" y="-23.239436619718312"/>
+            <point key="canvasLocation" x="1190" y="-23"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="QRX-0j-F96">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="zr8-dh-lc3" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" id="GbN-k1-gT5"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="zlt-rw-wWr">
+                        <rect key="frame" x="0.0" y="59" width="393" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="Zk4-Ah-Fli" kind="relationship" relationship="rootViewController" id="NU0-cV-mz0"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="vMb-Pt-1kH" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2730.5343511450383" y="-23.239436619718312"/>
         </scene>
     </scenes>
     <resources>

@@ -12,10 +12,10 @@ class MainViewController: UIViewController {
     @IBOutlet weak var scrollView: UIScrollView!
     
     let elipseView = EllipseView()
-    var currencyArray = [
-        "USD",
-        "EUR",
-        "PLN"
+    var favouriteCurrenciesArray = [
+        Currency(isoCurrencyCode: "USD", fullCurrencyName: "US Dollar"),
+        Currency(isoCurrencyCode: "EUR", fullCurrencyName: "Euro"),
+        Currency(isoCurrencyCode: "PLN", fullCurrencyName: "Polish Zloty")
     ]
     
     override func viewDidLoad() {
@@ -26,6 +26,19 @@ class MainViewController: UIViewController {
         mainWindowView.tableView.delegate = self
         scrollView.delegate = self
         addNotificationCenterObservers()
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
+        let destinationNavController = segue.destination as? UINavigationController
+        let destinationVC = destinationNavController?.topViewController as? AddCurrencyTableVC
+        destinationVC?.currenciesArray.removeAll(where: { currency in
+            favouriteCurrenciesArray.contains(currency)
+        })
+    }
+    
+    @IBAction func unwindSegueToTextFieldsVC(segue: UIStoryboardSegue) {
+        mainWindowView.tableView.reloadData()
     }
         
     @objc func textFieldEditingChanged(sender: UITextField) {
@@ -78,18 +91,18 @@ class MainViewController: UIViewController {
 
 extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
-        1
+        return 1
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        currencyArray.count
+        return favouriteCurrenciesArray.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? MainTableViewCell else {
             fatalError("Casting to \(MainTableViewCell.self) failed")
         }
-        cell.currencyLabel.text = currencyArray[indexPath.row]
+        cell.currencyLabel.text = favouriteCurrenciesArray[indexPath.row].isoCurrencyCode
         cell.textField.delegate = self
         cell.textField.addTarget(self, action: #selector(textFieldEditingChanged(sender:)), for: .editingChanged)
         return cell
