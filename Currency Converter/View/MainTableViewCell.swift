@@ -39,7 +39,7 @@ class MainTableViewCell: UITableViewCell {
         
         NSLayoutConstraint.activate([
             stackView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            stackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+            stackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 32),
         ])
     }
     
@@ -63,7 +63,7 @@ class MainTableViewCell: UITableViewCell {
         addSubview(textField)
         NSLayoutConstraint.activate([
             textField.centerYAnchor.constraint(equalTo: centerYAnchor),
-            textField.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            textField.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -32),
             textField.leadingAnchor.constraint(equalTo: currencyLabel.trailingAnchor, constant: 60),
             textField.heightAnchor.constraint(equalToConstant: 40),
         ])

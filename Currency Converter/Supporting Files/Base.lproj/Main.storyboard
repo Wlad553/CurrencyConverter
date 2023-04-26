@@ -99,18 +99,17 @@
                                                             <imageReference key="backgroundImage" image="square.and.arrow.up" catalog="system" symbolScale="large"/>
                                                         </state>
                                                     </button>
-                                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="41h-pd-2S8">
-                                                        <rect key="frame" x="16" y="76" width="329" height="237"/>
-                                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" estimatedSectionHeaderHeight="-1" sectionFooterHeight="28" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="41h-pd-2S8">
+                                                        <rect key="frame" x="0.0" y="76" width="361" height="237"/>
                                                         <constraints>
-                                                            <constraint firstAttribute="width" relation="lessThanOrEqual" constant="329" id="KF2-Gf-nC7"/>
+                                                            <constraint firstAttribute="width" relation="lessThanOrEqual" constant="361" id="v2O-Of-FKj"/>
                                                         </constraints>
                                                         <prototypes>
                                                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="cell" id="kQY-d2-pRu" customClass="MainTableViewCell" customModule="Currency_Converter" customModuleProvider="target">
-                                                                <rect key="frame" x="0.0" y="50" width="329" height="43.666667938232422"/>
+                                                                <rect key="frame" x="0.0" y="50" width="361" height="43.666667938232422"/>
                                                                 <autoresizingMask key="autoresizingMask"/>
                                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="kQY-d2-pRu" id="scB-c8-R8u">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="329" height="43.666667938232422"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="361" height="43.666667938232422"/>
                                                                     <autoresizingMask key="autoresizingMask"/>
                                                                 </tableViewCellContentView>
                                                             </tableViewCell>
@@ -136,12 +135,12 @@
                                                 <constraints>
                                                     <constraint firstItem="Mlv-jE-deL" firstAttribute="centerX" secondItem="jy0-Pl-SKQ" secondAttribute="centerX" id="0Yh-rw-RN7"/>
                                                     <constraint firstItem="5m2-55-DwA" firstAttribute="leading" secondItem="jy0-Pl-SKQ" secondAttribute="leading" constant="16" id="4Nv-mA-Xqu"/>
-                                                    <constraint firstAttribute="trailing" secondItem="41h-pd-2S8" secondAttribute="trailing" priority="999" constant="16" id="6YD-N8-LAe"/>
+                                                    <constraint firstAttribute="trailing" secondItem="41h-pd-2S8" secondAttribute="trailing" priority="999" id="6YD-N8-LAe"/>
                                                     <constraint firstItem="gcV-eW-5Vf" firstAttribute="top" secondItem="Mlv-jE-deL" secondAttribute="bottom" constant="8" id="F49-a6-oI6"/>
                                                     <constraint firstAttribute="height" constant="390" id="FJn-Pr-yGD"/>
                                                     <constraint firstItem="Mlv-jE-deL" firstAttribute="top" secondItem="41h-pd-2S8" secondAttribute="bottom" id="Jyd-lv-w5x"/>
                                                     <constraint firstItem="gcV-eW-5Vf" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="jy0-Pl-SKQ" secondAttribute="leading" constant="16" id="OsE-5w-3EE"/>
-                                                    <constraint firstItem="41h-pd-2S8" firstAttribute="leading" secondItem="jy0-Pl-SKQ" secondAttribute="leading" priority="999" constant="16" id="ZaM-zq-k93"/>
+                                                    <constraint firstItem="41h-pd-2S8" firstAttribute="leading" secondItem="jy0-Pl-SKQ" secondAttribute="leading" priority="999" id="ZaM-zq-k93"/>
                                                     <constraint firstAttribute="trailing" secondItem="5m2-55-DwA" secondAttribute="trailing" constant="16" id="aEl-ES-CPL"/>
                                                     <constraint firstAttribute="trailing" secondItem="gcV-eW-5Vf" secondAttribute="trailing" constant="16" id="dhu-HY-fS4"/>
                                                     <constraint firstItem="5m2-55-DwA" firstAttribute="top" secondItem="jy0-Pl-SKQ" secondAttribute="top" constant="16" id="kaW-Ds-esR"/>
@@ -264,7 +263,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hma-z6-7RT" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <exit id="Xt5-vj-gi3" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="3553" y="-23"/>
+            <point key="canvasLocation" x="3482" y="-23"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="g17-8x-WCm">

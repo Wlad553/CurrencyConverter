@@ -107,6 +107,15 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         cell.textField.addTarget(self, action: #selector(textFieldEditingChanged(sender:)), for: .editingChanged)
         return cell
     }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        favouriteCurrenciesArray.remove(at: indexPath.row)
+        tableView.deleteRows(at: [indexPath], with: .left)
+    }
+    
+    func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
 }
 
 extension MainViewController: UITextFieldDelegate {
