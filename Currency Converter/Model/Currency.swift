@@ -8,61 +8,79 @@
 import Foundation
 
 struct Currency: Equatable {
-    let isoCurrencyCode: String
-    let fullCurrencyName: String
+    let currencyCode: String
+    var fullCurrencyName: String {
+        Currency.availableCurrenciesDict[currencyCode]!
+    }
     
-    static let availableCurrenciesArray = [
-        Currency(isoCurrencyCode: "AED", fullCurrencyName: "UAE Dirham"),
-        Currency(isoCurrencyCode: "AOA", fullCurrencyName: "Angolan Kwanza"),
-        Currency(isoCurrencyCode: "ARS", fullCurrencyName: "Argentine Peso"),
-        Currency(isoCurrencyCode: "AUD", fullCurrencyName: "Australian Dollar"),
-        Currency(isoCurrencyCode: "BGN", fullCurrencyName: "Bulgaria Lev"),
-        Currency(isoCurrencyCode: "BHD", fullCurrencyName: "Bahraini Dinar"),
-        Currency(isoCurrencyCode: "BRL", fullCurrencyName: "Brazilian Real"),
-        Currency(isoCurrencyCode: "CAD", fullCurrencyName: "Canadian Dollar"),
-        Currency(isoCurrencyCode: "CHF", fullCurrencyName: "Swiss Franc"),
-        Currency(isoCurrencyCode: "CLP", fullCurrencyName: "Chilean Peso"),
-        Currency(isoCurrencyCode: "CNY", fullCurrencyName: "Chinese Yuan onshore"),
-        Currency(isoCurrencyCode: "CNH", fullCurrencyName: "Chinese Yuan offshore"),
-        Currency(isoCurrencyCode: "COP", fullCurrencyName: "Colombian Peso"),
-        Currency(isoCurrencyCode: "CZK", fullCurrencyName: "Czech Koruna"),
-        Currency(isoCurrencyCode: "DKK", fullCurrencyName: "Danish Krone"),
-        Currency(isoCurrencyCode: "EUR", fullCurrencyName: "Euro"),
-        Currency(isoCurrencyCode: "GBP", fullCurrencyName: "British Pound Sterling"),
-        Currency(isoCurrencyCode: "HKD", fullCurrencyName: "Hong Kong Dollar"),
-        Currency(isoCurrencyCode: "HRK", fullCurrencyName: "Croatian Kuna"),
-        Currency(isoCurrencyCode: "HUF", fullCurrencyName: "Hungarian Forint"),
-        Currency(isoCurrencyCode: "IDR", fullCurrencyName: "Indonesian Rupiah"),
-        Currency(isoCurrencyCode: "ILS", fullCurrencyName: "Israeli New Sheqel"),
-        Currency(isoCurrencyCode: "INR", fullCurrencyName: "Indian Rupee"),
-        Currency(isoCurrencyCode: "ISK", fullCurrencyName: "Icelandic Krona"),
-        Currency(isoCurrencyCode: "JPY", fullCurrencyName: "Japanese Yen"),
-        Currency(isoCurrencyCode: "KRW", fullCurrencyName: "South Korean Won"),
-        Currency(isoCurrencyCode: "KWD", fullCurrencyName: "Kuwaiti Dinar"),
-        Currency(isoCurrencyCode: "MAD", fullCurrencyName: "Moroccan Dirham"),
-        Currency(isoCurrencyCode: "MXN", fullCurrencyName: "Mexican Peso"),
-        Currency(isoCurrencyCode: "MYR", fullCurrencyName: "Malaysian Ringgit"),
-        Currency(isoCurrencyCode: "NGN", fullCurrencyName: "Nigerean Naira"),
-        Currency(isoCurrencyCode: "NOK", fullCurrencyName: "Norwegian Krone"),
-        Currency(isoCurrencyCode: "NZD", fullCurrencyName: "New Zealand Dollar"),
-        Currency(isoCurrencyCode: "OMR", fullCurrencyName: "Omani Rial"),
-        Currency(isoCurrencyCode: "PEN", fullCurrencyName: "Peruvian Nuevo Sol"),
-        Currency(isoCurrencyCode: "PHP", fullCurrencyName: "Philippine Peso"),
-        Currency(isoCurrencyCode: "PLN", fullCurrencyName: "Polish Zloty"),
-        Currency(isoCurrencyCode: "RON", fullCurrencyName: "Romanian Leu"),
-        Currency(isoCurrencyCode: "RUB", fullCurrencyName: "Russian Ruble"),
-        Currency(isoCurrencyCode: "SAR", fullCurrencyName: "Saudi Arabian Riyal"),
-        Currency(isoCurrencyCode: "SEK", fullCurrencyName: "Swedish Krona"),
-        Currency(isoCurrencyCode: "SGD", fullCurrencyName: "Singapore Dollar"),
-        Currency(isoCurrencyCode: "THB", fullCurrencyName: "Thai Baht"),
-        Currency(isoCurrencyCode: "TRY", fullCurrencyName: "Turkish Lira"),
-        Currency(isoCurrencyCode: "TWD", fullCurrencyName: "Taiwanese Dollar"),
-        Currency(isoCurrencyCode: "USD", fullCurrencyName: "US Dollar"),
-        Currency(isoCurrencyCode: "VND", fullCurrencyName: "Vietnamese Dong"),
-        Currency(isoCurrencyCode: "XAG", fullCurrencyName: "Silver (troy ounce)"),
-        Currency(isoCurrencyCode: "XAU", fullCurrencyName: "Gold (troy ounce)"),
-        Currency(isoCurrencyCode: "XPD", fullCurrencyName: "Palladium"),
-        Currency(isoCurrencyCode: "XPT", fullCurrencyName: "Platinum"),
-        Currency(isoCurrencyCode: "ZAR", fullCurrencyName: "South African Rand")
+    init?(currencyCode: String) {
+        guard Currency.availableCurrenciesDict[currencyCode] != nil else {
+            return nil
+        }
+        self.currencyCode = currencyCode
+    }
+    
+    static let availableCurrenciesDict = [
+        "AED": "UAE Dirham",
+        "AOA": "Angolan Kwanza",
+        "ARS": "Argentine Peso",
+        "AUD": "Australian Dollar",
+        "BGN": "Bulgaria Lev",
+        "BHD": "Bahraini Dinar",
+        "BRL": "Brazilian Real",
+        "CAD": "Canadian Dollar",
+        "CHF": "Swiss Franc",
+        "CLP": "Chilean Peso",
+        "CNY": "Chinese Yuan onshore",
+        "CNH": "Chinese Yuan offshore",
+        "COP": "Colombian Peso",
+        "CZK": "Czech Koruna",
+        "DKK": "Danish Krone",
+        "EUR": "Euro",
+        "GBP": "British Pound Sterling",
+        "HKD": "Hong Kong Dollar",
+        "HRK": "Croatian Kuna",
+        "HUF": "Hungarian Forint",
+        "IDR": "Indonesian Rupiah",
+        "ILS": "Israeli New Sheqel",
+        "INR": "Indian Rupee",
+        "ISK": "Icelandic Krona",
+        "JPY": "Japanese Yen",
+        "KRW": "South Korean Won",
+        "KWD": "Kuwaiti Dinar",
+        "MAD": "Moroccan Dirham",
+        "MXN": "Mexican Peso",
+        "MYR": "Malaysian Ringgit",
+        "NGN": "Nigerean Naira",
+        "NOK": "Norwegian Krone",
+        "NZD": "New Zealand Dollar",
+        "OMR": "Omani Rial",
+        "PEN": "Peruvian Nuevo Sol",
+        "PHP": "Philippine Peso",
+        "PLN": "Polish Zloty",
+        "RON": "Romanian Leu",
+        "RUB": "Russian Ruble",
+        "SAR": "Saudi Arabian Riyal",
+        "SEK": "Swedish Krona",
+        "SGD": "Singapore Dollar",
+        "THB": "Thai Baht",
+        "TRY": "Turkish Lira",
+        "TWD": "Taiwanese Dollar",
+        "USD": "US Dollar",
+        "VND": "Vietnamese Dong",
+        "XAG": "Silver (troy ounce)",
+        "XAU": "Gold (troy ounce)",
+        "XPD": "Palladium",
+        "XPT": "Platinum",
+        "ZAR": "South African Rand"
     ]
+    
+    static var availableCurrenciesArray: [Currency] {
+        var array: [Currency] = []
+        for i in availableCurrenciesDict {
+            guard let currency = Currency(currencyCode: i.key) else { continue }
+            array.append(currency)
+        }
+        return array
+    }
 }

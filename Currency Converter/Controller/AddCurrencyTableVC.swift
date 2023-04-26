@@ -11,20 +11,21 @@ class AddCurrencyTableVC: UITableViewController {
     let searchController = UISearchController()
     let noSearchResultsLabel = UILabel()
     let noSearchResultsStackView = UIStackView()
+    var stackViewYAnchorConstraint: NSLayoutConstraint!
     
     var searchResultCurrencies: [Currency] = []
     var sortedCurrencies2DArray: [[Currency]] = []
     var currenciesArray = Currency.availableCurrenciesArray {
         didSet {
             let alphabeticallySortedCurrenciesArray = currenciesArray.sorted {
-                $0.isoCurrencyCode < $1.isoCurrencyCode
+                $0.currencyCode < $1.currencyCode
             }
             var alphabeticallySorted2DArray: [[Currency]] = [[]]
             var section = 0
             for currency in alphabeticallySortedCurrenciesArray {
                 if alphabeticallySorted2DArray[section].isEmpty {
                     alphabeticallySorted2DArray[section].append(currency)
-                } else if  alphabeticallySorted2DArray[section].first?.isoCurrencyCode.first == currency.isoCurrencyCode.first {
+                } else if  alphabeticallySorted2DArray[section].first?.currencyCode.first == currency.currencyCode.first {
                     alphabeticallySorted2DArray[section].append(currency)
                 } else {
                     section += 1
@@ -40,6 +41,7 @@ class AddCurrencyTableVC: UITableViewController {
         super.viewDidLoad()
         setUpSearchController()
         setUpNoSearchResultsStackView()
+        addNotificationCenterObservers()
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(barAction(sender:)))
     }
     
@@ -52,7 +54,7 @@ class AddCurrencyTableVC: UITableViewController {
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         guard let searchText = searchController.searchBar.text, !searchText.isEmpty else {
-            return sortedCurrencies2DArray[section].first?.isoCurrencyCode.first?.uppercased()
+            return sortedCurrencies2DArray[section].first?.currencyCode.first?.uppercased()
         }
         if !searchResultCurrencies.isEmpty {
             return "Top results"
@@ -77,7 +79,7 @@ class AddCurrencyTableVC: UITableViewController {
         }
         var content = cell.defaultContentConfiguration()
         
-        content.text = "\(currency.isoCurrencyCode) - \(currency.fullCurrencyName)"
+        content.text = "\(currency.currencyCode) - \(currency.fullCurrencyName)"
         cell.contentConfiguration = content
         return cell
     }
@@ -102,6 +104,24 @@ class AddCurrencyTableVC: UITableViewController {
         dismiss(animated: true)
     }
     
+    @objc func keyboardNotificationTriggered(notification: Notification) {
+        guard let userInfo = notification.userInfo as? [String: Any],
+              let keyboardFrame = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue,
+              let navigationBarHeight = navigationController?.navigationBar.frame.height
+        else { return }
+        if notification.name == UIResponder.keyboardWillShowNotification {
+            self.stackViewYAnchorConstraint.constant = -keyboardFrame.height / 2.5 - navigationBarHeight
+            UIView.animate(withDuration: 1) {
+                self.view.layoutIfNeeded()
+            }
+        } else if notification.name == UIResponder.keyboardWillHideNotification {
+            self.stackViewYAnchorConstraint.constant = 0
+            UIView.animate(withDuration: 1) {
+                self.view.layoutIfNeeded()
+            }
+        }
+    }
+    
     private func setUpSearchController() {
         navigationItem.searchController = searchController
         searchController.searchResultsUpdater = self
@@ -111,21 +131,21 @@ class AddCurrencyTableVC: UITableViewController {
     }
     
     private func setUpNoSearchResultsStackView() {
-        let noSearchResultsSublabel = UILabel()
-        let noSearchResultsImage = UIImageView(image: UIImage(systemName: "magnifyingglass"))
-        
-        noSearchResultsImage.contentMode = .scaleAspectFit
-        noSearchResultsImage.tintColor = .systemGray
+        let sublabel = UILabel()
+        let imageView = UIImageView(image: UIImage(systemName: "magnifyingglass"))
+                
+        imageView.contentMode = .scaleAspectFit
+        imageView.tintColor = .systemGray
         
         noSearchResultsLabel.font = UIFont.systemFont(ofSize: 17, weight: .heavy)
         noSearchResultsLabel.numberOfLines = 0
         noSearchResultsLabel.textAlignment = .center
         
-        noSearchResultsSublabel.font = UIFont.systemFont(ofSize: 14)
-        noSearchResultsSublabel.textColor = noSearchResultsImage.tintColor
-        noSearchResultsSublabel.text = "Check the spelling or try a new search"
+        sublabel.font = UIFont.systemFont(ofSize: 14)
+        sublabel.textColor = imageView.tintColor
+        sublabel.text = "Check the spelling or try a new search"
         
-        [noSearchResultsImage, noSearchResultsLabel, noSearchResultsSublabel].forEach { view in
+        [imageView, noSearchResultsLabel, sublabel].forEach { view in
             noSearchResultsStackView.addArrangedSubview(view)
         }
         noSearchResultsStackView.isHidden = true
@@ -133,18 +153,29 @@ class AddCurrencyTableVC: UITableViewController {
         noSearchResultsStackView.spacing = 8
         noSearchResultsStackView.distribution = .equalSpacing
         noSearchResultsStackView.alignment = .center
-
+        
         noSearchResultsStackView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(noSearchResultsStackView)
+        stackViewYAnchorConstraint = noSearchResultsStackView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         NSLayoutConstraint.activate([
-            noSearchResultsImage.heightAnchor.constraint(equalToConstant: 64),
-            noSearchResultsImage.widthAnchor.constraint(equalToConstant: 48),
+            imageView.heightAnchor.constraint(equalToConstant: 64),
+            imageView.widthAnchor.constraint(equalToConstant: 48),
             
-            noSearchResultsStackView.topAnchor.constraint(equalTo: view.topAnchor,constant: view.frame.height * 0.1),
-            noSearchResultsStackView.leadingAnchor.constraint(greaterThanOrEqualTo: view.leadingAnchor, constant: 32),
-            noSearchResultsStackView.trailingAnchor.constraint(greaterThanOrEqualTo: view.trailingAnchor, constant: -32),
+            stackViewYAnchorConstraint,
             noSearchResultsStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
+    }
+    
+    private func addNotificationCenterObservers() {
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(keyboardNotificationTriggered(notification:)),
+                                               name: UIResponder.keyboardWillShowNotification,
+                                               object: nil)
+        
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(keyboardNotificationTriggered(notification:)),
+                                               name: UIResponder.keyboardWillHideNotification,
+                                               object: nil)
     }
 }
 
@@ -157,7 +188,7 @@ extension AddCurrencyTableVC: UISearchResultsUpdating {
             return
         }
         searchResultCurrencies = currenciesArray.filter({ currency in
-            if "\(currency.isoCurrencyCode) \(currency.fullCurrencyName)".lowercased().contains(searchText.lowercased()) {
+            if "\(currency.currencyCode) \(currency.fullCurrencyName)".lowercased().contains(searchText.lowercased()) {
                 return true
             }
             return false

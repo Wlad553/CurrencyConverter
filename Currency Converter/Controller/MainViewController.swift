@@ -13,9 +13,9 @@ class MainViewController: UIViewController {
     
     let elipseView = EllipseView()
     var favouriteCurrenciesArray = [
-        Currency(isoCurrencyCode: "USD", fullCurrencyName: "US Dollar"),
-        Currency(isoCurrencyCode: "EUR", fullCurrencyName: "Euro"),
-        Currency(isoCurrencyCode: "PLN", fullCurrencyName: "Polish Zloty")
+        Currency(currencyCode: "USD"),
+        Currency(currencyCode: "EUR"),
+        Currency(currencyCode: "PLN")
     ]
     
     override func viewDidLoad() {
@@ -102,7 +102,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? MainTableViewCell else {
             fatalError("Casting to \(MainTableViewCell.self) failed")
         }
-        cell.currencyLabel.text = favouriteCurrenciesArray[indexPath.row].isoCurrencyCode
+        cell.currencyLabel.text = favouriteCurrenciesArray[indexPath.row]?.currencyCode
         cell.textField.delegate = self
         cell.textField.addTarget(self, action: #selector(textFieldEditingChanged(sender:)), for: .editingChanged)
         return cell
