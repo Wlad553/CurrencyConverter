@@ -6,17 +6,19 @@
 //
 
 import UIKit
+import CoreData
 
-class MainViewController: UIViewController {
+final class MainViewController: UIViewController {
     @IBOutlet weak var mainWindowView: MainWindowView!
     @IBOutlet weak var scrollView: UIScrollView!
-    
     let elipseView = EllipseView()
-    var favouriteCurrenciesArray = [
-        Currency(currencyCode: "USD"),
-        Currency(currencyCode: "EUR"),
-        Currency(currencyCode: "PLN")
-    ]
+    
+    var favouriteCurrencies: [FavouriteCurrency] = []
+    
+    lazy var context: NSManagedObjectContext = {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        return appDelegate.persistentContainer.viewContext
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,17 +26,35 @@ class MainViewController: UIViewController {
         mainWindowView.setUpView()
         mainWindowView.tableView.dataSource = self
         mainWindowView.tableView.delegate = self
-        scrollView.delegate = self
         addNotificationCenterObservers()
+        getFavouriteCurrenciesData()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)
         let destinationNavController = segue.destination as? UINavigationController
         let destinationVC = destinationNavController?.topViewController as? AddCurrencyTableVC
-        destinationVC?.currenciesArray.removeAll(where: { currency in
-            favouriteCurrenciesArray.contains(currency)
-        })
+        
+        for currencyObject in favouriteCurrencies {
+            guard let currencyCode = currencyObject.currencyCode,
+                 let currencyToBeRemoved = Currency(currencyCode: currencyCode) else { continue }
+            destinationVC?.currenciesSet.remove(currencyToBeRemoved)
+        }
+    }
+    
+    func saveFavouriteCurrency(currencyCode: String) {
+        guard let entity = NSEntityDescription.entity(forEntityName: "FavouriteCurrency", in: context),
+              let currency = Currency(currencyCode: currencyCode)
+        else { return }
+        let currencyObject = FavouriteCurrency(entity: entity, insertInto: context)
+        currencyObject.currencyCode = currency.currencyCode
+        
+        do {
+            try context.save()
+            favouriteCurrencies.append(currencyObject)
+        } catch let error as NSError {
+            print(error.localizedDescription)
+        }
     }
     
     @IBAction func unwindSegueToTextFieldsVC(segue: UIStoryboardSegue) {
@@ -87,6 +107,23 @@ class MainViewController: UIViewController {
                                                name: UIResponder.keyboardWillHideNotification,
                                                object: nil)
     }
+    
+    private func getFavouriteCurrenciesData() {
+        let userDefaults = UserDefaults.standard
+        if userDefaults.bool(forKey: "isAppAlreadyLauchedOnce") {
+            let fetchRequest: NSFetchRequest<FavouriteCurrency> = FavouriteCurrency.fetchRequest()
+            do {
+                favouriteCurrencies = try context.fetch(fetchRequest)
+            } catch let error as NSError {
+                print(error.localizedDescription)
+            }
+        } else {
+            userDefaults.set(true, forKey: "isAppAlreadyLauchedOnce")
+            ["USD", "EUR", "PLN"].forEach { currencyCode in
+                saveFavouriteCurrency(currencyCode: currencyCode)
+            }
+        }
+    }
 }
 
 extension MainViewController: UITableViewDelegate, UITableViewDataSource {
@@ -95,21 +132,30 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return favouriteCurrenciesArray.count
+        return favouriteCurrencies.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? MainTableViewCell else {
             fatalError("Casting to \(MainTableViewCell.self) failed")
         }
-        cell.currencyLabel.text = favouriteCurrenciesArray[indexPath.row]?.currencyCode
+        cell.currencyLabel.text = favouriteCurrencies[indexPath.row].currencyCode
         cell.textField.delegate = self
         cell.textField.addTarget(self, action: #selector(textFieldEditingChanged(sender:)), for: .editingChanged)
         return cell
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        favouriteCurrenciesArray.remove(at: indexPath.row)
+        let currencyObject = favouriteCurrencies[indexPath.row]
+        context.delete(currencyObject)
+        
+        do {
+            try context.save()
+        } catch let error as NSError {
+            print(error.localizedDescription)
+        }
+        
+        favouriteCurrencies.remove(at: indexPath.row)
         tableView.deleteRows(at: [indexPath], with: .left)
     }
     

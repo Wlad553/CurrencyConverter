@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Currency: Equatable {
+struct Currency: Hashable {
     let currencyCode: String
     var fullCurrencyName: String {
         Currency.availableCurrenciesDict[currencyCode]!
@@ -75,12 +75,12 @@ struct Currency: Equatable {
         "ZAR": "South African Rand"
     ]
     
-    static var availableCurrenciesArray: [Currency] {
-        var array: [Currency] = []
+    static var availableCurrenciesSet: Set<Currency> {
+        var set: Set<Currency> = []
         for i in availableCurrenciesDict {
             guard let currency = Currency(currencyCode: i.key) else { continue }
-            array.append(currency)
+            set.insert(currency)
         }
-        return array
+        return set
     }
 }

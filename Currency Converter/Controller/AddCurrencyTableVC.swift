@@ -7,34 +7,32 @@
 
 import UIKit
 
-class AddCurrencyTableVC: UITableViewController {
+final class AddCurrencyTableVC: UITableViewController {
     let searchController = UISearchController()
     let noSearchResultsLabel = UILabel()
     let noSearchResultsStackView = UIStackView()
     var stackViewYAnchorConstraint: NSLayoutConstraint!
     
+    var currenciesSet = Currency.availableCurrenciesSet
     var searchResultCurrencies: [Currency] = []
-    var sortedCurrencies2DArray: [[Currency]] = []
-    var currenciesArray = Currency.availableCurrenciesArray {
-        didSet {
-            let alphabeticallySortedCurrenciesArray = currenciesArray.sorted {
-                $0.currencyCode < $1.currencyCode
-            }
-            var alphabeticallySorted2DArray: [[Currency]] = [[]]
-            var section = 0
-            for currency in alphabeticallySortedCurrenciesArray {
-                if alphabeticallySorted2DArray[section].isEmpty {
-                    alphabeticallySorted2DArray[section].append(currency)
-                } else if  alphabeticallySorted2DArray[section].first?.currencyCode.first == currency.currencyCode.first {
-                    alphabeticallySorted2DArray[section].append(currency)
-                } else {
-                    section += 1
-                    alphabeticallySorted2DArray.append([])
-                    alphabeticallySorted2DArray[section].append(currency)
-                }
-            }
-            sortedCurrencies2DArray = alphabeticallySorted2DArray
+    var sortedCurrencies2DArray: [[Currency]] {
+        let alphabeticallySortedCurrenciesArray = currenciesSet.sorted {
+            $0.currencyCode < $1.currencyCode
         }
+        var alphabeticallySorted2DArray: [[Currency]] = [[]]
+        var section = 0
+        for currency in alphabeticallySortedCurrenciesArray {
+            if alphabeticallySorted2DArray[section].isEmpty {
+                alphabeticallySorted2DArray[section].append(currency)
+            } else if  alphabeticallySorted2DArray[section].first?.currencyCode.first == currency.currencyCode.first {
+                alphabeticallySorted2DArray[section].append(currency)
+            } else {
+                section += 1
+                alphabeticallySorted2DArray.append([])
+                alphabeticallySorted2DArray[section].append(currency)
+            }
+        }
+        return alphabeticallySorted2DArray
     }
         
     override func viewDidLoad() {
@@ -93,11 +91,13 @@ class AddCurrencyTableVC: UITableViewController {
         guard let destinationVC = segue.destination as? MainViewController,
               let senderIndexPath = sender as? IndexPath
         else { return }
+        let currencyToAdd: Currency
         if let searchText = searchController.searchBar.text, !searchText.isEmpty {
-            destinationVC.favouriteCurrenciesArray.append(searchResultCurrencies[senderIndexPath.row])
+            currencyToAdd = searchResultCurrencies[senderIndexPath.row]
         } else {
-            destinationVC.favouriteCurrenciesArray.append(sortedCurrencies2DArray[senderIndexPath.section][senderIndexPath.row])
+            currencyToAdd = sortedCurrencies2DArray[senderIndexPath.section][senderIndexPath.row]
         }
+        destinationVC.saveFavouriteCurrency(currencyCode: currencyToAdd.currencyCode)
     }
     
     @objc func barAction(sender: UIBarButtonItem) {
@@ -181,18 +181,16 @@ class AddCurrencyTableVC: UITableViewController {
 
 extension AddCurrencyTableVC: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
-        guard let searchText = searchController.searchBar.text else { return }
-        if searchText.isEmpty {
+        guard let searchText = searchController.searchBar.text,
+              !searchText.isEmpty
+        else {
             noSearchResultsStackView.isHidden = true
             tableView.reloadData()
             return
         }
-        searchResultCurrencies = currenciesArray.filter({ currency in
-            if "\(currency.currencyCode) \(currency.fullCurrencyName)".lowercased().contains(searchText.lowercased()) {
-                return true
-            }
-            return false
-        })
+        
+        filterResultsWith(searchText)
+
         if searchResultCurrencies.isEmpty {
             noSearchResultsStackView.isHidden = false
             noSearchResultsLabel.text = #"No results for "\#(searchText)""#
@@ -200,5 +198,43 @@ extension AddCurrencyTableVC: UISearchResultsUpdating {
             noSearchResultsStackView.isHidden = true
         }
         tableView.reloadData()
+    }
+    
+    private func filterResultsWith(_ searchText: String) {
+        var alphanumericsSearchText = searchText
+        alphanumericsSearchText.removeAll { character in
+            let alphanumericsAndWhitespaceCharacterSet = CharacterSet.alphanumerics.union(CharacterSet(charactersIn: " "))
+            return alphanumericsAndWhitespaceCharacterSet.isDisjoint(with: CharacterSet(charactersIn: "\(character)"))
+        }
+        
+        if alphanumericsSearchText.isEmpty {
+            searchResultCurrencies.removeAll()
+            return
+        }
+        
+        var searchWordsToCheck = alphanumericsSearchText.lowercased().components(separatedBy: " ")
+        searchWordsToCheck.removeAll { string in
+            string.isEmpty
+        }
+        searchResultCurrencies = currenciesSet.filter({ currency in
+            let currencyNameAndCodeWords = [currency.currencyCode.lowercased()] + currency.fullCurrencyName.lowercased().components(separatedBy: " ")
+            var matchesCount = 0
+            for searchWord in searchWordsToCheck {
+                for currencyString in currencyNameAndCodeWords {
+                    if currencyString.hasPrefix(searchWord) {
+                        matchesCount += 1
+                        break
+                    }
+                }
+            }
+            if matchesCount == searchWordsToCheck.count {
+                return true
+            }
+            return false
+        })
+        
+        searchResultCurrencies.sort {
+            return $0.currencyCode < $1.currencyCode
+        }
     }
 }

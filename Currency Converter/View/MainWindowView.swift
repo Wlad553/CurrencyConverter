@@ -7,7 +7,7 @@
 
 import UIKit
 
-class MainWindowView: UIView {
+final class MainWindowView: UIView {
     @IBOutlet weak var askButton: UIButton!
     @IBOutlet weak var bidButton: UIButton!
     @IBOutlet weak var shareButton: UIButton!

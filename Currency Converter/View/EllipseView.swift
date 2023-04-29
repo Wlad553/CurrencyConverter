@@ -7,7 +7,7 @@
 
 import UIKit
 
-class EllipseView: UIView {
+final class EllipseView: UIView {
     private var bottomSublayer: CAShapeLayer!
     private var middleSublayer: CAShapeLayer!
     private var topSublayer: CAShapeLayer!

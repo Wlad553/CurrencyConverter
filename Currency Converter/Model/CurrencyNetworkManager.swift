@@ -14,7 +14,7 @@ enum CurrencyAPIResponseError: Error {
 }
 
 class CurrencyNetworkManager {
-    let urlString = "https://marketdata.tradermade.com/api/v1/live?currency=USDEUR&api_key=\(apiKey)"
+    private let urlString = "https://marketdata.tradermade.com/api/v1/live?currency=USDEUR,USDPLN&api_key=\(apiKey)"
     var onCompletion: (([CurrencyParsedData]) -> Void)?
     var dataFetchingFailed: ((Error) -> Void)?
 

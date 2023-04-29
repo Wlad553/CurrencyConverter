@@ -25,8 +25,8 @@ struct Quotes: Decodable {
 }
 
 struct CurrencyParsedData {
+    let baseCurrency = Currency(currencyCode: "USD")!
     let quoteCurrency: Currency
-    let baseCurrency = Currency(currencyCode: "USD")
     let askPrice: Double
     let bidPrice: Double
     

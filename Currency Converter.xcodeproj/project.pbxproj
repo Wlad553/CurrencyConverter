@@ -26,6 +26,7 @@
 		F5AE85A729F0209900A1B4E0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F5AE85A529F0209900A1B4E0 /* LaunchScreen.storyboard */; };
 		F5AE85AF29F020D400A1B4E0 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = F5AE85AE29F020D400A1B4E0 /* .gitignore */; };
 		F5AE85B729F0412F00A1B4E0 /* EllipseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5AE85B629F0412F00A1B4E0 /* EllipseView.swift */; };
+		F5FD0A6A29FCFD670071BA4D /* CurrencyConverter.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F5FD0A6829FCFD670071BA4D /* CurrencyConverter.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -50,6 +51,7 @@
 		F5AE85A829F0209900A1B4E0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F5AE85AE29F020D400A1B4E0 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		F5AE85B629F0412F00A1B4E0 /* EllipseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EllipseView.swift; sourceTree = "<group>"; };
+		F5FD0A6929FCFD670071BA4D /* CurrencyConverter.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CurrencyConverter.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -143,6 +145,7 @@
 				F5AE85A529F0209900A1B4E0 /* LaunchScreen.storyboard */,
 				F5ADFA4E29F96C8B004C539D /* Constants.swift */,
 				F5AE85A829F0209900A1B4E0 /* Info.plist */,
+				F5FD0A6829FCFD670071BA4D /* CurrencyConverter.xcdatamodeld */,
 			);
 			path = "Supporting Files";
 			sourceTree = "<group>";
@@ -235,6 +238,7 @@
 				F5AE859F29F0209800A1B4E0 /* MainViewController.swift in Sources */,
 				F5AE859B29F0209800A1B4E0 /* AppDelegate.swift in Sources */,
 				F5AE85B729F0412F00A1B4E0 /* EllipseView.swift in Sources */,
+				F5FD0A6A29FCFD670071BA4D /* CurrencyConverter.xcdatamodeld in Sources */,
 				F54C0DB629F67AC500E2D1E9 /* AddCurrencyTableVC.swift in Sources */,
 				F5ADFA4D29F96C2A004C539D /* CurrencyNetworkManager.swift in Sources */,
 				F5A370AC29F13D790066BFBD /* MainWindowView.swift in Sources */,
@@ -464,6 +468,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		F5FD0A6829FCFD670071BA4D /* CurrencyConverter.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				F5FD0A6929FCFD670071BA4D /* CurrencyConverter.xcdatamodel */,
+			);
+			currentVersion = F5FD0A6929FCFD670071BA4D /* CurrencyConverter.xcdatamodel */;
+			path = CurrencyConverter.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = F5AE858F29F0209800A1B4E0 /* Project object */;
 }
