@@ -12,6 +12,8 @@ final class MainTableViewCell: UITableViewCell {
     let currencyLabel = UILabel()
     let chevronImageView = UIImageView(image: UIImage(systemName: "chevron.right"))
     let stackView = UIStackView()
+    var textFieldTrailingConstraint: NSLayoutConstraint!
+    var stackViewLeadingConstraint: NSLayoutConstraint!
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
@@ -36,9 +38,10 @@ final class MainTableViewCell: UITableViewCell {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(stackView)
         
+        stackViewLeadingConstraint = stackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 32)
         NSLayoutConstraint.activate([
             stackView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            stackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 32),
+            stackViewLeadingConstraint,
         ])
     }
     
@@ -60,9 +63,11 @@ final class MainTableViewCell: UITableViewCell {
         
         textField.translatesAutoresizingMaskIntoConstraints = false
         addSubview(textField)
+        
+        textFieldTrailingConstraint = textField.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -32)
         NSLayoutConstraint.activate([
             textField.centerYAnchor.constraint(equalTo: centerYAnchor),
-            textField.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -32),
+            textFieldTrailingConstraint,
             textField.leadingAnchor.constraint(equalTo: currencyLabel.trailingAnchor, constant: 60),
             textField.heightAnchor.constraint(equalToConstant: 40),
         ])

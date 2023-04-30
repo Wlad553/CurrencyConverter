@@ -43,6 +43,7 @@ final class AddCurrencyTableVC: UITableViewController {
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(barAction(sender:)))
     }
     
+    // MARK: UITableViewDataSource
     override func numberOfSections(in tableView: UITableView) -> Int {
         if let searchText = searchController.searchBar.text, !searchText.isEmpty {
             return 1
@@ -82,10 +83,12 @@ final class AddCurrencyTableVC: UITableViewController {
         return cell
     }
     
+    // MARK: UITableViewDelegate
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: "goBack", sender: indexPath)
     }
     
+    // MARK: Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)
         guard let destinationVC = segue.destination as? MainViewController,
@@ -179,6 +182,16 @@ final class AddCurrencyTableVC: UITableViewController {
     }
 }
 
+// MARK: UIScrollViewDelegate
+extension AddCurrencyTableVC {
+    override func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        if searchController.searchBar.searchTextField.isFirstResponder {
+            searchController.searchBar.searchTextField.resignFirstResponder()
+        }
+    }
+}
+
+// MARK: UISearchResultsUpdating
 extension AddCurrencyTableVC: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         guard let searchText = searchController.searchBar.text,

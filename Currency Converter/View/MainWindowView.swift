@@ -60,7 +60,7 @@ final class MainWindowView: UIView {
             sender.layer.backgroundColor = CGColor(red: 10/255, green: 95/255, blue: 255/255, alpha: 1)
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            // we disable a button in the middle of animation duration so that the color smoothly changed from black to white
+            // disable a button in the middle of animation duration so that the color smoothly changed from black to white
             sender.isEnabled = false
         }
         for button in [bidButton, askButton] {

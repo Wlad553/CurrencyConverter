@@ -12,6 +12,8 @@ final class MainViewController: UIViewController {
     @IBOutlet weak var mainWindowView: MainWindowView!
     @IBOutlet weak var scrollView: UIScrollView!
     let elipseView = EllipseView()
+    let endEditingTapRecognizer = UITapGestureRecognizer()
+    let editTableViewPressRecognizer = UILongPressGestureRecognizer()
     
     var favouriteCurrencies: [FavouriteCurrency] = []
     
@@ -23,6 +25,7 @@ final class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         elipseView.layoutViewIn(view)
+        setUpGestureRecognizers()
         mainWindowView.setUpView()
         mainWindowView.tableView.dataSource = self
         mainWindowView.tableView.delegate = self
@@ -30,16 +33,8 @@ final class MainViewController: UIViewController {
         getFavouriteCurrenciesData()
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        super.prepare(for: segue, sender: sender)
-        let destinationNavController = segue.destination as? UINavigationController
-        let destinationVC = destinationNavController?.topViewController as? AddCurrencyTableVC
-        
-        for currencyObject in favouriteCurrencies {
-            guard let currencyCode = currencyObject.currencyCode,
-                 let currencyToBeRemoved = Currency(currencyCode: currencyCode) else { continue }
-            destinationVC?.currenciesSet.remove(currencyToBeRemoved)
-        }
+    @objc private func scrollViewTapDetected() {
+        view.endEditing(true)
     }
     
     func saveFavouriteCurrency(currencyCode: String) {
@@ -83,7 +78,7 @@ final class MainViewController: UIViewController {
             sender.text?.removeLast(separatedSenderText[1].count - 2)
     }
     
-    @objc func keyboardNotificationTriggered(notification: Notification) {
+    @objc private func keyboardNotificationTriggered(notification: Notification) {
         guard let userInfo = notification.userInfo as? [String: Any],
               let keyboardFrame = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue
         else { return }
@@ -93,6 +88,39 @@ final class MainViewController: UIViewController {
         } else {
             scrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardFrame.height, right: 0)
             scrollView.scrollIndicatorInsets = scrollView.contentInset
+        }
+    }
+    
+    @objc private func longPressDetected() {
+        if editTableViewPressRecognizer.state == .began {
+            prepareCellsForEditingToggle()
+        }
+    }
+    
+    private func prepareCellsForEditingToggle() {
+        if mainWindowView.tableView.isEditing {
+            mainWindowView.tableView.isEditing.toggle()
+            for i in 0..<favouriteCurrencies.count {
+                guard let cell = mainWindowView.tableView.cellForRow(at: IndexPath(row: i, section: 0)) as? MainTableViewCell else { return }
+                cell.stackViewLeadingConstraint.constant = 32
+                cell.textFieldTrailingConstraint.constant = -32
+                UIView.animate(withDuration: 0.2) {
+                    cell.layoutIfNeeded()
+                }
+            }
+        } else {
+            view.endEditing(true)
+            for i in 0..<favouriteCurrencies.count {
+                guard let cell = mainWindowView.tableView.cellForRow(at: IndexPath(row: i, section: 0)) as? MainTableViewCell else { return }
+                cell.stackViewLeadingConstraint.constant = 56
+                cell.textFieldTrailingConstraint.constant = -56
+                UIView.animate(withDuration: 0.2) {
+                    cell.layoutIfNeeded()
+                }
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                self.mainWindowView.tableView.isEditing.toggle()
+            }
         }
     }
     
@@ -124,9 +152,37 @@ final class MainViewController: UIViewController {
             }
         }
     }
+    
+    private func setUpGestureRecognizers() {
+        editTableViewPressRecognizer.addTarget(self, action: #selector(longPressDetected))
+        mainWindowView.tableView.addGestureRecognizer(editTableViewPressRecognizer)
+        editTableViewPressRecognizer.minimumPressDuration = 0.75
+        scrollView.addGestureRecognizer(endEditingTapRecognizer)
+        endEditingTapRecognizer.cancelsTouchesInView = false
+        endEditingTapRecognizer.addTarget(self, action: #selector(scrollViewTapDetected))
+    }
+    
+    // MARK: Navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
+        let destinationNavController = segue.destination as? UINavigationController
+        let destinationVC = destinationNavController?.topViewController as? AddCurrencyTableVC
+        
+        for currencyObject in favouriteCurrencies {
+            guard let currencyCode = currencyObject.currencyCode,
+                 let currencyToBeRemoved = Currency(currencyCode: currencyCode) else { continue }
+            destinationVC?.currenciesSet.remove(currencyToBeRemoved)
+        }
+        
+        if mainWindowView.tableView.isEditing {
+            prepareCellsForEditingToggle()
+        }
+    }
 }
 
-extension MainViewController: UITableViewDelegate, UITableViewDataSource {
+extension MainViewController: UITableViewDataSource, UITableViewDelegate {
+    
+    // MARK: UITableViewDataSource
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -145,26 +201,56 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
     
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        let currencyObject = favouriteCurrencies[indexPath.row]
-        context.delete(currencyObject)
+    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        let currencyObject = favouriteCurrencies.remove(at: sourceIndexPath.row)
+        favouriteCurrencies.insert(currencyObject, at: destinationIndexPath.row)
         
-        do {
-            try context.save()
-        } catch let error as NSError {
-            print(error.localizedDescription)
+        var currencyCodes: [String] = []
+        for i in favouriteCurrencies {
+            guard let currencyCode = i.currencyCode else { continue }
+            currencyCodes.append(currencyCode)
         }
         
-        favouriteCurrencies.remove(at: indexPath.row)
-        tableView.deleteRows(at: [indexPath], with: .left)
+        for currencyObject in favouriteCurrencies {
+            context.delete(currencyObject)
+        }
+        favouriteCurrencies.removeAll()
+        for currencyCode in currencyCodes {
+            saveFavouriteCurrency(currencyCode: currencyCode)
+        }
     }
     
-    func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        return true
+    // MARK: UITableViewDelegate
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let deleteAction = UIContextualAction(style: .destructive, title: nil) { _, _, _ in
+            let currencyObject = self.favouriteCurrencies[indexPath.row]
+            self.context.delete(currencyObject)
+            
+            do {
+                try self.context.save()
+            } catch let error as NSError {
+                print(error.localizedDescription)
+            }
+            
+            self.favouriteCurrencies.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .left)
+        }
+        deleteAction.image = UIImage(systemName: "trash")
+        deleteAction.backgroundColor = UIColor.systemRed
+        let configuration = UISwipeActionsConfiguration(actions: [deleteAction])
+        return configuration
     }
 }
 
+// MARK: UITextFieldDelegate
 extension MainViewController: UITextFieldDelegate {
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        if mainWindowView.tableView.isEditing {
+            return false
+        }
+        return true
+    }
+    
     func textFieldDidBeginEditing(_ textField: UITextField) {
         textField.layer.borderWidth = 1
         textField.textColor = UIColor(red: 1/255, green: 35/255, blue: 83/255, alpha: 1)
@@ -188,4 +274,3 @@ extension MainViewController: UITextFieldDelegate {
         return false
     }
 }
-
