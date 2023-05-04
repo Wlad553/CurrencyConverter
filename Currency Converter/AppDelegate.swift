@@ -7,15 +7,48 @@
 
 import UIKit
 import CoreData
+import BackgroundTasks
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
-
-
+    var appLastOpenedDate: Date?
+        
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        BGTaskScheduler.shared.register(forTaskWithIdentifier: "com.vladylslavpetrenko.fetchCurrenciesData", using: nil) { task in
+            self.handleAppRefreshTask(task: task as! BGAppRefreshTask)
+        }
         return true
+    }
+    
+    func handleAppRefreshTask(task: BGAppRefreshTask) {
+        task.expirationHandler = {
+            task.setTaskCompleted(success: false)
+            CurrenciesDataNetworkManager.urlSession.invalidateAndCancel()
+        }
+        
+        CurrenciesDataNetworkManager.shared.fetchCurrencyData {
+            task.setTaskCompleted(success: true)
+        }
+        
+        guard let appLastOpenedDate = appLastOpenedDate else { return }
+        
+        if appLastOpenedDate > Date(timeIntervalSinceNow: -(60 * 60 * 24)) {
+            scheduleBackgroundCurrenciesDataFetch()
+        } else {
+            scheduleBackgroundCurrenciesDataFetch(delayForBeginDate: 60 * 60 * 24)
+        }
+    }
+    
+    func scheduleBackgroundCurrenciesDataFetch(delayForBeginDate: TimeInterval = 0) {
+        let currencyDataFetchTask = BGProcessingTaskRequest(identifier: "com.vladylslavpetrenko.fetchCurrenciesData")
+        let calendarCurrentComponents = Calendar.current.dateComponents([.minute], from: Date())
+        currencyDataFetchTask.requiresNetworkConnectivity = true
+        currencyDataFetchTask.earliestBeginDate = Date(timeIntervalSinceNow: delayForBeginDate + 60 * 60 - Double(calendarCurrentComponents.minute!) * 60)
+        do {
+          try BGTaskScheduler.shared.submit(currencyDataFetchTask)
+        } catch {
+          print("Unable to submit task: \(error.localizedDescription)")
+        }
     }
 
     // MARK: UISceneSession Lifecycle

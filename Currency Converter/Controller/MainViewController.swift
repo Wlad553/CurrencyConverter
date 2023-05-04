@@ -17,13 +17,14 @@ final class MainViewController: UIViewController {
     
     var favouriteCurrencies: [FavouriteCurrency] = []
     
-    lazy var context: NSManagedObjectContext = {
+    private lazy var context: NSManagedObjectContext = {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         return appDelegate.persistentContainer.viewContext
     }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        CurrenciesDataNetworkManager.shared.fetchDataIfNeeded()
         elipseView.layoutViewIn(view)
         setUpGestureRecognizers()
         mainWindowView.setUpView()

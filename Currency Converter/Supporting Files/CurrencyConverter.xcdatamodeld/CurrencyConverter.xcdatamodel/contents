@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21754" systemVersion="22E261" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="CurrencyData" representedClassName="CurrencySavedData" syncable="YES" codeGenerationType="class">
+        <attribute name="askPrice" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="bidPrice" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="quoteCurrency" attributeType="String"/>
+        <attribute name="timeIntervalSinceLastUpdate" attributeType="Double" defaultValueString="0" usesScalarValueType="YES"/>
+    </entity>
     <entity name="FavouriteCurrency" representedClassName="FavouriteCurrency" syncable="YES" codeGenerationType="class">
-        <attribute name="currencyCode" optional="YES" attributeType="String"/>
+        <attribute name="currencyCode" attributeType="String"/>
     </entity>
 </model>
