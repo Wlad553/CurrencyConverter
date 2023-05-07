@@ -15,12 +15,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         BGTaskScheduler.shared.register(forTaskWithIdentifier: "com.vladylslavpetrenko.fetchCurrenciesData", using: nil) { task in
-            self.handleAppRefreshTask(task: task as! BGAppRefreshTask)
+            self.handleAppRefreshTask(task: task as! BGProcessingTask)
         }
         return true
     }
     
-    func handleAppRefreshTask(task: BGAppRefreshTask) {
+    func handleAppRefreshTask(task: BGProcessingTask) {
         task.expirationHandler = {
             task.setTaskCompleted(success: false)
             CurrenciesDataNetworkManager.urlSession.invalidateAndCancel()

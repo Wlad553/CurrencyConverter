@@ -31,7 +31,7 @@ class CurrenciesDataNetworkManager {
     
     private init() {}
 
-    func fetchCurrencyData(urlSession: URLSession = urlSession, completionHandler: @escaping () -> Void) {
+    func fetchCurrencyData(urlSession: URLSession = urlSession, completionHandler: @escaping () -> Void = {}) {
         guard let url = URL(string: urlString) else { return }
         urlSession.configuration.waitsForConnectivity = true
         urlSession.dataTask(with: url) { [weak self] data, response, error in
@@ -91,16 +91,22 @@ class CurrenciesDataNetworkManager {
         return multipleCurrenciesParsedData
     }
     
-    func fetchDataIfNeeded() {
+    func fetchDataIfNeeded(completionHandler: @escaping () -> Void) {
         guard let objects = try? context.fetch(fetchRequest) else { return }
         if objects.count != Currency.availableCurrencyPairsCount || objects.count == 0 {
-            fetchCurrencyData {}
+            fetchCurrencyData {
+                completionHandler()
+            }
             return
         }
         let timeIntervalsDifference = Date().timeIntervalSince1970 - objects.first!.timeIntervalSinceLastUpdate
         if timeIntervalsDifference >= (60 * 60) {
-            fetchCurrencyData {}
+            fetchCurrencyData {
+                completionHandler()
+            }
+            return
         }
+        completionHandler()
     }
     
     private func updateObjectsFromContext(withData currencyParsedData: [CurrencyParsedData]) {

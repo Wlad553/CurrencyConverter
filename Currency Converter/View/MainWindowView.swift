@@ -14,6 +14,8 @@ final class MainWindowView: UIView {
     @IBOutlet weak var addCurrencyButton: UIButton!
     @IBOutlet weak var tableView: UITableView!
     
+    var selectedButton: UIButton!
+    
     override func layoutSubviews() {
         layer.shadowPath = CGPath(rect: CGRect(x: 5, y: 20, width: bounds.width - 10, height: bounds.height - 15), transform: nil)
     }
@@ -32,6 +34,9 @@ final class MainWindowView: UIView {
     }
     
     private func setUpButtons() {
+        bidButton.isEnabled = false
+        selectedButton = bidButton
+        
         bidButton.layer.backgroundColor = CGColor(red: 10/255, green: 95/255, blue: 255/255, alpha: 1)
         askButton.layer.backgroundColor = UIColor.white.cgColor
         [askButton, bidButton].forEach { button in
@@ -55,7 +60,8 @@ final class MainWindowView: UIView {
         layer.shadowPath = CGPath(rect: CGRect(x: 5, y: 20, width: bounds.width - 10, height: bounds.height - 15), transform: nil)
     }
     
-    @IBAction func sellBuyButtonAction(sender: UIButton) {
+    @IBAction func bidAskButtonUIUpdateAction(sender: UIButton) {
+        selectedButton = sender
         UIView.animate(withDuration: 0.2) {
             sender.layer.backgroundColor = CGColor(red: 10/255, green: 95/255, blue: 255/255, alpha: 1)
         }

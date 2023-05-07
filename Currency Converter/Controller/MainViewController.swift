@@ -11,11 +11,15 @@ import CoreData
 final class MainViewController: UIViewController {
     @IBOutlet weak var mainWindowView: MainWindowView!
     @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var lastTimeUpdatedLabel: UILabel!
+    
     let elipseView = EllipseView()
     let endEditingTapRecognizer = UITapGestureRecognizer()
     let editTableViewPressRecognizer = UILongPressGestureRecognizer()
     
+    var cells: [MainTableViewCell] = []
     var favouriteCurrencies: [FavouriteCurrency] = []
+    var lastActiveTextField: UITextField?
     
     private lazy var context: NSManagedObjectContext = {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
@@ -24,7 +28,6 @@ final class MainViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        CurrenciesDataNetworkManager.shared.fetchDataIfNeeded()
         elipseView.layoutViewIn(view)
         setUpGestureRecognizers()
         mainWindowView.setUpView()
@@ -32,6 +35,10 @@ final class MainViewController: UIViewController {
         mainWindowView.tableView.delegate = self
         addNotificationCenterObservers()
         getFavouriteCurrenciesData()
+        addButtonsTagrets()
+        CurrenciesDataNetworkManager.shared.fetchDataIfNeeded {
+            self.updateLastTimeUpdatedLabel()
+        }
     }
     
     @objc private func scrollViewTapDetected() {
@@ -55,28 +62,75 @@ final class MainViewController: UIViewController {
     
     @IBAction func unwindSegueToTextFieldsVC(segue: UIStoryboardSegue) {
         mainWindowView.tableView.reloadData()
+        guard let lastActiveTextField = lastActiveTextField else { return }
+        convertActiveTextFieldCurrencyToOtherCurrencies(lastActiveTextField)
     }
-        
-    @objc func textFieldEditingChanged(sender: UITextField) {
-        guard let senderText = sender.text,
-              let senderTextFirstCharacter = senderText.first,
-              let indexOfCommaOrDot = senderText.firstIndex(where: { (character: Character) -> Bool in
+    
+    private func checkMaskForTextField(textField: UITextField) {
+        guard let textFieldText = textField.text,
+              let senderTextFirstCharacter = textFieldText.first,
+              let indexOfCommaOrDot = textFieldText.firstIndex(where: { (character: Character) -> Bool in
                   ".,".contains(character)
               })
         else { return }
         
-        var newTextWithoutSigns = sender.text?.components(separatedBy: CharacterSet(charactersIn: ",.")).joined()
+        var newTextWithoutSigns = textField.text?.components(separatedBy: CharacterSet(charactersIn: ",.")).joined()
         newTextWithoutSigns?.insert(".", at: indexOfCommaOrDot)
-        sender.text = newTextWithoutSigns
+        textField.text = newTextWithoutSigns
         
         if ",.".contains(senderTextFirstCharacter) {
-            sender.text? = "0\(senderText)"
+            textField.text? = "0\(textFieldText)"
         }
         
-        guard let separatedSenderText = sender.text?.components(separatedBy: "."),
+        guard let separatedSenderText = textField.text?.components(separatedBy: "."),
               separatedSenderText[separatedSenderText.count - 1].count > 2
         else { return }
-            sender.text?.removeLast(separatedSenderText[1].count - 2)
+        textField.text?.removeLast(separatedSenderText[1].count - 2)
+    }
+    
+    private func convertActiveTextFieldCurrencyToOtherCurrencies(_ textField: UITextField) {
+        let fetchRequest: NSFetchRequest<CurrencySavedData> = CurrencySavedData.fetchRequest()
+        let baseCurrencySumToConvert: Double
+        guard let activeCell = textField.superview as? MainTableViewCell,
+              let currencyDataObjects = try? context.fetch(fetchRequest),
+              let textFieldText = textField.text,
+              let sumToConvert = Double(textFieldText)
+        else {
+            for cell in cells {
+                cell.textField.text = ""
+            }
+            return
+        }
+        
+        if activeCell.currencyLabel.text == "USD" {
+            baseCurrencySumToConvert = sumToConvert
+        } else {
+            guard let activeCellCurrencyDataObject = currencyDataObjects.first(where: { object in
+                object.quoteCurrency == activeCell.currencyLabel.text
+            }) else { return }
+            let baseCurrencyPriceCoefficient = mainWindowView.selectedButton == mainWindowView.bidButton ? activeCellCurrencyDataObject.bidPrice : activeCellCurrencyDataObject.askPrice
+            baseCurrencySumToConvert = sumToConvert / baseCurrencyPriceCoefficient
+            
+            let usdCell = cells.first { cell in
+                cell.currencyLabel.text == "USD"
+            }
+            usdCell?.textField.text = String(format: "%.2f", baseCurrencySumToConvert)
+        }
+        
+        for cell in cells {
+            guard cell != activeCell,
+            let currencyDataObject = currencyDataObjects.first (where: { object in
+                object.quoteCurrency == cell.currencyLabel.text
+            })
+            else { continue }
+            let currencyPriceCoefficient = mainWindowView.selectedButton == mainWindowView.bidButton ? currencyDataObject.bidPrice : currencyDataObject.askPrice
+            cell.textField.text = String(format: "%.2f", (baseCurrencySumToConvert * currencyPriceCoefficient))
+        }
+    }
+        
+    @objc func textFieldEditingChanged(sender: UITextField) {
+        checkMaskForTextField(textField: sender)
+        convertActiveTextFieldCurrencyToOtherCurrencies(sender)
     }
     
     @objc private func keyboardNotificationTriggered(notification: Notification) {
@@ -94,15 +148,22 @@ final class MainViewController: UIViewController {
     
     @objc private func longPressDetected() {
         if editTableViewPressRecognizer.state == .began {
+            let feedbackGenerator = UIImpactFeedbackGenerator(style: .medium)
+            feedbackGenerator.prepare()
+            feedbackGenerator.impactOccurred()
             prepareCellsForEditingToggle()
         }
+    }
+    
+    @objc func bidAskButtonTapped(sender: UIButton) {
+        guard let lastActiveTextField = lastActiveTextField else { return }
+        convertActiveTextFieldCurrencyToOtherCurrencies(lastActiveTextField)
     }
     
     private func prepareCellsForEditingToggle() {
         if mainWindowView.tableView.isEditing {
             mainWindowView.tableView.isEditing.toggle()
-            for i in 0..<favouriteCurrencies.count {
-                guard let cell = mainWindowView.tableView.cellForRow(at: IndexPath(row: i, section: 0)) as? MainTableViewCell else { return }
+            for cell in cells {
                 cell.stackViewLeadingConstraint.constant = 32
                 cell.textFieldTrailingConstraint.constant = -32
                 UIView.animate(withDuration: 0.2) {
@@ -111,8 +172,7 @@ final class MainViewController: UIViewController {
             }
         } else {
             view.endEditing(true)
-            for i in 0..<favouriteCurrencies.count {
-                guard let cell = mainWindowView.tableView.cellForRow(at: IndexPath(row: i, section: 0)) as? MainTableViewCell else { return }
+            for cell in cells {
                 cell.stackViewLeadingConstraint.constant = 56
                 cell.textFieldTrailingConstraint.constant = -56
                 UIView.animate(withDuration: 0.2) {
@@ -163,6 +223,20 @@ final class MainViewController: UIViewController {
         endEditingTapRecognizer.addTarget(self, action: #selector(scrollViewTapDetected))
     }
     
+    private func addButtonsTagrets() {
+        [mainWindowView.bidButton, mainWindowView.askButton].forEach { button in
+            button?.addTarget(self, action: #selector(bidAskButtonTapped(sender:)), for: .touchUpInside)
+        }
+    }
+    
+    func updateLastTimeUpdatedLabel() {
+        let fetchRequest: NSFetchRequest<CurrencySavedData> = CurrencySavedData.fetchRequest()
+        guard let firstCurrency = try? context.fetch(fetchRequest).first?.timeIntervalSinceLastUpdate else { return }
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd MMM yyyy h:mm a"
+        lastTimeUpdatedLabel.text = dateFormatter.string(from: Date(timeIntervalSince1970: firstCurrency))
+    }
+    
     // MARK: Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)
@@ -199,6 +273,7 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
         cell.currencyLabel.text = favouriteCurrencies[indexPath.row].currencyCode
         cell.textField.delegate = self
         cell.textField.addTarget(self, action: #selector(textFieldEditingChanged(sender:)), for: .editingChanged)
+        cells.append(cell)
         return cell
     }
     
@@ -255,6 +330,7 @@ extension MainViewController: UITextFieldDelegate {
     func textFieldDidBeginEditing(_ textField: UITextField) {
         textField.layer.borderWidth = 1
         textField.textColor = UIColor(red: 1/255, green: 35/255, blue: 83/255, alpha: 1)
+        lastActiveTextField = textField
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
