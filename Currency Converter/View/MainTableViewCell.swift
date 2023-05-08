@@ -49,7 +49,6 @@ final class MainTableViewCell: UITableViewCell {
         textField.textColor = UIColor(red: 69/255, green: 69/255, blue: 69/255, alpha: 1)
         textField.backgroundColor = UIColor(red: 240/255, green: 241/255, blue: 245/255, alpha: 1)
         
-        // text padding by 8 points
         textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 8, height: textField.frame.size.height))
         textField.leftViewMode = .always
         textField.rightView = UIView(frame: CGRect(x: 0, y: 0, width: 8, height: textField.frame.size.height))

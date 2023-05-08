@@ -26,15 +26,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             CurrenciesDataNetworkManager.urlSession.invalidateAndCancel()
         }
         
-        CurrenciesDataNetworkManager.shared.fetchCurrencyData {
+        CurrenciesDataNetworkManager.shared.fetchCurrencyData { _ in
+            NotificationCenter.default.post(name: .curreniesDataFetched, object: self)
             task.setTaskCompleted(success: true)
         }
         
         guard let appLastOpenedDate = appLastOpenedDate else { return }
         
+        // if user didn't open the app during last 24h since last open, then rates update once a day
         if appLastOpenedDate > Date(timeIntervalSinceNow: -(60 * 60 * 24)) {
             scheduleBackgroundCurrenciesDataFetch()
         } else {
+            // id he did, then rates update once an hour
             scheduleBackgroundCurrenciesDataFetch(delayForBeginDate: 60 * 60 * 24)
         }
     }
@@ -43,10 +46,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let currencyDataFetchTask = BGProcessingTaskRequest(identifier: "com.vladylslavpetrenko.fetchCurrenciesData")
         let calendarCurrentComponents = Calendar.current.dateComponents([.minute], from: Date())
         currencyDataFetchTask.requiresNetworkConnectivity = true
+        // earliest update time in background is every hour e.g. at 7:00, 8:00 etc.
         currencyDataFetchTask.earliestBeginDate = Date(timeIntervalSinceNow: delayForBeginDate + 60 * 60 - Double(calendarCurrentComponents.minute!) * 60)
         do {
           try BGTaskScheduler.shared.submit(currencyDataFetchTask)
-        } catch {
+        } catch let error as NSError {
           print("Unable to submit task: \(error.localizedDescription)")
         }
     }

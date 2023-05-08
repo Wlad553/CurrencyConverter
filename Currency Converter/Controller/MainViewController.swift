@@ -17,9 +17,16 @@ final class MainViewController: UIViewController {
     let endEditingTapRecognizer = UITapGestureRecognizer()
     let editTableViewPressRecognizer = UILongPressGestureRecognizer()
     
-    var cells: [MainTableViewCell] = []
     var favouriteCurrencies: [FavouriteCurrency] = []
     var lastActiveTextField: UITextField?
+    var cells: [MainTableViewCell] {
+        var cells: [MainTableViewCell] = []
+        for i in 0..<favouriteCurrencies.count {
+            guard let cell = mainWindowView.tableView.cellForRow(at: IndexPath(row: i, section: 0)) as? MainTableViewCell else { continue }
+            cells.append(cell)
+        }
+        return cells
+    }
     
     private lazy var context: NSManagedObjectContext = {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
@@ -36,8 +43,24 @@ final class MainViewController: UIViewController {
         addNotificationCenterObservers()
         getFavouriteCurrenciesData()
         addButtonsTagrets()
-        CurrenciesDataNetworkManager.shared.fetchDataIfNeeded {
-            self.updateLastTimeUpdatedLabel()
+        CurrenciesDataNetworkManager.shared.fetchDataIfNeeded { error in
+            if let error = error {
+                var errorTitle: String?
+                var errorMessage: String?
+                
+                switch error {
+                case CurrencyAPIError.dataSaving:
+                    errorMessage = "Unable to save rates"
+                case CurrencyAPIError.network:
+                    errorTitle = "Unable to get latest rates"
+                    errorMessage = "Please, try again later"
+                default: break
+                }
+                self.presentOkActionAlertController(title: errorTitle,
+                                                    message: errorMessage)
+            } else {
+                self.updateLastTimeUpdatedLabel()
+            }
         }
     }
     
@@ -55,18 +78,59 @@ final class MainViewController: UIViewController {
         do {
             try context.save()
             favouriteCurrencies.append(currencyObject)
-        } catch let error as NSError {
-            print(error.localizedDescription)
+        } catch let error {
+            presentOkActionAlertController(title: "Unable to add currency to favourites",
+                                           message: error.localizedDescription)
         }
     }
     
+    @IBAction func shareButtonTapped(sender: UIButton) {
+        var stringToShare = ""
+        for cell in cells {
+            guard let cellTextFieldText = cell.textField.text,
+                  let cellLabelText = cell.currencyLabel.text,
+                  !cellTextFieldText.isEmpty
+            else { continue }
+            stringToShare.append(("\(cellLabelText) \(cellTextFieldText)\n"))
+        }
+        if stringToShare.isEmpty {
+            presentOkActionAlertController(title: "Nothing to share",
+                                           message: "Please, type convert amount first")
+            return
+        }
+        let activityViewController = UIActivityViewController(activityItems: [stringToShare], applicationActivities: nil)
+        present(activityViewController, animated: true, completion: nil)
+    }
+    
     @IBAction func unwindSegueToTextFieldsVC(segue: UIStoryboardSegue) {
-        mainWindowView.tableView.reloadData()
+        // User cannot add more than 4 favourite currencies, if he tries then the currency in the bottom is replaced with new currency
+        if favouriteCurrencies.count > 4 {
+            favouriteCurrencies.remove(at: favouriteCurrencies.count - 2)
+            let fetchRequest: NSFetchRequest<FavouriteCurrency> = FavouriteCurrency.fetchRequest()
+            guard let objects = try? context.fetch(fetchRequest) else { return }
+            context.delete(objects[objects.count - 2])
+            try? context.save()
+            let newCellIndexPath = [IndexPath(row: favouriteCurrencies.count - 1, section: 0)]
+            mainWindowView.tableView.reloadRows(at: newCellIndexPath, with: .fade)
+        } else {
+            let newCellIndexPath = [IndexPath(row: favouriteCurrencies.count - 1, section: 0)]
+            mainWindowView.tableView.insertRows(at: newCellIndexPath, with: .fade)
+            mainWindowView.tableView.reloadRows(at: newCellIndexPath, with: .fade)
+        }
+        // Currency from last active textField will also be converted to new added favourite currency just after adding
         guard let lastActiveTextField = lastActiveTextField else { return }
         convertActiveTextFieldCurrencyToOtherCurrencies(lastActiveTextField)
     }
     
-    private func checkMaskForTextField(textField: UITextField) {
+    func updateLastTimeUpdatedLabel() {
+        let fetchRequest: NSFetchRequest<CurrencySavedData> = CurrencySavedData.fetchRequest()
+        guard let firstCurrency = try? context.fetch(fetchRequest).first?.timeIntervalSinceLastUpdate else { return }
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd MMM yyyy h:mm a"
+        lastTimeUpdatedLabel.text = dateFormatter.string(from: Date(timeIntervalSince1970: firstCurrency))
+    }
+    
+    func checkMaskForTextField(textField: UITextField) {
         guard let textFieldText = textField.text,
               let senderTextFirstCharacter = textFieldText.first,
               let indexOfCommaOrDot = textFieldText.firstIndex(where: { (character: Character) -> Bool in
@@ -88,7 +152,7 @@ final class MainViewController: UIViewController {
         textField.text?.removeLast(separatedSenderText[1].count - 2)
     }
     
-    private func convertActiveTextFieldCurrencyToOtherCurrencies(_ textField: UITextField) {
+    func convertActiveTextFieldCurrencyToOtherCurrencies(_ textField: UITextField) {
         let fetchRequest: NSFetchRequest<CurrencySavedData> = CurrencySavedData.fetchRequest()
         let baseCurrencySumToConvert: Double
         guard let activeCell = textField.superview as? MainTableViewCell,
@@ -119,15 +183,35 @@ final class MainViewController: UIViewController {
         
         for cell in cells {
             guard cell != activeCell,
-            let currencyDataObject = currencyDataObjects.first (where: { object in
-                object.quoteCurrency == cell.currencyLabel.text
-            })
+                  let currencyDataObject = currencyDataObjects.first (where: { object in
+                      object.quoteCurrency == cell.currencyLabel.text
+                  })
             else { continue }
             let currencyPriceCoefficient = mainWindowView.selectedButton == mainWindowView.bidButton ? currencyDataObject.bidPrice : currencyDataObject.askPrice
             cell.textField.text = String(format: "%.2f", (baseCurrencySumToConvert * currencyPriceCoefficient))
         }
     }
-        
+    
+    func getFavouriteCurrenciesData() {
+        // if user has ever launched the app, then favouriteCurrencies is retreived from container
+        let userDefaults = UserDefaults.standard
+        if userDefaults.bool(forKey: "isAppAlreadyLauchedOnce") {
+            let fetchRequest: NSFetchRequest<FavouriteCurrency> = FavouriteCurrency.fetchRequest()
+            do {
+                favouriteCurrencies = try context.fetch(fetchRequest)
+            } catch {
+                presentOkActionAlertController(title: "Error occured when trying to read favourite currencies",
+                                               message: error.localizedDescription)
+            }
+        } else {
+            // if he hasn't, then 3 standard currency will be added to favourites
+            userDefaults.set(true, forKey: "isAppAlreadyLauchedOnce")
+            ["USD", "EUR", "PLN"].forEach { currencyCode in
+                saveFavouriteCurrency(currencyCode: currencyCode)
+            }
+        }
+    }
+    
     @objc func textFieldEditingChanged(sender: UITextField) {
         checkMaskForTextField(textField: sender)
         convertActiveTextFieldCurrencyToOtherCurrencies(sender)
@@ -195,22 +279,11 @@ final class MainViewController: UIViewController {
                                                selector: #selector(keyboardNotificationTriggered(notification:)),
                                                name: UIResponder.keyboardWillHideNotification,
                                                object: nil)
-    }
-    
-    private func getFavouriteCurrenciesData() {
-        let userDefaults = UserDefaults.standard
-        if userDefaults.bool(forKey: "isAppAlreadyLauchedOnce") {
-            let fetchRequest: NSFetchRequest<FavouriteCurrency> = FavouriteCurrency.fetchRequest()
-            do {
-                favouriteCurrencies = try context.fetch(fetchRequest)
-            } catch let error as NSError {
-                print(error.localizedDescription)
-            }
-        } else {
-            userDefaults.set(true, forKey: "isAppAlreadyLauchedOnce")
-            ["USD", "EUR", "PLN"].forEach { currencyCode in
-                saveFavouriteCurrency(currencyCode: currencyCode)
-            }
+        
+        NotificationCenter.default.addObserver(forName: .curreniesDataFetched,
+                                               object: nil,
+                                               queue: nil) { _ in
+            self.updateLastTimeUpdatedLabel()
         }
     }
     
@@ -229,12 +302,13 @@ final class MainViewController: UIViewController {
         }
     }
     
-    func updateLastTimeUpdatedLabel() {
-        let fetchRequest: NSFetchRequest<CurrencySavedData> = CurrencySavedData.fetchRequest()
-        guard let firstCurrency = try? context.fetch(fetchRequest).first?.timeIntervalSinceLastUpdate else { return }
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd MMM yyyy h:mm a"
-        lastTimeUpdatedLabel.text = dateFormatter.string(from: Date(timeIntervalSince1970: firstCurrency))
+    private func presentOkActionAlertController(title: String?, message: String?) {
+        let alertController = UIAlertController(title: title,
+                                                message: message,
+                                                preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "Ok", style: .cancel)
+        alertController.addAction(okAction)
+        present(alertController, animated: true)
     }
     
     // MARK: Navigation
@@ -243,9 +317,10 @@ final class MainViewController: UIViewController {
         let destinationNavController = segue.destination as? UINavigationController
         let destinationVC = destinationNavController?.topViewController as? AddCurrencyTableVC
         
+        // favourite currencies will not exist in AddCurrencyTableVC
         for currencyObject in favouriteCurrencies {
             guard let currencyCode = currencyObject.currencyCode,
-                 let currencyToBeRemoved = Currency(currencyCode: currencyCode) else { continue }
+                  let currencyToBeRemoved = Currency(currencyCode: currencyCode) else { continue }
             destinationVC?.currenciesSet.remove(currencyToBeRemoved)
         }
         
@@ -273,7 +348,6 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
         cell.currencyLabel.text = favouriteCurrencies[indexPath.row].currencyCode
         cell.textField.delegate = self
         cell.textField.addTarget(self, action: #selector(textFieldEditingChanged(sender:)), for: .editingChanged)
-        cells.append(cell)
         return cell
     }
     
@@ -281,6 +355,7 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
         let currencyObject = favouriteCurrencies.remove(at: sourceIndexPath.row)
         favouriteCurrencies.insert(currencyObject, at: destinationIndexPath.row)
         
+        // when rows were moved, then new order will be saved
         var currencyCodes: [String] = []
         for i in favouriteCurrencies {
             guard let currencyCode = i.currencyCode else { continue }
@@ -301,12 +376,7 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
         let deleteAction = UIContextualAction(style: .destructive, title: nil) { _, _, _ in
             let currencyObject = self.favouriteCurrencies[indexPath.row]
             self.context.delete(currencyObject)
-            
-            do {
-                try self.context.save()
-            } catch let error as NSError {
-                print(error.localizedDescription)
-            }
+            try? self.context.save()
             
             self.favouriteCurrencies.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .left)

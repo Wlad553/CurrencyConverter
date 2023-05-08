@@ -74,9 +74,19 @@ struct Currency: Hashable {
         "XPT": "Platinum",
         "ZAR": "South African Rand"
     ]
+    
     // minus 1 since we don't have such a pair like USD/USD
-    // 2 is a test value
-    static let availableCurrencyPairsCount = 2 /*availableCurrenciesDict.keys.count - 1*/
+    static let availableCurrencyPairsCount = availableCurrenciesDict.keys.count - 1
+    
+    static var availableCurrencyPairs: String {
+        var string = ""
+        for currencyCode in Currency.availableCurrenciesDict.keys {
+            guard currencyCode != "USD" else { continue }
+            string.append("USD\(currencyCode),")
+        }
+        string.removeLast()
+        return string
+    }
     
     static var availableCurrenciesSet: Set<Currency> {
         var set: Set<Currency> = []

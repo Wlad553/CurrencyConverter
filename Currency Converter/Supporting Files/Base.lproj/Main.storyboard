@@ -62,6 +62,9 @@
                                                                 <state key="selected">
                                                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 </state>
+                                                                <connections>
+                                                                    <action selector="bidAskButtonUIUpdateActionWithSender:" destination="jy0-Pl-SKQ" eventType="touchUpInside" id="dj3-Nq-99o"/>
+                                                                </connections>
                                                             </button>
                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XWR-mh-efT">
                                                                 <rect key="frame" x="186.66666666666663" y="0.0" width="142.33333333333337" height="44"/>
@@ -95,6 +98,9 @@
                                                         <state key="normal">
                                                             <imageReference key="backgroundImage" image="square.and.arrow.up" catalog="system" symbolScale="large"/>
                                                         </state>
+                                                        <connections>
+                                                            <action selector="shareButtonTappedWithSender:" destination="BYZ-38-t0r" eventType="touchUpInside" id="u1b-B7-KfM"/>
+                                                        </connections>
                                                     </button>
                                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" estimatedSectionHeaderHeight="-1" sectionFooterHeight="28" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="41h-pd-2S8">
                                                         <rect key="frame" x="0.0" y="76" width="361" height="237"/>
@@ -124,7 +130,7 @@
                                                             <imageReference key="image" image="plus.circle.fill" catalog="system" symbolScale="small"/>
                                                         </state>
                                                         <connections>
-                                                            <segue destination="zr8-dh-lc3" kind="show" id="Bnz-F6-Q8f"/>
+                                                            <segue destination="zr8-dh-lc3" kind="show" id="I2a-FH-Wxm"/>
                                                         </connections>
                                                     </button>
                                                 </subviews>
