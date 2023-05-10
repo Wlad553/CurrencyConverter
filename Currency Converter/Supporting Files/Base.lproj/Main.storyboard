@@ -62,9 +62,6 @@
                                                                 <state key="selected">
                                                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 </state>
-                                                                <connections>
-                                                                    <action selector="bidAskButtonUIUpdateActionWithSender:" destination="jy0-Pl-SKQ" eventType="touchUpInside" id="dj3-Nq-99o"/>
-                                                                </connections>
                                                             </button>
                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XWR-mh-efT">
                                                                 <rect key="frame" x="186.66666666666663" y="0.0" width="142.33333333333337" height="44"/>
@@ -76,9 +73,6 @@
                                                                 <state key="disabled">
                                                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 </state>
-                                                                <connections>
-                                                                    <action selector="bidAskButtonUIUpdateActionWithSender:" destination="jy0-Pl-SKQ" eventType="touchUpInside" id="7J6-Tz-COQ"/>
-                                                                </connections>
                                                             </button>
                                                         </subviews>
                                                         <constraints>
@@ -240,7 +234,7 @@
         <!--Currency-->
         <scene sceneID="aUp-rg-q4x">
             <objects>
-                <tableViewController id="Zk4-Ah-Fli" customClass="AddCurrencyTableVC" customModule="Currency_Converter" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="Zk4-Ah-Fli" customClass="AddCurrencyTableViewController" customModule="Currency_Converter" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" estimatedSectionHeaderHeight="-1" sectionFooterHeight="18" estimatedSectionFooterHeight="-1" id="p8g-Vr-TrG">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

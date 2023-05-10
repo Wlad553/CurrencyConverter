@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		F504FB1929F2C77E00E58C11 /* MainTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F504FB1829F2C77E00E58C11 /* MainTableViewCell.swift */; };
 		F54A7BF12A0937020017E5B5 /* Extesions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54A7BF02A0937020017E5B5 /* Extesions.swift */; };
-		F54C0DB629F67AC500E2D1E9 /* AddCurrencyTableVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54C0DB529F67AC500E2D1E9 /* AddCurrencyTableVC.swift */; };
+		F54C0DB629F67AC500E2D1E9 /* AddCurrencyTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54C0DB529F67AC500E2D1E9 /* AddCurrencyTableViewController.swift */; };
 		F54C0DB829F6C69400E2D1E9 /* Currency.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54C0DB729F6C69400E2D1E9 /* Currency.swift */; };
 		F552E75B29F3FD5B00F652E7 /* Lato-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F552E75129F3FD5B00F652E7 /* Lato-Light.ttf */; };
 		F552E75E29F3FD5B00F652E7 /* Lato-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F552E75429F3FD5B00F652E7 /* Lato-Bold.ttf */; };
@@ -27,18 +27,20 @@
 		F5AE85A729F0209900A1B4E0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F5AE85A529F0209900A1B4E0 /* LaunchScreen.storyboard */; };
 		F5AE85AF29F020D400A1B4E0 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = F5AE85AE29F020D400A1B4E0 /* .gitignore */; };
 		F5AE85B729F0412F00A1B4E0 /* EllipseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5AE85B629F0412F00A1B4E0 /* EllipseView.swift */; };
+		F5F92A302A0ABD8F004C096F /* SearchControllerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5F92A2F2A0ABD8F004C096F /* SearchControllerManager.swift */; };
+		F5F92A322A0BF8BB004C096F /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5F92A312A0BF8BB004C096F /* CoreDataManager.swift */; };
 		F5FD0A6A29FCFD670071BA4D /* CurrencyConverter.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F5FD0A6829FCFD670071BA4D /* CurrencyConverter.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		F504FB1829F2C77E00E58C11 /* MainTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTableViewCell.swift; sourceTree = "<group>"; };
 		F54A7BF02A0937020017E5B5 /* Extesions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extesions.swift; sourceTree = "<group>"; };
-		F54C0DB529F67AC500E2D1E9 /* AddCurrencyTableVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCurrencyTableVC.swift; sourceTree = "<group>"; };
+		F54C0DB529F67AC500E2D1E9 /* AddCurrencyTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCurrencyTableViewController.swift; sourceTree = "<group>"; };
 		F54C0DB729F6C69400E2D1E9 /* Currency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Currency.swift; sourceTree = "<group>"; };
-		F552E75129F3FD5B00F652E7 /* Lato-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Lato-Light.ttf"; path = "Fonts/Lato-Light.ttf"; sourceTree = "<group>"; };
-		F552E75429F3FD5B00F652E7 /* Lato-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Lato-Bold.ttf"; path = "Fonts/Lato-Bold.ttf"; sourceTree = "<group>"; };
-		F552E75629F3FD5B00F652E7 /* Lato-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Lato-Black.ttf"; path = "Fonts/Lato-Black.ttf"; sourceTree = "<group>"; };
-		F552E76529F42D9D00F652E7 /* Lato-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Lato-Regular.ttf"; path = "Fonts/Lato-Regular.ttf"; sourceTree = "<group>"; };
+		F552E75129F3FD5B00F652E7 /* Lato-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Light.ttf"; sourceTree = "<group>"; };
+		F552E75429F3FD5B00F652E7 /* Lato-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Bold.ttf"; sourceTree = "<group>"; };
+		F552E75629F3FD5B00F652E7 /* Lato-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Black.ttf"; sourceTree = "<group>"; };
+		F552E76529F42D9D00F652E7 /* Lato-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Regular.ttf"; sourceTree = "<group>"; };
 		F5A370AB29F13D790066BFBD /* MainWindowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainWindowView.swift; sourceTree = "<group>"; };
 		F5ADFA4A29F96249004C539D /* CurrenciesData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrenciesData.swift; sourceTree = "<group>"; };
 		F5ADFA4C29F96C2A004C539D /* CurrenciesDataNetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrenciesDataNetworkManager.swift; sourceTree = "<group>"; };
@@ -53,6 +55,8 @@
 		F5AE85A829F0209900A1B4E0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F5AE85AE29F020D400A1B4E0 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		F5AE85B629F0412F00A1B4E0 /* EllipseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EllipseView.swift; sourceTree = "<group>"; };
+		F5F92A2F2A0ABD8F004C096F /* SearchControllerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchControllerManager.swift; sourceTree = "<group>"; };
+		F5F92A312A0BF8BB004C096F /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
 		F5FD0A6929FCFD670071BA4D /* CurrencyConverter.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CurrencyConverter.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -71,10 +75,6 @@
 			isa = PBXGroup;
 			children = (
 				F5F0ABE329F42F9A00EA6ED4 /* Fonts */,
-				F552E75629F3FD5B00F652E7 /* Lato-Black.ttf */,
-				F552E75429F3FD5B00F652E7 /* Lato-Bold.ttf */,
-				F552E75129F3FD5B00F652E7 /* Lato-Light.ttf */,
-				F552E76529F42D9D00F652E7 /* Lato-Regular.ttf */,
 				F5AE85A329F0209900A1B4E0 /* Assets.xcassets */,
 			);
 			path = Resources;
@@ -117,6 +117,8 @@
 				F54C0DB729F6C69400E2D1E9 /* Currency.swift */,
 				F5ADFA4A29F96249004C539D /* CurrenciesData.swift */,
 				F5ADFA4C29F96C2A004C539D /* CurrenciesDataNetworkManager.swift */,
+				F5F92A312A0BF8BB004C096F /* CoreDataManager.swift */,
+				F5F92A2F2A0ABD8F004C096F /* SearchControllerManager.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -135,7 +137,7 @@
 			isa = PBXGroup;
 			children = (
 				F5AE859E29F0209800A1B4E0 /* MainViewController.swift */,
-				F54C0DB529F67AC500E2D1E9 /* AddCurrencyTableVC.swift */,
+				F54C0DB529F67AC500E2D1E9 /* AddCurrencyTableViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -156,6 +158,10 @@
 		F5F0ABE329F42F9A00EA6ED4 /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
+				F552E75629F3FD5B00F652E7 /* Lato-Black.ttf */,
+				F552E75429F3FD5B00F652E7 /* Lato-Bold.ttf */,
+				F552E75129F3FD5B00F652E7 /* Lato-Light.ttf */,
+				F552E76529F42D9D00F652E7 /* Lato-Regular.ttf */,
 			);
 			path = Fonts;
 			sourceTree = "<group>";
@@ -239,11 +245,13 @@
 				F5ADFA4B29F96249004C539D /* CurrenciesData.swift in Sources */,
 				F5ADFA4F29F96C8B004C539D /* Constants.swift in Sources */,
 				F5AE859F29F0209800A1B4E0 /* MainViewController.swift in Sources */,
+				F5F92A322A0BF8BB004C096F /* CoreDataManager.swift in Sources */,
+				F5F92A302A0ABD8F004C096F /* SearchControllerManager.swift in Sources */,
 				F54A7BF12A0937020017E5B5 /* Extesions.swift in Sources */,
 				F5AE859B29F0209800A1B4E0 /* AppDelegate.swift in Sources */,
 				F5AE85B729F0412F00A1B4E0 /* EllipseView.swift in Sources */,
 				F5FD0A6A29FCFD670071BA4D /* CurrencyConverter.xcdatamodeld in Sources */,
-				F54C0DB629F67AC500E2D1E9 /* AddCurrencyTableVC.swift in Sources */,
+				F54C0DB629F67AC500E2D1E9 /* AddCurrencyTableViewController.swift in Sources */,
 				F5ADFA4D29F96C2A004C539D /* CurrenciesDataNetworkManager.swift in Sources */,
 				F5A370AC29F13D790066BFBD /* MainWindowView.swift in Sources */,
 				F504FB1929F2C77E00E58C11 /* MainTableViewCell.swift in Sources */,

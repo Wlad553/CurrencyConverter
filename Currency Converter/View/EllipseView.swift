@@ -1,5 +1,5 @@
 //
-//  OvalView.swift
+//  EllipseView.swift
 //  Currency Converter
 //
 //  Created by Vladyslav Petrenko on 19/04/2023.
@@ -26,13 +26,13 @@ final class EllipseView: UIView {
         super.init(frame: frame)
         bottomSublayer = layoutEllipseShapeLayer(
             path: bottomSublayersPath,
-            color: CGColor(red: 10/255, green: 95/255, blue: 255/255, alpha: 1))
+            color: UIColor.bottomEllipseLayer.cgColor)
         middleSublayer = layoutEllipseShapeLayer(
             path: middleSublayersPath,
-            color: CGColor(red: 24/255, green: 110/255, blue: 247/255, alpha: 1))
+            color: UIColor.middleEllipseLayer.cgColor)
         topSublayer = layoutEllipseShapeLayer(
             path: topSublayersPath,
-            color: CGColor(red: 41/255, green: 126/255, blue: 255/255, alpha: 1))
+            color: UIColor.topEllipseLayer.cgColor)
         [bottomSublayer, middleSublayer, topSublayer].forEach { shapeLayer in
             layer.addSublayer(shapeLayer)
         }

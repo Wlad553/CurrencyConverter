@@ -1,5 +1,5 @@
 //
-//  MainView.swift
+//  MainWindowView.swift
 //  Currency Converter
 //
 //  Created by Vladyslav Petrenko on 20/04/2023.
@@ -37,7 +37,7 @@ final class MainWindowView: UIView {
         bidButton.isEnabled = false
         selectedButton = bidButton
         
-        bidButton.layer.backgroundColor = CGColor(red: 10/255, green: 95/255, blue: 255/255, alpha: 1)
+        bidButton.layer.backgroundColor = UIColor.blueButton.cgColor
         askButton.layer.backgroundColor = UIColor.white.cgColor
         [askButton, bidButton].forEach { button in
             guard let button = button else { return }
@@ -60,10 +60,10 @@ final class MainWindowView: UIView {
         layer.shadowPath = CGPath(rect: CGRect(x: 5, y: 20, width: bounds.width - 10, height: bounds.height - 15), transform: nil)
     }
     
-    @IBAction func bidAskButtonUIUpdateAction(sender: UIButton) {
+    func buttonsUIUpdateAction(sender: UIButton) {
         selectedButton = sender
         UIView.animate(withDuration: 0.2) {
-            sender.layer.backgroundColor = CGColor(red: 10/255, green: 95/255, blue: 255/255, alpha: 1)
+            sender.layer.backgroundColor = UIColor.blueButton.cgColor
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             // disable a button in the middle of animation duration so that the color smoothly changed from black to white

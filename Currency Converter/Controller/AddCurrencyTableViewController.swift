@@ -1,5 +1,5 @@
 //
-//  AddCurrencyViewController.swift
+//  AddCurrencyTableViewController.swift
 //  Currency Converter
 //
 //  Created by Vladyslav Petrenko on 22/04/2023.
@@ -7,8 +7,9 @@
 
 import UIKit
 
-final class AddCurrencyTableVC: UITableViewController {
+final class AddCurrencyTableViewController: UITableViewController {
     let searchController = UISearchController()
+    let searchControllerManager = SearchControllerManager()
     let noSearchResultsLabel = UILabel()
     let noSearchResultsStackView = UIStackView()
     var stackViewYAnchorConstraint: NSLayoutConstraint!
@@ -34,58 +35,13 @@ final class AddCurrencyTableVC: UITableViewController {
         }
         return alphabeticallySorted2DArray
     }
-        
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpSearchController()
         setUpNoSearchResultsStackView()
         addNotificationCenterObservers()
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(barAction(sender:)))
-    }
-    
-    // MARK: UITableViewDataSource
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        if let searchText = searchController.searchBar.text, !searchText.isEmpty {
-            return 1
-        }
-            return sortedCurrencies2DArray.count
-    }
-    
-    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        guard let searchText = searchController.searchBar.text, !searchText.isEmpty else {
-            return sortedCurrencies2DArray[section].first?.currencyCode.first?.uppercased()
-        }
-        if !searchResultCurrencies.isEmpty {
-            return "Top results"
-        }
-            return nil
-    }
-    
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let searchText = searchController.searchBar.text, !searchText.isEmpty {
-            return searchResultCurrencies.count
-        }
-        return sortedCurrencies2DArray[section].count
-    }
-    
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "addCurrencyCell", for: indexPath)
-        var currency: Currency
-        if let searchText = searchController.searchBar.text, !searchText.isEmpty {
-            currency = searchResultCurrencies[indexPath.row]
-        } else {
-            currency = sortedCurrencies2DArray[indexPath.section][indexPath.row]
-        }
-        var content = cell.defaultContentConfiguration()
-        
-        content.text = "\(currency.currencyCode) - \(currency.fullCurrencyName)"
-        cell.contentConfiguration = content
-        return cell
-    }
-    
-    // MARK: UITableViewDelegate
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: "goBack", sender: indexPath)
     }
     
     // MARK: Navigation
@@ -100,7 +56,8 @@ final class AddCurrencyTableVC: UITableViewController {
         } else {
             currencyToAdd = sortedCurrencies2DArray[senderIndexPath.section][senderIndexPath.row]
         }
-        destinationVC.saveFavouriteCurrency(currencyCode: currencyToAdd.currencyCode)
+        try? destinationVC.coreDataManager.saveFavouriteCurrency(currencyCode: currencyToAdd.currencyCode)
+        destinationVC.getFavouriteCurrencies()
     }
     
     @objc func barAction(sender: UIBarButtonItem) {
@@ -182,8 +139,57 @@ final class AddCurrencyTableVC: UITableViewController {
     }
 }
 
+// MARK: UITableViewDataSource
+extension AddCurrencyTableViewController {
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        if let searchText = searchController.searchBar.text, !searchText.isEmpty {
+            return 1
+        }
+        return sortedCurrencies2DArray.count
+    }
+    
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        guard let searchText = searchController.searchBar.text, !searchText.isEmpty else {
+            return sortedCurrencies2DArray[section].first?.currencyCode.first?.uppercased()
+        }
+        if !searchResultCurrencies.isEmpty {
+            return "Top results"
+        }
+        return nil
+    }
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if let searchText = searchController.searchBar.text, !searchText.isEmpty {
+            return searchResultCurrencies.count
+        }
+        return sortedCurrencies2DArray[section].count
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "addCurrencyCell", for: indexPath)
+        var currency: Currency
+        if let searchText = searchController.searchBar.text, !searchText.isEmpty {
+            currency = searchResultCurrencies[indexPath.row]
+        } else {
+            currency = sortedCurrencies2DArray[indexPath.section][indexPath.row]
+        }
+        var content = cell.defaultContentConfiguration()
+        
+        content.text = "\(currency.currencyCode) - \(currency.fullCurrencyName)"
+        cell.contentConfiguration = content
+        return cell
+    }
+}
+    
+    // MARK: UITableViewDelegate
+extension AddCurrencyTableViewController {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        performSegue(withIdentifier: "goBack", sender: indexPath)
+    }
+}
+
 // MARK: UIScrollViewDelegate
-extension AddCurrencyTableVC {
+extension AddCurrencyTableViewController {
     override func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         if searchController.searchBar.searchTextField.isFirstResponder {
             searchController.searchBar.searchTextField.resignFirstResponder()
@@ -192,7 +198,7 @@ extension AddCurrencyTableVC {
 }
 
 // MARK: UISearchResultsUpdating
-extension AddCurrencyTableVC: UISearchResultsUpdating {
+extension AddCurrencyTableViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         guard let searchText = searchController.searchBar.text,
               !searchText.isEmpty
@@ -202,7 +208,7 @@ extension AddCurrencyTableVC: UISearchResultsUpdating {
             return
         }
         
-        filterResultsWith(searchText)
+        searchResultCurrencies = searchControllerManager.filteredResultsWith(searchText, setToFilter: currenciesSet)
 
         if searchResultCurrencies.isEmpty {
             noSearchResultsStackView.isHidden = false
@@ -211,43 +217,5 @@ extension AddCurrencyTableVC: UISearchResultsUpdating {
             noSearchResultsStackView.isHidden = true
         }
         tableView.reloadData()
-    }
-    
-    private func filterResultsWith(_ searchText: String) {
-        var alphanumericsSearchText = searchText
-        alphanumericsSearchText.removeAll { character in
-            let alphanumericsAndWhitespaceCharacterSet = CharacterSet.alphanumerics.union(CharacterSet(charactersIn: " "))
-            return alphanumericsAndWhitespaceCharacterSet.isDisjoint(with: CharacterSet(charactersIn: "\(character)"))
-        }
-        
-        if alphanumericsSearchText.isEmpty {
-            searchResultCurrencies.removeAll()
-            return
-        }
-        
-        var searchWordsToCheck = alphanumericsSearchText.lowercased().components(separatedBy: " ")
-        searchWordsToCheck.removeAll { string in
-            string.isEmpty
-        }
-        searchResultCurrencies = currenciesSet.filter({ currency in
-            let currencyNameAndCodeWords = [currency.currencyCode.lowercased()] + currency.fullCurrencyName.lowercased().components(separatedBy: " ")
-            var matchesCount = 0
-            for searchWord in searchWordsToCheck {
-                for currencyString in currencyNameAndCodeWords {
-                    if currencyString.hasPrefix(searchWord) {
-                        matchesCount += 1
-                        break
-                    }
-                }
-            }
-            if matchesCount == searchWordsToCheck.count {
-                return true
-            }
-            return false
-        })
-        
-        searchResultCurrencies.sort {
-            return $0.currencyCode < $1.currencyCode
-        }
     }
 }

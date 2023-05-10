@@ -11,6 +11,8 @@ import BackgroundTasks
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
+    let mainViewController = MainViewController()
+
     var appLastOpenedDate: Date?
         
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -26,7 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             CurrenciesDataNetworkManager.urlSession.invalidateAndCancel()
         }
         
-        CurrenciesDataNetworkManager.shared.fetchCurrencyData { _ in
+        mainViewController.currencyDataNetworkManager.fetchCurrencyData { _ in
             NotificationCenter.default.post(name: .curreniesDataFetched, object: self)
             task.setTaskCompleted(success: true)
         }
@@ -48,6 +50,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         currencyDataFetchTask.requiresNetworkConnectivity = true
         // earliest update time in background is every hour e.g. at 7:00, 8:00 etc.
         currencyDataFetchTask.earliestBeginDate = Date(timeIntervalSinceNow: delayForBeginDate + 60 * 60 - Double(calendarCurrentComponents.minute!) * 60)
+//        currencyDataFetchTask.earliestBeginDate = Date().addingTimeInterval(2)
         do {
           try BGTaskScheduler.shared.submit(currencyDataFetchTask)
         } catch let error as NSError {
@@ -113,6 +116,5 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
     }
-
 }
 

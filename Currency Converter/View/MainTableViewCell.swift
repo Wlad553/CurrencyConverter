@@ -27,13 +27,14 @@ final class MainTableViewCell: UITableViewCell {
     
     private func setUpLeftSideOfView() {
         currencyLabel.font = UIFont(name: "Lato-Regular", size: 17)
-        currencyLabel.textColor = UIColor(red: 1/255, green: 35/255, blue: 83/255, alpha: 1)
+        currencyLabel.textColor = UIColor.currencyLabel
         chevronImageView.tintColor = currencyLabel.textColor
         
         stackView.addArrangedSubview(currencyLabel)
         stackView.addArrangedSubview(chevronImageView)
         
-        stackView.spacing = 8
+        stackView.spacing = 3
+        stackView.distribution = .fill
         
         stackView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(stackView)
@@ -41,20 +42,21 @@ final class MainTableViewCell: UITableViewCell {
         stackViewLeadingConstraint = stackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 32)
         NSLayoutConstraint.activate([
             stackView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            stackView.widthAnchor.constraint(equalToConstant: 60),
             stackViewLeadingConstraint,
         ])
     }
     
     private func setUpTextField() {
-        textField.textColor = UIColor(red: 69/255, green: 69/255, blue: 69/255, alpha: 1)
-        textField.backgroundColor = UIColor(red: 240/255, green: 241/255, blue: 245/255, alpha: 1)
+        textField.textColor = UIColor.inactiveText
+        textField.backgroundColor = UIColor.textFieldBackground
         
         textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 8, height: textField.frame.size.height))
         textField.leftViewMode = .always
         textField.rightView = UIView(frame: CGRect(x: 0, y: 0, width: 8, height: textField.frame.size.height))
         textField.rightViewMode = .always
         
-        textField.layer.borderColor = CGColor(red: 0/255, green: 122/255, blue: 255/255, alpha: 1)
+        textField.layer.borderColor = UIColor.activeTextFieldBorder.cgColor
         textField.layer.cornerRadius = 5
         
         textField.borderStyle = .none

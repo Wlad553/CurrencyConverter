@@ -7,6 +7,10 @@
 
 import Foundation
 
+enum CurrencyError: Error {
+    case nonExistingCurrency
+}
+
 struct Currency: Hashable {
     let currencyCode: String
     var fullCurrencyName: String {
