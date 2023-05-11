@@ -7,7 +7,7 @@
 
 import Foundation
 
-class SearchControllerManager {
+final class SearchControllerManager {
     func filteredResultsWith(_ searchText: String, setToFilter: Set<Currency>) -> [Currency] {
         var searchResult: [Currency] = []
         var alphanumericsSearchText = searchText

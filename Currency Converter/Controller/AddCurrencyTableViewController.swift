@@ -56,7 +56,7 @@ final class AddCurrencyTableViewController: UITableViewController {
         } else {
             currencyToAdd = sortedCurrencies2DArray[senderIndexPath.section][senderIndexPath.row]
         }
-        try? destinationVC.coreDataManager.saveFavouriteCurrency(currencyCode: currencyToAdd.currencyCode)
+        try? destinationVC.coreDataManager.saveFavouriteCurrency(withCode: currencyToAdd.currencyCode)
         destinationVC.getFavouriteCurrencies()
     }
     

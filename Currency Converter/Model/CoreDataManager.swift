@@ -11,9 +11,10 @@ import UIKit
 enum CoreDataError: Error {
     case nonExistingEntity
     case objectsFetchingError
+    case objectsSaving
 }
 
-class CoreDataManager {
+final class CoreDataManager {
     lazy var context: NSManagedObjectContext = {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         return appDelegate.persistentContainer.viewContext
@@ -40,15 +41,17 @@ class CoreDataManager {
         }
     }
     
-    func save(currencyRatesData: [CurrencyParsedData]) {
+    func save(currencyRatesData: [CurrencyParsedData]) throws {
         guard let entity = NSEntityDescription.entity(forEntityName: "CurrencyData", in: context) else { return }
-        for singleCurrencyData in currencyRatesData {
+        for singleRateData in currencyRatesData {
             let currencyDataObject = CurrencySavedData(entity: entity, insertInto: context)
-            currencyDataObject.quoteCurrency = singleCurrencyData.quoteCurrency.currencyCode
-            currencyDataObject.bidPrice = singleCurrencyData.bidPrice
-            currencyDataObject.askPrice = singleCurrencyData.askPrice
+            currencyDataObject.quoteCurrency = singleRateData.quoteCurrency.currencyCode
+            currencyDataObject.bidPrice = singleRateData.bidPrice
+            currencyDataObject.askPrice = singleRateData.askPrice
             currencyDataObject.timeIntervalSinceLastUpdate = Date().timeIntervalSince1970
         }
+        
+        try context.save()
     }
     
     func deleteObjects<T: NSManagedObject>(from request: NSFetchRequest<T>) where T: NSFetchRequestResult {
@@ -58,7 +61,7 @@ class CoreDataManager {
         }
     }
     
-    func saveFavouriteCurrency(currencyCode: String) throws {
+    func saveFavouriteCurrency(withCode currencyCode: String) throws {
         guard let entity = NSEntityDescription.entity(forEntityName: "FavouriteCurrency", in: context) else {
             throw CoreDataError.nonExistingEntity
         }
@@ -78,7 +81,7 @@ class CoreDataManager {
         if !userDefaults.bool(forKey: "isAppAlreadyLauchedOnce") {
             userDefaults.set(true, forKey: "isAppAlreadyLauchedOnce")
             ["USD", "EUR", "PLN"].forEach { currencyCode in
-                try? saveFavouriteCurrency(currencyCode: currencyCode)
+                try? saveFavouriteCurrency(withCode: currencyCode)
             }
         }
         return try context.fetch(fetchRequest)

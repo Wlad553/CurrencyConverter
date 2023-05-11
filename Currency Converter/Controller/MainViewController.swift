@@ -304,7 +304,7 @@ extension MainViewController: UITableViewDataSource {
         favouriteCurrencies.removeAll()
         for currencyCode in currencyCodes {
             do {
-                try coreDataManager.saveFavouriteCurrency(currencyCode: currencyCode)
+                try coreDataManager.saveFavouriteCurrency(withCode: currencyCode)
             } catch {
                 presentOkActionAlertController(title: "Unable to add \(currencyCode) to favourites",
                                                message: error.localizedDescription)

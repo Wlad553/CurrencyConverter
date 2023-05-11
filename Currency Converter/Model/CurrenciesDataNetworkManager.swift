@@ -11,7 +11,6 @@ enum CurrencyAPIError: Error {
     case network
     case parsing
     case request
-    case dataSaving
 }
 
 protocol CurrenciesDataNetworkManagerProtocol {
@@ -58,14 +57,13 @@ final class CurrenciesDataNetworkManager: CurrenciesDataNetworkManagerProtocol {
                     // In other case we delete all objects from container and add new ones
                 } else {
                     coreDataManager.deleteObjects(from: coreDataManager.currencySavedDataFetchRequest)
-                    coreDataManager.save(currencyRatesData: currencyParsedData)
+                    do {
+                        try coreDataManager.save(currencyRatesData: currencyParsedData)
+                    } catch {
+                        throw CoreDataError.objectsSaving
+                    }
                 }
                 
-                do {
-                    try coreDataManager.context.save()
-                } catch {
-                    throw CurrencyAPIError.dataSaving
-                }
                 DispatchQueue.main.async {
                     completionHandler(nil)
                 }
@@ -122,7 +120,7 @@ final class CurrenciesDataNetworkManager: CurrenciesDataNetworkManagerProtocol {
             switch error {
             case CurrencyAPIError.parsing:
                 errorMessage = "Unable to process data"
-            case CurrencyAPIError.dataSaving:
+            case CoreDataError.objectsSaving:
                 errorMessage = "Unable to save rates"
             case CurrencyAPIError.network:
                 errorTitle = "Unable to get latest rates"
