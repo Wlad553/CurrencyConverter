@@ -23,9 +23,8 @@ final class AddCurrencyTableViewController: UITableViewController {
         var alphabeticallySorted2DArray: [[Currency]] = [[]]
         var section = 0
         for currency in alphabeticallySortedCurrenciesArray {
-            if alphabeticallySorted2DArray[section].isEmpty {
-                alphabeticallySorted2DArray[section].append(currency)
-            } else if  alphabeticallySorted2DArray[section].first?.currencyCode.first == currency.currencyCode.first {
+            if alphabeticallySorted2DArray[section].isEmpty ||
+                alphabeticallySorted2DArray[section].first?.currencyCode.first == currency.currencyCode.first {
                 alphabeticallySorted2DArray[section].append(currency)
             } else {
                 section += 1

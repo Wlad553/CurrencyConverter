@@ -12,7 +12,8 @@ import BackgroundTasks
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     let mainViewController = MainViewController()
-
+    
+    var backgroundProcessingTask: BGProcessingTask?
     var appLastOpenedDate: Date?
         
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -23,15 +24,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func handleAppRefreshTask(task: BGProcessingTask) {
+        backgroundProcessingTask = task
+        let backgroundURLSession = URLSession(configuration: .background(withIdentifier: "com.vladylslavpetrenko.backgroundDataFetch"),
+                                              delegate: self,
+                                              delegateQueue: .main)
         task.expirationHandler = {
             task.setTaskCompleted(success: false)
-            CurrenciesDataNetworkManager.urlSession.invalidateAndCancel()
+            backgroundURLSession.invalidateAndCancel()
         }
         
-        mainViewController.currencyDataNetworkManager.fetchCurrencyData { _ in
-            NotificationCenter.default.post(name: .curreniesDataFetched, object: self)
-            task.setTaskCompleted(success: true)
-        }
+        mainViewController.currencyDataNetworkManager.fetchCurrencyData(urlSession: backgroundURLSession)
         
         guard let appLastOpenedDate = appLastOpenedDate else { return }
         
@@ -50,7 +52,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         currencyDataFetchTask.requiresNetworkConnectivity = true
         // earliest update time in background is every hour e.g. at 7:00, 8:00 etc.
         currencyDataFetchTask.earliestBeginDate = Date(timeIntervalSinceNow: delayForBeginDate + 60 * 60 - Double(calendarCurrentComponents.minute!) * 60)
-//        currencyDataFetchTask.earliestBeginDate = Date().addingTimeInterval(2)
         do {
           try BGTaskScheduler.shared.submit(currencyDataFetchTask)
         } catch let error as NSError {
@@ -118,3 +119,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 }
 
+
+// MARK: URLSessionDelegate
+extension AppDelegate: URLSessionDelegate {
+    func urlSessionDidFinishEvents(forBackgroundURLSession session: URLSession) {
+        session.finishTasksAndInvalidate()
+    }
+}
+
+// MARK: URLSessionDataDelegate
+extension AppDelegate: URLSessionDataDelegate {
+    func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
+        guard let currencyParsedData = try? mainViewController.currencyDataNetworkManager.parseJSON(withData: data) else { return }
+
+        try? mainViewController.currencyDataNetworkManager.updateCurrencySavedDataObjects(with: currencyParsedData)
+
+        NotificationCenter.default.post(name: .curreniesDataFetched, object: self)
+        guard let backgroundProcessingTask = backgroundProcessingTask else { return }
+        backgroundProcessingTask.setTaskCompleted(success: true)
+    }
+}

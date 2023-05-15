@@ -15,7 +15,7 @@ enum CurrencyAPIError: Error {
 
 protocol CurrenciesDataNetworkManagerProtocol {
     static var urlSession: URLSession { get }
-    func fetchCurrencyData( urlSession: URLSession, completionHandler: @escaping (Error?) -> Void)
+    func fetchCurrencyData(urlSession: URLSession, completionHandler: @escaping (Error?) -> Void)
     func parseJSON(withData data: Data) throws -> [CurrencyParsedData]?
     func fetchDataIfNeeded(completionHandler: @escaping (_ errorTitle: String?, _ errorMessage: String?) -> Void)
 }
@@ -26,8 +26,8 @@ final class CurrenciesDataNetworkManager: CurrenciesDataNetworkManagerProtocol {
     private let coreDataManager = CoreDataManager()
     private let urlString = "https://marketdata.tradermade.com/api/v1/live?currency=\(Currency.availableCurrencyPairs)&api_key=\(apiKey)"
     
-    func fetchCurrencyData( urlSession: URLSession = urlSession,
-                            completionHandler: @escaping (Error?) -> Void = { _ in }) {
+    func fetchCurrencyData(urlSession: URLSession = urlSession,
+                           completionHandler: @escaping (Error?) -> Void = { _ in }) {
         guard let url = URL(string: urlString) else { return }
         urlSession.configuration.waitsForConnectivity = true
         urlSession.dataTask(with: url) { [self] data, response, error in
@@ -43,26 +43,8 @@ final class CurrenciesDataNetworkManager: CurrenciesDataNetworkManagerProtocol {
                 else {
                     throw CurrencyAPIError.parsing
                 }
-                guard let currencyDataObjects = try? coreDataManager.context.fetch(coreDataManager.currencySavedDataFetchRequest) else {
-                    throw CoreDataError.objectsFetchingError
-                }
                 
-                // if there are no new currencies after in currencyParsedData, then we just update their properties
-                if currencyDataObjects.count == Currency.availableCurrencyPairsCount &&
-                    currencyDataObjects.allSatisfy({ currency in
-                        guard let quoteCurrency = currency.quoteCurrency else { return false }
-                        return Currency.availableCurrenciesDict.keys.contains(quoteCurrency)
-                    }) {
-                    coreDataManager.updateCurrencySavedDataObjectsInContext(withData: currencyParsedData)
-                    // In other case we delete all objects from container and add new ones
-                } else {
-                    coreDataManager.deleteObjects(from: coreDataManager.currencySavedDataFetchRequest)
-                    do {
-                        try coreDataManager.save(currencyRatesData: currencyParsedData)
-                    } catch {
-                        throw CoreDataError.objectsSaving
-                    }
-                }
+                try updateCurrencySavedDataObjects(with: currencyParsedData)
                 
                 DispatchQueue.main.async {
                     completionHandler(nil)
@@ -73,6 +55,13 @@ final class CurrenciesDataNetworkManager: CurrenciesDataNetworkManagerProtocol {
                 }
             }
         }.resume()
+    }
+    
+    func fetchCurrencyData(urlSession: URLSession) {
+        guard let url = URL(string: urlString) else { return }
+        urlSession.configuration.waitsForConnectivity = true
+        let dataTask = urlSession.dataTask(with: url)
+        dataTask.resume()
     }
     
     func parseJSON(withData data: Data) throws -> [CurrencyParsedData]? {
@@ -109,6 +98,28 @@ final class CurrenciesDataNetworkManager: CurrenciesDataNetworkManagerProtocol {
             return
         }
         completionHandler(nil, nil)
+    }
+    
+    func updateCurrencySavedDataObjects(with currencyParsedData: [CurrencyParsedData]) throws {
+        guard let currencyDataObjects = try? coreDataManager.context.fetch(coreDataManager.currencySavedDataFetchRequest) else {
+            throw CoreDataError.objectsFetchingError
+        }
+
+        if currencyDataObjects.count == Currency.availableCurrencyPairsCount &&
+            currencyDataObjects.allSatisfy({ currency in
+                guard let quoteCurrency = currency.quoteCurrency else { return false }
+                return Currency.availableCurrenciesDict.keys.contains(quoteCurrency)
+            }) {
+            coreDataManager.updateCurrencySavedDataObjectsInContext(withData: currencyParsedData)
+            // In other case we delete all objects from container and add new ones
+        } else {
+            coreDataManager.deleteObjects(from: coreDataManager.currencySavedDataFetchRequest)
+            do {
+                try coreDataManager.save(currencyRatesData: currencyParsedData)
+            } catch {
+                throw CoreDataError.objectsSaving
+            }
+        }
     }
     
     private func getTitleAndMessageFor(error: Error?) -> (title: String?, message: String?) {
