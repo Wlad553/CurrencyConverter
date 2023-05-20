@@ -14,8 +14,8 @@ enum CoreDataError: Error {
     case objectsSaving
 }
 
-final class CoreDataManager {
-    lazy var context: NSManagedObjectContext = {
+open class CoreDataManager {
+    lazy public var appMainContext: NSManagedObjectContext = {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         return appDelegate.persistentContainer.viewContext
     }()
@@ -28,55 +28,43 @@ final class CoreDataManager {
         FavouriteCurrency.fetchRequest()
     }
     
-    func updateCurrencySavedDataObjectsInContext(withData currencyParsedData: [CurrencyParsedData]) {
-        guard let objects = try? context.fetch(currencySavedDataFetchRequest) else { return }
-        for object in objects {
-            let newCurrencyData = currencyParsedData.first { currencyParsedData in
-                currencyParsedData.quoteCurrency.currencyCode == object.quoteCurrency
-            }
-            guard let newCurrencyData = newCurrencyData else { continue }
-            object.askPrice = newCurrencyData.askPrice
-            object.bidPrice = newCurrencyData.bidPrice
-            object.timeIntervalSinceLastUpdate = Date().timeIntervalSince1970
-        }
-    }
+    public init() {}
     
-    func save(currencyRatesData: [CurrencyParsedData]) throws {
-        guard let entity = NSEntityDescription.entity(forEntityName: "CurrencyData", in: context) else { return }
+    func save(currencyRatesData: [CurrencyRatesParsedData]) throws {
+        guard let entity = NSEntityDescription.entity(forEntityName: "CurrencyData", in: appMainContext) else { return }
         for singleRateData in currencyRatesData {
-            let currencyDataObject = CurrencySavedData(entity: entity, insertInto: context)
+            let currencyDataObject = CurrencySavedData(entity: entity, insertInto: appMainContext)
             currencyDataObject.quoteCurrency = singleRateData.quoteCurrency.currencyCode
             currencyDataObject.bidPrice = singleRateData.bidPrice
             currencyDataObject.askPrice = singleRateData.askPrice
             currencyDataObject.timeIntervalSinceLastUpdate = Date().timeIntervalSince1970
         }
         
-        try context.save()
+        try appMainContext.save()
     }
     
     func deleteObjects<T: NSManagedObject>(from request: NSFetchRequest<T>) where T: NSFetchRequestResult {
-        guard let objects = try? context.fetch(request) else { return }
+        guard let objects = try? appMainContext.fetch(request) else { return }
         for object in objects {
-            context.delete(object)
+            appMainContext.delete(object)
         }
     }
     
     func saveFavouriteCurrency(withCode currencyCode: String) throws {
-        guard let entity = NSEntityDescription.entity(forEntityName: "FavouriteCurrency", in: context) else {
+        guard let entity = NSEntityDescription.entity(forEntityName: "FavouriteCurrency", in: appMainContext) else {
             throw CoreDataError.nonExistingEntity
         }
         guard let currency = Currency(currencyCode: currencyCode) else {
             throw CurrencyError.nonExistingCurrency
         }
-        let currencyObject = FavouriteCurrency(entity: entity, insertInto: context)
+        let currencyObject = FavouriteCurrency(entity: entity, insertInto: appMainContext)
         currencyObject.currencyCode = currency.currencyCode
         
-        try context.save()
+        try appMainContext.save()
     }
     
     func getFavouriteCurrencies() throws -> [FavouriteCurrency] {
         let userDefaults = UserDefaults.standard
-        let fetchRequest: NSFetchRequest<FavouriteCurrency> = FavouriteCurrency.fetchRequest()
         // if user has ever launched the app, then favouriteCurrencies is retreived from container if he hasn't, then 3 standard currency will be added to favourites
         if !userDefaults.bool(forKey: "isAppAlreadyLauchedOnce") {
             userDefaults.set(true, forKey: "isAppAlreadyLauchedOnce")
@@ -84,6 +72,44 @@ final class CoreDataManager {
                 try? saveFavouriteCurrency(withCode: currencyCode)
             }
         }
-        return try context.fetch(fetchRequest)
+        return try appMainContext.fetch(favouriteCurrencyFetchRequest)
+    }
+    
+    func addOrUpdateCurrencyRatesSavedDataObjects(with currencyParsedData: [CurrencyRatesParsedData]) throws {
+        guard let currencyRatesDataObjects = try? appMainContext.fetch(currencySavedDataFetchRequest) else {
+            throw CoreDataError.objectsFetchingError
+        }
+        
+        do {
+            if currencyRatesDataObjects.count == Currency.availableCurrencyPairsCount &&
+                currencyRatesDataObjects.allSatisfy({ currency in
+                    guard let quoteCurrency = currency.quoteCurrency else { return false }
+                    return Currency.availableCurrenciesDict.keys.contains(quoteCurrency)
+                }) {
+                try updateCurrencySavedDataObjects(withData: currencyParsedData)
+                // In other case we delete all objects from container and add new ones
+            } else {
+                deleteObjects(from: currencySavedDataFetchRequest)
+                try save(currencyRatesData: currencyParsedData)
+            }
+        } catch {
+            throw CoreDataError.objectsSaving
+        }
+    }
+    
+    private func updateCurrencySavedDataObjects(withData currencyParsedData: [CurrencyRatesParsedData]) throws {
+        guard let objects = try? appMainContext.fetch(currencySavedDataFetchRequest) else { return }
+        let currentTimeIntervalSince1970 = Date().timeIntervalSince1970
+        for object in objects {
+            let newCurrencyData = currencyParsedData.first { currencyParsedData in
+                currencyParsedData.quoteCurrency.currencyCode == object.quoteCurrency
+            }
+            guard let newCurrencyData = newCurrencyData else { continue }
+            object.askPrice = newCurrencyData.askPrice
+            object.bidPrice = newCurrencyData.bidPrice
+            object.timeIntervalSinceLastUpdate = currentTimeIntervalSince1970
+        }
+        
+        try appMainContext.save()
     }
 }

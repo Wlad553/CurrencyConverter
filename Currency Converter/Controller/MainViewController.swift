@@ -15,8 +15,8 @@ final class MainViewController: UIViewController {
     let elipseView = EllipseView()
     let endEditingTapRecognizer = UITapGestureRecognizer()
     let editTableViewPressRecognizer = UILongPressGestureRecognizer()
-    let currencyDataNetworkManager = CurrenciesDataNetworkManager()
     let coreDataManager = CoreDataManager()
+    lazy var networkCurrenciesDataManager = NetworkCurrenciesDataManager(coreDataManager: coreDataManager)
     
     var favouriteCurrencies: [FavouriteCurrency] = []
     var lastActiveTextField: UITextField?
@@ -68,9 +68,9 @@ final class MainViewController: UIViewController {
         // User cannot add more than 4 favourite currencies, if he tries then the currency in the bottom is replaced with new currency
         if favouriteCurrencies.count > 4 {
             favouriteCurrencies.remove(at: favouriteCurrencies.count - 2)
-            guard let objects = try? coreDataManager.context.fetch(coreDataManager.favouriteCurrencyFetchRequest) else { return }
-            coreDataManager.context.delete(objects[objects.count - 2])
-            try? coreDataManager.context.save()
+            guard let objects = try? coreDataManager.appMainContext.fetch(coreDataManager.favouriteCurrencyFetchRequest) else { return }
+            coreDataManager.appMainContext.delete(objects[objects.count - 2])
+            try? coreDataManager.appMainContext.save()
             let newCellIndexPath = [IndexPath(row: favouriteCurrencies.count - 1, section: 0)]
             mainWindowView.tableView.reloadRows(at: newCellIndexPath, with: .fade)
         } else {
@@ -84,7 +84,7 @@ final class MainViewController: UIViewController {
     }
     
     func tryUpdateLastTimeUpdatedLabel() {
-        guard let firstCurrency = try? coreDataManager.context.fetch(coreDataManager.currencySavedDataFetchRequest).first?.timeIntervalSinceLastUpdate else { return }
+        guard let firstCurrency = try? coreDataManager.appMainContext.fetch(coreDataManager.currencySavedDataFetchRequest).first?.timeIntervalSinceLastUpdate else { return }
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd MMM yyyy h:mm a"
         lastTimeUpdatedLabel.text = dateFormatter.string(from: Date(timeIntervalSince1970: firstCurrency))
@@ -120,7 +120,7 @@ final class MainViewController: UIViewController {
     func convertActiveTextFieldCurrencyToOtherCurrencies(_ textField: UITextField) {
         let baseCurrencySumToConvert: Double
         guard let activeCell = textField.superview as? MainTableViewCell,
-              let currencyDataObjects = try? coreDataManager.context.fetch(coreDataManager.currencySavedDataFetchRequest),
+              let currencyRatesDataObjects = try? coreDataManager.appMainContext.fetch(coreDataManager.currencySavedDataFetchRequest),
               let textFieldText = textField.text,
               let sumToConvert = Double(textFieldText)
         else {
@@ -133,7 +133,7 @@ final class MainViewController: UIViewController {
         if activeCell.currencyLabel.text == "USD" {
             baseCurrencySumToConvert = sumToConvert
         } else {
-            guard let activeCellCurrencyDataObject = currencyDataObjects.first(where: { object in
+            guard let activeCellCurrencyDataObject = currencyRatesDataObjects.first(where: { object in
                 object.quoteCurrency == activeCell.currencyLabel.text
             }) else { return }
             let baseCurrencyPriceCoefficient = mainWindowView.selectedButton == mainWindowView.bidButton ? activeCellCurrencyDataObject.bidPrice : activeCellCurrencyDataObject.askPrice
@@ -147,17 +147,17 @@ final class MainViewController: UIViewController {
         
         for cell in cells {
             guard cell != activeCell,
-                  let currencyDataObject = currencyDataObjects.first (where: { object in
+                  let currencyRateDataObject = currencyRatesDataObjects.first (where: { object in
                       object.quoteCurrency == cell.currencyLabel.text
                   })
             else { continue }
-            let currencyPriceCoefficient = mainWindowView.selectedButton == mainWindowView.bidButton ? currencyDataObject.bidPrice : currencyDataObject.askPrice
+            let currencyPriceCoefficient = mainWindowView.selectedButton == mainWindowView.bidButton ? currencyRateDataObject.bidPrice : currencyRateDataObject.askPrice
             cell.textField.text = String(format: "%.2f", (baseCurrencySumToConvert * currencyPriceCoefficient))
         }
     }
     
     func fetchDataIfNeeded() {
-        currencyDataNetworkManager.fetchDataIfNeeded { errorTitle, errorMessage in
+        networkCurrenciesDataManager.fetchDataIfNeeded { errorTitle, errorMessage in
             if errorTitle != nil || errorMessage != nil {
                 self.presentOkActionAlertController(title: errorTitle,
                                                     message: errorMessage)
@@ -324,8 +324,8 @@ extension MainViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let deleteAction = UIContextualAction(style: .destructive, title: nil) { _, _, _ in
             let currencyObject = self.favouriteCurrencies[indexPath.row]
-            self.coreDataManager.context.delete(currencyObject)
-            try? self.coreDataManager.context.save()
+            self.coreDataManager.appMainContext.delete(currencyObject)
+            try? self.coreDataManager.appMainContext.save()
             
             self.favouriteCurrencies.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .left)
