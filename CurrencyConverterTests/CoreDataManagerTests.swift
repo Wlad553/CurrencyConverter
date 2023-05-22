@@ -9,7 +9,7 @@ import XCTest
 import CoreData
 @testable import Currency_Converter
 
-final class CurrencyConverterCoreDataTests: XCTestCase {
+final class CoreDataManagerTests: XCTestCase {
     var coreDataManager: CoreDataManager!
     var networkManager: NetworkCurrenciesDataManager!
     var derivedContext: NSManagedObjectContext!

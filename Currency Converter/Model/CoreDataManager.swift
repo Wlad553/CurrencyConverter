@@ -37,7 +37,7 @@ open class CoreDataManager {
             currencyDataObject.quoteCurrency = singleRateData.quoteCurrency.currencyCode
             currencyDataObject.bidPrice = singleRateData.bidPrice
             currencyDataObject.askPrice = singleRateData.askPrice
-            currencyDataObject.timeIntervalSinceLastUpdate = Date().timeIntervalSince1970
+            currencyDataObject.timeIntervalSinceLastUpdate = singleRateData.requestTimestamp
         }
         
         try appMainContext.save()
@@ -65,8 +65,9 @@ open class CoreDataManager {
     
     func getFavouriteCurrencies() throws -> [FavouriteCurrency] {
         let userDefaults = UserDefaults.standard
+        let savedFavouriteCurrencies = try appMainContext.fetch(favouriteCurrencyFetchRequest)
         // if user has ever launched the app, then favouriteCurrencies is retreived from container if he hasn't, then 3 standard currency will be added to favourites
-        if !userDefaults.bool(forKey: "isAppAlreadyLauchedOnce") {
+        if !userDefaults.bool(forKey: "isAppAlreadyLauchedOnce") || savedFavouriteCurrencies.count == 0 {
             userDefaults.set(true, forKey: "isAppAlreadyLauchedOnce")
             ["USD", "EUR", "PLN"].forEach { currencyCode in
                 try? saveFavouriteCurrency(withCode: currencyCode)
@@ -99,7 +100,6 @@ open class CoreDataManager {
     
     private func updateCurrencySavedDataObjects(withData currencyParsedData: [CurrencyRatesParsedData]) throws {
         guard let objects = try? appMainContext.fetch(currencySavedDataFetchRequest) else { return }
-        let currentTimeIntervalSince1970 = Date().timeIntervalSince1970
         for object in objects {
             let newCurrencyData = currencyParsedData.first { currencyParsedData in
                 currencyParsedData.quoteCurrency.currencyCode == object.quoteCurrency
@@ -107,7 +107,7 @@ open class CoreDataManager {
             guard let newCurrencyData = newCurrencyData else { continue }
             object.askPrice = newCurrencyData.askPrice
             object.bidPrice = newCurrencyData.bidPrice
-            object.timeIntervalSinceLastUpdate = currentTimeIntervalSince1970
+            object.timeIntervalSinceLastUpdate = newCurrencyData.requestTimestamp
         }
         
         try appMainContext.save()

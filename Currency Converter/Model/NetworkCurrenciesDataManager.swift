@@ -19,11 +19,11 @@ protocol NetworkCurrenciesDataManagerProtocol {
     var urlString: String { get }
     func fetchCurrencyRatesData(urlSession: URLSession, completionHandler: @escaping ([CurrencyRatesParsedData]?, Error?) -> Void)
     func parseJSON(withRatesData data: Data) throws -> [CurrencyRatesParsedData]?
-    func fetchDataIfNeeded(urlSession: URLSession, minTimeIntervalDifferenceForUpdate: Double, completionHandler: @escaping (_ errorTitle: String?, _ errorMessage: String?) -> Void)
+    func fetchDataIfNeeded(urlSession: URLSession, completionHandler: @escaping (_ errorTitle: String?, _ errorMessage: String?) -> Void)
 }
 
 open class NetworkCurrenciesDataManager: NetworkCurrenciesDataManagerProtocol {
-    public static let urlSession = URLSession(configuration: .default)
+    public static var urlSession = URLSession(configuration: .default)
     
     let urlString = "https://marketdata.tradermade.com/api/v1/live?currency=\(Currency.availableCurrencyPairs)&api_key=\(apiKey)"
     let coreDataManager: CoreDataManager
@@ -83,7 +83,6 @@ open class NetworkCurrenciesDataManager: NetworkCurrenciesDataManagerProtocol {
     }
     
     func fetchDataIfNeeded(urlSession: URLSession = urlSession,
-                                minTimeIntervalDifferenceForUpdate: Double = (60 * 60),
                                 completionHandler: @escaping (_ errorTitle: String?, _ errorMessage: String?) -> Void) {
         guard let objects = try? coreDataManager.appMainContext.fetch(coreDataManager.currencySavedDataFetchRequest) else { return }
         // Try to fetch data when the container is empty and we have no data stored or if containter has less objects than we get from server
@@ -97,7 +96,7 @@ open class NetworkCurrenciesDataManager: NetworkCurrenciesDataManagerProtocol {
         }
         // Or when it's been one or more hours since last update
         let timeIntervalsDifference = Date().timeIntervalSince1970 - objects.first!.timeIntervalSinceLastUpdate
-        if timeIntervalsDifference >= minTimeIntervalDifferenceForUpdate {
+        if timeIntervalsDifference >= (60 * 60) {
             fetchCurrencyRatesData (urlSession: urlSession) { _, error in
                 let errorTitle = self.getTitleAndMessageFor(error: error).title
                 let errorMessage = self.getTitleAndMessageFor(error: error).message

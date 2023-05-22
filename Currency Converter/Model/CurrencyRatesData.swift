@@ -9,6 +9,7 @@ import Foundation
 
 struct CurrencyRatesData: Decodable {
     let quotes: [Quotes]
+    let timestamp: Int
 }
 
 struct Quotes: Decodable {
@@ -29,11 +30,13 @@ public struct CurrencyRatesParsedData {
     let quoteCurrency: Currency
     let askPrice: Double
     let bidPrice: Double
+    let requestTimestamp: Double
     
     init?(currencyRatesData: CurrencyRatesData, currencyNumber: Int) {
         guard let currency = Currency(currencyCode: currencyRatesData.quotes[currencyNumber].quoteCurrency) else { return nil }
         self.quoteCurrency = currency
         self.askPrice = currencyRatesData.quotes[currencyNumber].ask
         self.bidPrice = currencyRatesData.quotes[currencyNumber].bid
+        self.requestTimestamp = Double(currencyRatesData.timestamp)
     }
 }

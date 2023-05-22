@@ -9,7 +9,7 @@ import XCTest
 import CoreData
 @testable import Currency_Converter
 
-final class CurrencyConverterAPICallTests: XCTestCase {
+final class APICallTests: XCTestCase {
     var networkManager: NetworkCurrenciesDataManager!
     var urlSession: URLSession!
     
@@ -53,11 +53,14 @@ final class CurrencyConverterAPICallTests: XCTestCase {
             XCTAssertEqual(firstCurrencyPair.bidPrice, 231.1219)
             XCTAssertEqual(firstCurrencyPair.quoteCurrency.currencyCode, "ARS")
             XCTAssertEqual(firstCurrencyPair.baseCurrency.currencyCode, "USD")
+            XCTAssertEqual(firstCurrencyPair.requestTimestamp, 1684252586)
             
             XCTAssertEqual(lastCurrencyPair.askPrice, 0.30706)
             XCTAssertEqual(lastCurrencyPair.bidPrice, 0.30706)
             XCTAssertEqual(lastCurrencyPair.quoteCurrency.currencyCode, "KWD")
             XCTAssertEqual(lastCurrencyPair.baseCurrency.currencyCode, "USD")
+            XCTAssertEqual(lastCurrencyPair.requestTimestamp, 1684252586)
+
             expectation.fulfill()
         }
         wait(for: [expectation], timeout: 2)
@@ -72,7 +75,7 @@ final class CurrencyConverterAPICallTests: XCTestCase {
         // 1. Save data if currencyRatesSavedDataObjects.count == 0
         let dataUrlInitial = Bundle.main.url(forResource: "stubbedRatesData", withExtension: "json")!
         let dataInitial = try! Data(contentsOf: dataUrlInitial)
-        var currencyParsedDataInitial: [CurrencyRatesParsedData]! = try? networkManager.parseJSON(withRatesData: dataInitial)
+        let currencyParsedDataInitial: [CurrencyRatesParsedData]! = try? networkManager.parseJSON(withRatesData: dataInitial)
         
         let apiURL = URL(string: networkManager.urlString)!
         MockURL.requestHandler = { request in
@@ -103,6 +106,7 @@ final class CurrencyConverterAPICallTests: XCTestCase {
             XCTAssertEqual(parsedSingleCurrencyRate.askPrice, object.askPrice)
             XCTAssertEqual(parsedSingleCurrencyRate.bidPrice, object.bidPrice)
             XCTAssertEqual(parsedSingleCurrencyRate.quoteCurrency.currencyCode, object.quoteCurrency)
+            XCTAssertEqual(parsedSingleCurrencyRate.requestTimestamp, object.timeIntervalSinceLastUpdate)
         }
         
         // 2. Update currencyRatesSavedDataObjects if currencyRatesSavedDataObjects already exist and minTimeIntervalDifferenceForUpdate is exceeded
@@ -121,7 +125,7 @@ final class CurrencyConverterAPICallTests: XCTestCase {
             return (response, dataLast)
         }
 
-        networkManager.fetchDataIfNeeded (urlSession: urlSession, minTimeIntervalDifferenceForUpdate: 0) { errorTitle, errorMessage in
+        networkManager.fetchDataIfNeeded (urlSession: urlSession) { errorTitle, errorMessage in
             XCTAssertNil(errorTitle)
             XCTAssertNil(errorMessage)
             dataFetchExpectationLast.fulfill()
@@ -141,6 +145,7 @@ final class CurrencyConverterAPICallTests: XCTestCase {
             XCTAssertEqual(parsedSingleCurrencyRate.askPrice, object.askPrice)
             XCTAssertEqual(parsedSingleCurrencyRate.bidPrice, object.bidPrice)
             XCTAssertEqual(parsedSingleCurrencyRate.quoteCurrency.currencyCode, object.quoteCurrency)
+            XCTAssertEqual(parsedSingleCurrencyRate.requestTimestamp, object.timeIntervalSinceLastUpdate)
         }
     }
 }

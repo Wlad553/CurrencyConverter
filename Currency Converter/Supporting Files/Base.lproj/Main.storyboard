@@ -236,7 +236,7 @@
         <!--Currency-->
         <scene sceneID="aUp-rg-q4x">
             <objects>
-                <tableViewController id="Zk4-Ah-Fli" customClass="AddCurrencyTableViewController" customModule="Currency_Converter" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="addCurrency" id="Zk4-Ah-Fli" customClass="AddCurrencyTableViewController" customModule="Currency_Converter" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" estimatedSectionHeaderHeight="-1" sectionFooterHeight="18" estimatedSectionFooterHeight="-1" id="p8g-Vr-TrG">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

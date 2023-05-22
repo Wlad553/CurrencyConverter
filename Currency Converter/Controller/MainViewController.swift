@@ -15,7 +15,7 @@ final class MainViewController: UIViewController {
     let elipseView = EllipseView()
     let endEditingTapRecognizer = UITapGestureRecognizer()
     let editTableViewPressRecognizer = UILongPressGestureRecognizer()
-    let coreDataManager = CoreDataManager()
+    var coreDataManager = CoreDataManager()
     lazy var networkCurrenciesDataManager = NetworkCurrenciesDataManager(coreDataManager: coreDataManager)
     
     var favouriteCurrencies: [FavouriteCurrency] = []
@@ -83,11 +83,13 @@ final class MainViewController: UIViewController {
         convertActiveTextFieldCurrencyToOtherCurrencies(lastActiveTextField)
     }
     
-    func tryUpdateLastTimeUpdatedLabel() {
-        guard let firstCurrency = try? coreDataManager.appMainContext.fetch(coreDataManager.currencySavedDataFetchRequest).first?.timeIntervalSinceLastUpdate else { return }
+    func tryUpdateLastTimeUpdatedLabel(forTimeZone timeZone: TimeZone = .current) {
+        guard let firstCurrencyRequestTime = try? coreDataManager.appMainContext.fetch(coreDataManager.currencySavedDataFetchRequest).first?.timeIntervalSinceLastUpdate else { return }
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd MMM yyyy h:mm a"
-        lastTimeUpdatedLabel.text = dateFormatter.string(from: Date(timeIntervalSince1970: firstCurrency))
+        dateFormatter.timeZone = timeZone
+        dateFormatter.locale = Locale(identifier: "en_US")
+        lastTimeUpdatedLabel.text = dateFormatter.string(from: Date(timeIntervalSince1970: firstCurrencyRequestTime))
     }
     
     func checkMaskForTextField(textField: UITextField) {
@@ -103,12 +105,12 @@ final class MainViewController: UIViewController {
               })
         else { return }
         
-        var newTextWithoutSigns = textField.text?.components(separatedBy: CharacterSet(charactersIn: allowedSigns)).joined()
-        newTextWithoutSigns?.insert(".", at: indexOfCommaOrDot)
+        guard var newTextWithoutSigns = textField.text?.components(separatedBy: CharacterSet(charactersIn: allowedSigns)).joined() else { return }
+        newTextWithoutSigns.insert(".", at: indexOfCommaOrDot)
         textField.text = newTextWithoutSigns
         
         if allowedSigns.contains(senderTextFirstCharacter) {
-            textField.text? = "0\(textFieldText)"
+            textField.text? = "0\(newTextWithoutSigns)"
         }
         
         guard let separatedSenderText = textField.text?.components(separatedBy: "."),
@@ -189,19 +191,19 @@ final class MainViewController: UIViewController {
         }
     }
     
-    @objc func askButtonTapped(sender: UIButton) {
-        mainWindowView.buttonsUIUpdateAction(sender: sender)
+    @objc func askButtonTapped() {
+        mainWindowView.buttonsUIUpdateAction(sender: mainWindowView.askButton)
         guard let lastActiveTextField = lastActiveTextField else { return }
         convertActiveTextFieldCurrencyToOtherCurrencies(lastActiveTextField)
     }
     
-    @objc func bidButtonTapped(sender: UIButton) {
-        mainWindowView.buttonsUIUpdateAction(sender: sender)
+    @objc func bidButtonTapped() {
+        mainWindowView.buttonsUIUpdateAction(sender: mainWindowView.bidButton)
         guard let lastActiveTextField = lastActiveTextField else { return }
         convertActiveTextFieldCurrencyToOtherCurrencies(lastActiveTextField)
     }
     
-    private func prepareCellsForEditingToggle() {
+    func prepareCellsForEditingToggle() {
         if mainWindowView.tableView.isEditing {
             mainWindowView.tableView.isEditing.toggle()
             for cell in cells {
@@ -236,8 +238,8 @@ final class MainViewController: UIViewController {
     }
     
     private func addButtonsTagrets() {
-        mainWindowView.bidButton.addTarget(self, action: #selector(bidButtonTapped(sender:)), for: .touchUpInside)
-        mainWindowView.askButton.addTarget(self, action: #selector(askButtonTapped(sender:)), for: .touchUpInside)
+        mainWindowView.bidButton.addTarget(self, action: #selector(bidButtonTapped), for: .touchUpInside)
+        mainWindowView.askButton.addTarget(self, action: #selector(askButtonTapped), for: .touchUpInside)
     }
     
     private func presentOkActionAlertController(title: String?, message: String?) {

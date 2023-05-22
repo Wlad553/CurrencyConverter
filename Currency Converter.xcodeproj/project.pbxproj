@@ -10,7 +10,7 @@
 		F504FB1929F2C77E00E58C11 /* MainTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F504FB1829F2C77E00E58C11 /* MainTableViewCell.swift */; };
 		F51EC9FB2A13E01A00683582 /* stubbedRatesData.json in Resources */ = {isa = PBXBuildFile; fileRef = F51EC9FA2A13E01A00683582 /* stubbedRatesData.json */; };
 		F51EC9FD2A13E09000683582 /* MockURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = F51EC9FC2A13E09000683582 /* MockURL.swift */; };
-		F51EC9FF2A13E1CA00683582 /* CurrencyConverterAPICallTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F51EC9FE2A13E1CA00683582 /* CurrencyConverterAPICallTests.swift */; };
+		F51EC9FF2A13E1CA00683582 /* APICallTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F51EC9FE2A13E1CA00683582 /* APICallTests.swift */; };
 		F51ECA042A13EA0A00683582 /* stubbedRatesData.json in Resources */ = {isa = PBXBuildFile; fileRef = F51EC9FA2A13E01A00683582 /* stubbedRatesData.json */; };
 		F51ECA072A1400C500683582 /* TestCoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F51ECA062A1400C500683582 /* TestCoreDataManager.swift */; };
 		F54A7BF12A0937020017E5B5 /* Extesions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54A7BF02A0937020017E5B5 /* Extesions.swift */; };
@@ -22,7 +22,7 @@
 		F552E76029F3FD5B00F652E7 /* Lato-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F552E75629F3FD5B00F652E7 /* Lato-Black.ttf */; };
 		F552E76629F42DF200F652E7 /* Lato-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F552E76529F42D9D00F652E7 /* Lato-Regular.ttf */; };
 		F57FC8CE2A1918910095B1FE /* stubbedRatesDataSecond.json in Resources */ = {isa = PBXBuildFile; fileRef = F59F5A7C2A191599001F9CE8 /* stubbedRatesDataSecond.json */; };
-		F586008B2A12B05A008EAD7C /* CurrencyConverterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F586008A2A12B05A008EAD7C /* CurrencyConverterTests.swift */; };
+		F586008B2A12B05A008EAD7C /* MainViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F586008A2A12B05A008EAD7C /* MainViewControllerTests.swift */; };
 		F58600982A12B105008EAD7C /* CurrencyConverterUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F58600972A12B105008EAD7C /* CurrencyConverterUITests.swift */; };
 		F59F5A7D2A191599001F9CE8 /* stubbedRatesDataSecond.json in Resources */ = {isa = PBXBuildFile; fileRef = F59F5A7C2A191599001F9CE8 /* stubbedRatesDataSecond.json */; };
 		F5A370AC29F13D790066BFBD /* MainWindowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5A370AB29F13D790066BFBD /* MainWindowView.swift */; };
@@ -37,7 +37,8 @@
 		F5AE85A729F0209900A1B4E0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F5AE85A529F0209900A1B4E0 /* LaunchScreen.storyboard */; };
 		F5AE85AF29F020D400A1B4E0 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = F5AE85AE29F020D400A1B4E0 /* .gitignore */; };
 		F5AE85B729F0412F00A1B4E0 /* EllipseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5AE85B629F0412F00A1B4E0 /* EllipseView.swift */; };
-		F5E6FEA42A16519300C2C326 /* CurrencyConverterCoreDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5E6FEA32A16519300C2C326 /* CurrencyConverterCoreDataTests.swift */; };
+		F5E340542A1A50CB004B6468 /* AddCurrencyTableViewControllerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5E340532A1A50CB004B6468 /* AddCurrencyTableViewControllerTest.swift */; };
+		F5E6FEA42A16519300C2C326 /* CoreDataManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5E6FEA32A16519300C2C326 /* CoreDataManagerTests.swift */; };
 		F5F92A302A0ABD8F004C096F /* SearchControllerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5F92A2F2A0ABD8F004C096F /* SearchControllerManager.swift */; };
 		F5F92A322A0BF8BB004C096F /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5F92A312A0BF8BB004C096F /* CoreDataManager.swift */; };
 		F5FD0A6A29FCFD670071BA4D /* CurrencyConverter.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F5FD0A6829FCFD670071BA4D /* CurrencyConverter.xcdatamodeld */; };
@@ -64,7 +65,7 @@
 		F504FB1829F2C77E00E58C11 /* MainTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTableViewCell.swift; sourceTree = "<group>"; };
 		F51EC9FA2A13E01A00683582 /* stubbedRatesData.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = stubbedRatesData.json; sourceTree = "<group>"; };
 		F51EC9FC2A13E09000683582 /* MockURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockURL.swift; sourceTree = "<group>"; };
-		F51EC9FE2A13E1CA00683582 /* CurrencyConverterAPICallTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyConverterAPICallTests.swift; sourceTree = "<group>"; };
+		F51EC9FE2A13E1CA00683582 /* APICallTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APICallTests.swift; sourceTree = "<group>"; };
 		F51ECA052A13EDDA00683582 /* CurrencyConverterTestPlan.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CurrencyConverterTestPlan.xctestplan; sourceTree = "<group>"; };
 		F51ECA062A1400C500683582 /* TestCoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestCoreDataManager.swift; sourceTree = "<group>"; };
 		F54A7BF02A0937020017E5B5 /* Extesions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extesions.swift; sourceTree = "<group>"; };
@@ -76,7 +77,7 @@
 		F552E75629F3FD5B00F652E7 /* Lato-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Black.ttf"; sourceTree = "<group>"; };
 		F552E76529F42D9D00F652E7 /* Lato-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Regular.ttf"; sourceTree = "<group>"; };
 		F58600882A12B05A008EAD7C /* CurrencyConverterTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CurrencyConverterTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		F586008A2A12B05A008EAD7C /* CurrencyConverterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyConverterTests.swift; sourceTree = "<group>"; };
+		F586008A2A12B05A008EAD7C /* MainViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewControllerTests.swift; sourceTree = "<group>"; };
 		F58600952A12B105008EAD7C /* CurrencyConverterUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CurrencyConverterUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F58600972A12B105008EAD7C /* CurrencyConverterUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyConverterUITests.swift; sourceTree = "<group>"; };
 		F59F5A7C2A191599001F9CE8 /* stubbedRatesDataSecond.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = stubbedRatesDataSecond.json; sourceTree = "<group>"; };
@@ -94,7 +95,8 @@
 		F5AE85A829F0209900A1B4E0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F5AE85AE29F020D400A1B4E0 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		F5AE85B629F0412F00A1B4E0 /* EllipseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EllipseView.swift; sourceTree = "<group>"; };
-		F5E6FEA32A16519300C2C326 /* CurrencyConverterCoreDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyConverterCoreDataTests.swift; sourceTree = "<group>"; };
+		F5E340532A1A50CB004B6468 /* AddCurrencyTableViewControllerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCurrencyTableViewControllerTest.swift; sourceTree = "<group>"; };
+		F5E6FEA32A16519300C2C326 /* CoreDataManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManagerTests.swift; sourceTree = "<group>"; };
 		F5F92A2F2A0ABD8F004C096F /* SearchControllerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchControllerManager.swift; sourceTree = "<group>"; };
 		F5F92A312A0BF8BB004C096F /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
 		F5FD0A6929FCFD670071BA4D /* CurrencyConverter.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CurrencyConverter.xcdatamodel; sourceTree = "<group>"; };
@@ -147,9 +149,10 @@
 			isa = PBXGroup;
 			children = (
 				F51ECA002A13E5DD00683582 /* Supporting Files */,
-				F51EC9FE2A13E1CA00683582 /* CurrencyConverterAPICallTests.swift */,
-				F5E6FEA32A16519300C2C326 /* CurrencyConverterCoreDataTests.swift */,
-				F586008A2A12B05A008EAD7C /* CurrencyConverterTests.swift */,
+				F51EC9FE2A13E1CA00683582 /* APICallTests.swift */,
+				F5E6FEA32A16519300C2C326 /* CoreDataManagerTests.swift */,
+				F586008A2A12B05A008EAD7C /* MainViewControllerTests.swift */,
+				F5E340532A1A50CB004B6468 /* AddCurrencyTableViewControllerTest.swift */,
 				F51EC9FC2A13E09000683582 /* MockURL.swift */,
 				F51ECA062A1400C500683582 /* TestCoreDataManager.swift */,
 				F5521C1D2A1637D60039CB1C /* TestNetworkCurrenciesDataManager.swift */,
@@ -396,11 +399,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F586008B2A12B05A008EAD7C /* CurrencyConverterTests.swift in Sources */,
+				F586008B2A12B05A008EAD7C /* MainViewControllerTests.swift in Sources */,
 				F5521C1E2A1637D60039CB1C /* TestNetworkCurrenciesDataManager.swift in Sources */,
-				F51EC9FF2A13E1CA00683582 /* CurrencyConverterAPICallTests.swift in Sources */,
+				F51EC9FF2A13E1CA00683582 /* APICallTests.swift in Sources */,
 				F51ECA072A1400C500683582 /* TestCoreDataManager.swift in Sources */,
-				F5E6FEA42A16519300C2C326 /* CurrencyConverterCoreDataTests.swift in Sources */,
+				F5E340542A1A50CB004B6468 /* AddCurrencyTableViewControllerTest.swift in Sources */,
+				F5E6FEA42A16519300C2C326 /* CoreDataManagerTests.swift in Sources */,
 				F51EC9FD2A13E09000683582 /* MockURL.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
