@@ -263,7 +263,7 @@
                             <outlet property="delegate" destination="Zk4-Ah-Fli" id="1mx-aP-TlB"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Currency" customizationIdentifier="" id="Bl2-ib-ZBl"/>
+                    <navigationItem key="navigationItem" title="Currency" id="Bl2-ib-ZBl"/>
                     <connections>
                         <segue destination="Xt5-vj-gi3" kind="unwind" identifier="goBack" unwindAction="unwindSegueToTextFieldsVCWithSegue:" id="6Nj-UX-J9I"/>
                     </connections>
