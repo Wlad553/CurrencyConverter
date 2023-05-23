@@ -8,8 +8,8 @@
 import Foundation
 
 final class SearchControllerManager {
-    func filteredResultsWith(_ searchText: String, setToFilter: Set<Currency>) -> [Currency] {
-        var searchResult: [Currency] = []
+    func filteredResultsWith<T: CurrencyProtocol>(_ searchText: String, setToFilter: Set<T>) -> [T] {
+        var searchResult: [T] = []
         var alphanumericsSearchText = searchText
         alphanumericsSearchText.removeAll { character in
             let alphanumericsAndWhitespaceCharacterSet = CharacterSet.alphanumerics.union(CharacterSet(charactersIn: " "))

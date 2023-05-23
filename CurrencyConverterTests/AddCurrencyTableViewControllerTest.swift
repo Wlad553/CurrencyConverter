@@ -24,64 +24,67 @@ final class AddCurrencyTableViewControllerTest: XCTestCase {
         super.tearDown()
     }
     
-    func testFilterResultsWith() {
+    func testFilterNonEmptyResults() {
         // 1.
         let filterResultFirst = viewController.searchControllerManager.filteredResultsWith("c c",
-                                                                                           setToFilter: viewController.currenciesSet)
-        let expectationArrayFirst: [Currency] = [
-            Currency(currencyCode: "CAD")!,
-            Currency(currencyCode: "CHF")!,
-            Currency(currencyCode: "CLP")!,
-            Currency(currencyCode: "CNH")!,
-            Currency(currencyCode: "CNY")!,
-            Currency(currencyCode: "COP")!,
-            Currency(currencyCode: "CZK")!,
-            Currency(currencyCode: "HRK")!
+                                                                                           setToFilter: MockCurrency.currenciesSet)
+        let expectationArrayFirst: [MockCurrency] = [
+            MockCurrency(currencyCode: "CAD"),
+            MockCurrency(currencyCode: "CHF"),
+            MockCurrency(currencyCode: "CLP"),
+            MockCurrency(currencyCode: "CNH"),
+            MockCurrency(currencyCode: "CNY"),
+            MockCurrency(currencyCode: "COP"),
+            MockCurrency(currencyCode: "CZK"),
+            MockCurrency(currencyCode: "HRK")
         ]
         XCTAssertEqual(filterResultFirst, expectationArrayFirst)
         
         // 2.
         let filterResultSecond = viewController.searchControllerManager.filteredResultsWith("c o y",
-                                                                                            setToFilter: viewController.currenciesSet)
-        let expectationArraySecond: [Currency] = [
-            Currency(currencyCode: "CNH")!,
-            Currency(currencyCode: "CNY")!
+                                                                                            setToFilter: MockCurrency.currenciesSet)
+        let expectationArraySecond: [MockCurrency] = [
+            MockCurrency(currencyCode: "CNH"),
+            MockCurrency(currencyCode: "CNY")
         ]
         XCTAssertEqual(filterResultSecond, expectationArraySecond)
         
         // 3.
-        let filterResultThird = viewController.searchControllerManager.filteredResultsWith("....",
-                                                                                           setToFilter: viewController.currenciesSet)
-        let expectationArrayThird: [Currency] = []
+        let filterResultThird = viewController.searchControllerManager.filteredResultsWith("….a a….#*&$U#($D",
+                                                                                            setToFilter: MockCurrency.currenciesSet)
+        let expectationArrayThird: [MockCurrency] = [MockCurrency(currencyCode: "AUD")]
         XCTAssertEqual(filterResultThird, expectationArrayThird)
         
         // 4.
-        let filterResultFourth = viewController.searchControllerManager.filteredResultsWith("….a a….#*&$U#($D",
-                                                                                            setToFilter: viewController.currenciesSet)
-        let expectationArrayFourth: [Currency] = [Currency(currencyCode: "AUD")!]
+        let filterResultFourth = viewController.searchControllerManager.filteredResultsWith("KW#*$* $#",
+                                                                                           setToFilter: MockCurrency.currenciesSet)
+        let expectationArrayFourth: [MockCurrency] = [
+            MockCurrency(currencyCode: "AOA"),
+            MockCurrency(currencyCode: "KWD")
+        ]
         XCTAssertEqual(filterResultFourth, expectationArrayFourth)
         
         // 5.
-        let filterResultFifth = viewController.searchControllerManager.filteredResultsWith("KW#*$* $#",
-                                                                                           setToFilter: viewController.currenciesSet)
-        let expectationArrayFifth: [Currency] = [
-            Currency(currencyCode: "AOA")!,
-            Currency(currencyCode: "KWD")!
+        let filterResultFifth = viewController.searchControllerManager.filteredResultsWith("sw",
+                                                                                           setToFilter: MockCurrency.currenciesSet)
+        let expectationArrayFifth: [MockCurrency] = [
+            MockCurrency(currencyCode: "CHF"),
+            MockCurrency(currencyCode: "SEK")
         ]
         XCTAssertEqual(filterResultFifth, expectationArrayFifth)
-        
-        // 6.
-        let filterResultSixth = viewController.searchControllerManager.filteredResultsWith("KW#*$* $#3",
-                                                                                           setToFilter: viewController.currenciesSet)
-        let expectationArraySixth: [Currency] = []
-        XCTAssertEqual(filterResultSixth, expectationArraySixth)
     }
     
-    func testUpdateSearchResults() {
-        viewController.searchController.searchBar.text = "sw"
-        viewController.updateSearchResults(for: viewController.searchController)
-        let expectationArray: [Currency] = [Currency(currencyCode: "CHF")!,
-                                            Currency(currencyCode: "SEK")!]
-        XCTAssertEqual(viewController.searchResultCurrencies, expectationArray)
+    func testFilterEmptyResults() {
+        // 1.
+        let filterResultFirst = viewController.searchControllerManager.filteredResultsWith("KW#*$* $#3",
+                                                                                           setToFilter: MockCurrency.currenciesSet)
+        let expectationArrayFirst: [MockCurrency] = []
+        XCTAssertEqual(filterResultFirst, expectationArrayFirst)
+        
+        // 2.
+        let filterResultSecond = viewController.searchControllerManager.filteredResultsWith("....",
+                                                                                           setToFilter: MockCurrency.currenciesSet)
+        let expectationArraySecond: [MockCurrency] = []
+        XCTAssertEqual(filterResultSecond, expectationArraySecond)
     }
 }

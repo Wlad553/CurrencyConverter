@@ -11,7 +11,12 @@ enum CurrencyError: Error {
     case nonExistingCurrency
 }
 
-struct Currency: Hashable {
+public protocol CurrencyProtocol: Hashable {
+    var currencyCode: String { get }
+    var fullCurrencyName: String { get }
+}
+
+struct Currency: CurrencyProtocol {
     let currencyCode: String
     var fullCurrencyName: String {
         Currency.availableCurrenciesDict[currencyCode]!
