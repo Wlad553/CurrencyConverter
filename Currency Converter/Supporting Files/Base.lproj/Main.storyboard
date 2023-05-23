@@ -34,6 +34,7 @@
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Currency Converter" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nfH-WK-Fw5">
                                                 <rect key="frame" x="23.999999999999986" y="64" width="217.66666666666663" height="29"/>
+                                                <accessibility key="accessibilityConfiguration" identifier="appName"/>
                                                 <fontDescription key="fontDescription" name="Lato-Black" family="Lato" pointSize="24"/>
                                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
@@ -85,6 +86,7 @@
                                                     </stackView>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gcV-eW-5Vf">
                                                         <rect key="frame" x="313" y="337.66666666666669" width="32" height="39.666666666666686"/>
+                                                        <accessibility key="accessibilityConfiguration" identifier="shareButton"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="32" id="0k7-B6-yy3"/>
                                                             <constraint firstAttribute="height" constant="32" id="uTi-VN-MUf"/>
@@ -111,11 +113,13 @@
                                                                     <rect key="frame" x="0.0" y="0.0" width="361" height="43.666667938232422"/>
                                                                     <autoresizingMask key="autoresizingMask"/>
                                                                 </tableViewCellContentView>
+                                                                <accessibility key="accessibilityConfiguration" identifier="mainWindowTableViewCell"/>
                                                             </tableViewCell>
                                                         </prototypes>
                                                     </tableView>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mlv-jE-deL">
                                                         <rect key="frame" x="120.66666666666666" y="313" width="119.66666666666666" height="21"/>
+                                                        <accessibility key="accessibilityConfiguration" identifier="addCurrencyButton"/>
                                                         <fontDescription key="fontDescription" name="Lato-Regular" family="Lato" pointSize="17"/>
                                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                                         <state key="normal" title="Add Currency">
@@ -131,6 +135,7 @@
                                                     </button>
                                                 </subviews>
                                                 <color key="backgroundColor" systemColor="systemFillColor"/>
+                                                <accessibility key="accessibilityConfiguration" identifier="mainWindowView"/>
                                                 <constraints>
                                                     <constraint firstItem="Mlv-jE-deL" firstAttribute="centerX" secondItem="jy0-Pl-SKQ" secondAttribute="centerX" id="0Yh-rw-RN7"/>
                                                     <constraint firstItem="5m2-55-DwA" firstAttribute="leading" secondItem="jy0-Pl-SKQ" secondAttribute="leading" constant="16" id="4Nv-mA-Xqu"/>
@@ -168,12 +173,14 @@
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Last updated" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kRT-3m-NNS">
                                                         <rect key="frame" x="0.0" y="0.0" width="79.333333333333329" height="17"/>
+                                                        <accessibility key="accessibilityConfiguration" identifier="lastUpdatedLabel"/>
                                                         <fontDescription key="fontDescription" name="Lato-Regular" family="Lato" pointSize="14"/>
                                                         <color key="textColor" red="0.3411764705882353" green="0.3411764705882353" blue="0.3411764705882353" alpha="1" colorSpace="calibratedRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="--" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="avV-ox-buq">
                                                         <rect key="frame" x="0.0" y="25" width="79.333333333333329" height="17"/>
+                                                        <accessibility key="accessibilityConfiguration" identifier="lastUpdatedTimeLabel"/>
                                                         <fontDescription key="fontDescription" name="Lato-Regular" family="Lato" pointSize="14"/>
                                                         <color key="textColor" red="0.3411764705882353" green="0.3411764705882353" blue="0.3411764705882353" alpha="1" colorSpace="calibratedRGB"/>
                                                         <nil key="highlightedColor"/>
@@ -248,6 +255,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="353" height="43.666667938232422"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
+                                <accessibility key="accessibilityConfiguration" identifier="addCurrencyCell"/>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -255,7 +263,7 @@
                             <outlet property="delegate" destination="Zk4-Ah-Fli" id="1mx-aP-TlB"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Currency" id="Bl2-ib-ZBl"/>
+                    <navigationItem key="navigationItem" title="Currency" customizationIdentifier="" id="Bl2-ib-ZBl"/>
                     <connections>
                         <segue destination="Xt5-vj-gi3" kind="unwind" identifier="goBack" unwindAction="unwindSegueToTextFieldsVCWithSegue:" id="6Nj-UX-J9I"/>
                     </connections>

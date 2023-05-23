@@ -31,6 +31,7 @@ final class MainWindowView: UIView {
         tableView.separatorStyle = .none
         tableView.allowsSelection = false
         tableView.alwaysBounceVertical = false
+        tableView.accessibilityIdentifier = "mainWindowViewTableView"
     }
     
     private func setUpButtons() {

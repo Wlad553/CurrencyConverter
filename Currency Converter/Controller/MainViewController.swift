@@ -247,6 +247,7 @@ final class MainViewController: UIViewController {
                                                 message: message,
                                                 preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Ok", style: .cancel)
+        okAction.accessibilityIdentifier = "okAction"
         alertController.addAction(okAction)
         present(alertController, animated: true)
     }
