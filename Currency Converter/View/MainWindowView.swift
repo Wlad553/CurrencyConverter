@@ -14,7 +14,7 @@ final class MainWindowView: UIView {
     @IBOutlet weak var addCurrencyButton: UIButton!
     @IBOutlet weak var tableView: UITableView!
     
-    var selectedButton: UIButton!
+    private(set) var selectedButton: UIButton!
     
     override func layoutSubviews() {
         layer.shadowPath = CGPath(rect: CGRect(x: 5, y: 20, width: bounds.width - 10, height: bounds.height - 15), transform: nil)
@@ -31,6 +31,7 @@ final class MainWindowView: UIView {
         tableView.separatorStyle = .none
         tableView.allowsSelection = false
         tableView.alwaysBounceVertical = false
+        tableView.accessibilityIdentifier = "mainWindowViewTableView"
     }
     
     private func setUpButtons() {

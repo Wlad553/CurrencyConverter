@@ -14,8 +14,8 @@ enum CoreDataError: Error {
     case objectsSaving
 }
 
-final class CoreDataManager {
-    lazy var context: NSManagedObjectContext = {
+open class CoreDataManager {
+    lazy public var appMainContext: NSManagedObjectContext = {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         return appDelegate.persistentContainer.viewContext
     }()
@@ -28,8 +28,78 @@ final class CoreDataManager {
         FavouriteCurrency.fetchRequest()
     }
     
-    func updateCurrencySavedDataObjectsInContext(withData currencyParsedData: [CurrencyParsedData]) {
-        guard let objects = try? context.fetch(currencySavedDataFetchRequest) else { return }
+    public init() {}
+    
+    func save(currencyRatesData: [CurrencyRatesParsedData]) throws {
+        guard let entity = NSEntityDescription.entity(forEntityName: "CurrencyData", in: appMainContext) else { return }
+        for singleRateData in currencyRatesData {
+            let currencyDataObject = CurrencySavedData(entity: entity, insertInto: appMainContext)
+            currencyDataObject.quoteCurrency = singleRateData.quoteCurrency.currencyCode
+            currencyDataObject.bidPrice = singleRateData.bidPrice
+            currencyDataObject.askPrice = singleRateData.askPrice
+            currencyDataObject.timeIntervalSinceLastUpdate = singleRateData.requestTimestamp
+        }
+        
+        try appMainContext.save()
+    }
+    
+    func deleteObjects<T: NSManagedObject>(from request: NSFetchRequest<T>) where T: NSFetchRequestResult {
+        guard let objects = try? appMainContext.fetch(request) else { return }
+        for object in objects {
+            appMainContext.delete(object)
+        }
+    }
+    
+    func saveFavouriteCurrency(withCode currencyCode: String) throws {
+        guard let entity = NSEntityDescription.entity(forEntityName: "FavouriteCurrency", in: appMainContext) else {
+            throw CoreDataError.nonExistingEntity
+        }
+        guard let currency = Currency(currencyCode: currencyCode) else {
+            throw CurrencyError.nonExistingCurrency
+        }
+        let currencyObject = FavouriteCurrency(entity: entity, insertInto: appMainContext)
+        currencyObject.currencyCode = currency.currencyCode
+        
+        try appMainContext.save()
+    }
+    
+    func getFavouriteCurrencies() throws -> [FavouriteCurrency] {
+        let userDefaults = UserDefaults.standard
+        let savedFavouriteCurrencies = try appMainContext.fetch(favouriteCurrencyFetchRequest)
+        // if user has ever launched the app, then favouriteCurrencies is retreived from container if he hasn't, then 3 standard currency will be added to favourites
+        if !userDefaults.bool(forKey: "isAppAlreadyLauchedOnce") || savedFavouriteCurrencies.count == 0 {
+            userDefaults.set(true, forKey: "isAppAlreadyLauchedOnce")
+            ["USD", "EUR", "PLN"].forEach { currencyCode in
+                try? saveFavouriteCurrency(withCode: currencyCode)
+            }
+        }
+        return try appMainContext.fetch(favouriteCurrencyFetchRequest)
+    }
+    
+    func addOrUpdateCurrencyRatesSavedDataObjects(with currencyParsedData: [CurrencyRatesParsedData]) throws {
+        guard let currencyRatesDataObjects = try? appMainContext.fetch(currencySavedDataFetchRequest) else {
+            throw CoreDataError.objectsFetchingError
+        }
+        
+        do {
+            if currencyRatesDataObjects.count == Currency.availableCurrencyPairsCount &&
+                currencyRatesDataObjects.allSatisfy({ currency in
+                    guard let quoteCurrency = currency.quoteCurrency else { return false }
+                    return Currency.availableCurrenciesDict.keys.contains(quoteCurrency)
+                }) {
+                try updateCurrencySavedDataObjects(withData: currencyParsedData)
+                // In other case we delete all objects from container and add new ones
+            } else {
+                deleteObjects(from: currencySavedDataFetchRequest)
+                try save(currencyRatesData: currencyParsedData)
+            }
+        } catch {
+            throw CoreDataError.objectsSaving
+        }
+    }
+    
+    private func updateCurrencySavedDataObjects(withData currencyParsedData: [CurrencyRatesParsedData]) throws {
+        guard let objects = try? appMainContext.fetch(currencySavedDataFetchRequest) else { return }
         for object in objects {
             let newCurrencyData = currencyParsedData.first { currencyParsedData in
                 currencyParsedData.quoteCurrency.currencyCode == object.quoteCurrency
@@ -37,53 +107,9 @@ final class CoreDataManager {
             guard let newCurrencyData = newCurrencyData else { continue }
             object.askPrice = newCurrencyData.askPrice
             object.bidPrice = newCurrencyData.bidPrice
-            object.timeIntervalSinceLastUpdate = Date().timeIntervalSince1970
-        }
-    }
-    
-    func save(currencyRatesData: [CurrencyParsedData]) throws {
-        guard let entity = NSEntityDescription.entity(forEntityName: "CurrencyData", in: context) else { return }
-        for singleRateData in currencyRatesData {
-            let currencyDataObject = CurrencySavedData(entity: entity, insertInto: context)
-            currencyDataObject.quoteCurrency = singleRateData.quoteCurrency.currencyCode
-            currencyDataObject.bidPrice = singleRateData.bidPrice
-            currencyDataObject.askPrice = singleRateData.askPrice
-            currencyDataObject.timeIntervalSinceLastUpdate = Date().timeIntervalSince1970
+            object.timeIntervalSinceLastUpdate = newCurrencyData.requestTimestamp
         }
         
-        try context.save()
-    }
-    
-    func deleteObjects<T: NSManagedObject>(from request: NSFetchRequest<T>) where T: NSFetchRequestResult {
-        guard let objects = try? context.fetch(request) else { return }
-        for object in objects {
-            context.delete(object)
-        }
-    }
-    
-    func saveFavouriteCurrency(withCode currencyCode: String) throws {
-        guard let entity = NSEntityDescription.entity(forEntityName: "FavouriteCurrency", in: context) else {
-            throw CoreDataError.nonExistingEntity
-        }
-        guard let currency = Currency(currencyCode: currencyCode) else {
-            throw CurrencyError.nonExistingCurrency
-        }
-        let currencyObject = FavouriteCurrency(entity: entity, insertInto: context)
-        currencyObject.currencyCode = currency.currencyCode
-        
-        try context.save()
-    }
-    
-    func getFavouriteCurrencies() throws -> [FavouriteCurrency] {
-        let userDefaults = UserDefaults.standard
-        let fetchRequest: NSFetchRequest<FavouriteCurrency> = FavouriteCurrency.fetchRequest()
-        // if user has ever launched the app, then favouriteCurrencies is retreived from container if he hasn't, then 3 standard currency will be added to favourites
-        if !userDefaults.bool(forKey: "isAppAlreadyLauchedOnce") {
-            userDefaults.set(true, forKey: "isAppAlreadyLauchedOnce")
-            ["USD", "EUR", "PLN"].forEach { currencyCode in
-                try? saveFavouriteCurrency(withCode: currencyCode)
-            }
-        }
-        return try context.fetch(fetchRequest)
+        try appMainContext.save()
     }
 }

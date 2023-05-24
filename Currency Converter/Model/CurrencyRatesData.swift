@@ -7,8 +7,9 @@
 
 import Foundation
 
-struct CurrenciesData: Decodable {
+struct CurrencyRatesData: Decodable {
     let quotes: [Quotes]
+    let timestamp: Int
 }
 
 struct Quotes: Decodable {
@@ -24,16 +25,18 @@ struct Quotes: Decodable {
     }
 }
 
-struct CurrencyParsedData {
+public struct CurrencyRatesParsedData {
     let baseCurrency = Currency(currencyCode: "USD")!
     let quoteCurrency: Currency
     let askPrice: Double
     let bidPrice: Double
+    let requestTimestamp: Double
     
-    init?(currencyData: CurrenciesData, currencyNumber: Int) {
-        guard let currency = Currency(currencyCode: currencyData.quotes[currencyNumber].quoteCurrency) else { return nil }
+    init?(currencyRatesData: CurrencyRatesData, currencyNumber: Int) {
+        guard let currency = Currency(currencyCode: currencyRatesData.quotes[currencyNumber].quoteCurrency) else { return nil }
         self.quoteCurrency = currency
-        self.askPrice = currencyData.quotes[currencyNumber].ask
-        self.bidPrice = currencyData.quotes[currencyNumber].bid
+        self.askPrice = currencyRatesData.quotes[currencyNumber].ask
+        self.bidPrice = currencyRatesData.quotes[currencyNumber].bid
+        self.requestTimestamp = Double(currencyRatesData.timestamp)
     }
 }

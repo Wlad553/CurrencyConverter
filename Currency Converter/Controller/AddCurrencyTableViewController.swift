@@ -37,10 +37,11 @@ final class AddCurrencyTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        addAccessibilityIdentifiers()
         setUpSearchController()
         setUpNoSearchResultsStackView()
         addNotificationCenterObservers()
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(barAction(sender:)))
+        addLeftBarButtonItem()
     }
     
     // MARK: Navigation
@@ -87,6 +88,7 @@ final class AddCurrencyTableViewController: UITableViewController {
         searchController.automaticallyShowsCancelButton = true
         searchController.searchBar.placeholder = "Search Currency"
         searchController.searchBar.searchTextField.font = UIFont(name: "Lato-Regular", size: 17)
+        searchController.searchBar.searchTextField.accessibilityIdentifier = "searchTextField"
     }
     
     private func setUpNoSearchResultsStackView() {
@@ -95,14 +97,17 @@ final class AddCurrencyTableViewController: UITableViewController {
                 
         imageView.contentMode = .scaleAspectFit
         imageView.tintColor = .systemGray
+        imageView.accessibilityIdentifier = "magnifyingGlass"
         
         noSearchResultsLabel.font = UIFont.systemFont(ofSize: 17, weight: .heavy)
         noSearchResultsLabel.numberOfLines = 0
         noSearchResultsLabel.textAlignment = .center
+        noSearchResultsLabel.accessibilityIdentifier = "noSearchResultsLabel"
         
         sublabel.font = UIFont.systemFont(ofSize: 14)
         sublabel.textColor = imageView.tintColor
         sublabel.text = "Check the spelling or try a new search"
+        sublabel.accessibilityIdentifier = "noSearchResultsLabelSublabel"
         
         [imageView, noSearchResultsLabel, sublabel].forEach { view in
             noSearchResultsStackView.addArrangedSubview(view)
@@ -123,6 +128,16 @@ final class AddCurrencyTableViewController: UITableViewController {
             stackViewYAnchorConstraint,
             noSearchResultsStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
+    }
+    
+    private func addLeftBarButtonItem() {
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(barAction(sender:)))
+        self.navigationItem.leftBarButtonItem?.accessibilityIdentifier = "cancelButton"
+    }
+    
+    private func addAccessibilityIdentifiers() {
+        navigationController?.navigationBar.accessibilityIdentifier = "addCurrencyNavigationBar"
+        tableView.accessibilityIdentifier = "addCurrencyTableView"
     }
     
     private func addNotificationCenterObservers() {

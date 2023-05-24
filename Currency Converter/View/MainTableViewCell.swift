@@ -28,7 +28,9 @@ final class MainTableViewCell: UITableViewCell {
     private func setUpLeftSideOfView() {
         currencyLabel.font = UIFont(name: "Lato-Regular", size: 17)
         currencyLabel.textColor = UIColor.currencyLabel
+        currencyLabel.accessibilityIdentifier = "cellCurrencyLabel"
         chevronImageView.tintColor = currencyLabel.textColor
+        chevronImageView.accessibilityIdentifier = "cellChevronImageView"
         
         stackView.addArrangedSubview(currencyLabel)
         stackView.addArrangedSubview(chevronImageView)
@@ -48,6 +50,7 @@ final class MainTableViewCell: UITableViewCell {
     }
     
     private func setUpTextField() {
+        textField.accessibilityIdentifier = "cellTextField"
         textField.textColor = UIColor.inactiveText
         textField.backgroundColor = UIColor.textFieldBackground
         

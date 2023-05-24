@@ -36,6 +36,7 @@ final class EllipseView: UIView {
         [bottomSublayer, middleSublayer, topSublayer].forEach { shapeLayer in
             layer.addSublayer(shapeLayer)
         }
+        self.accessibilityIdentifier = "topViewWithThreeLayers"
     }
     
     required init?(coder: NSCoder) {
