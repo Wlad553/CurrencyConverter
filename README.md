@@ -24,6 +24,7 @@ Current branch - main
 * BackgroundTasks
 * URLSession
 * UI Storyboard/Programmatically (Constraints)
+* DI
 * Unit and UI Tests
 
 # Screenshots
