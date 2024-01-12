@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  MainViewController.swift
 //  CurrencyConverter
 //
 //  Created by Vladyslav Petrenko on 12/01/2024.

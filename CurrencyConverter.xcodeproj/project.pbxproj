@@ -16,6 +16,16 @@
 		F5C6E3EE2B51CF260001DFE4 /* CurrencyConverterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C6E3ED2B51CF260001DFE4 /* CurrencyConverterTests.swift */; };
 		F5C6E3F82B51CF260001DFE4 /* CurrencyConverterUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C6E3F72B51CF260001DFE4 /* CurrencyConverterUITests.swift */; };
 		F5C6E4072B51CFC40001DFE4 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = F5C6E4062B51CFC40001DFE4 /* .gitignore */; };
+		F5C6E4132B51E2A30001DFE4 /* XCoordinator in Frameworks */ = {isa = PBXBuildFile; productRef = F5C6E4122B51E2A30001DFE4 /* XCoordinator */; };
+		F5C6E4152B51E2A30001DFE4 /* XCoordinatorRx in Frameworks */ = {isa = PBXBuildFile; productRef = F5C6E4142B51E2A30001DFE4 /* XCoordinatorRx */; };
+		F5C6E4182B51E2B20001DFE4 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = F5C6E4172B51E2B20001DFE4 /* SnapKit */; };
+		F5C6E41B2B51E3780001DFE4 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = F5C6E41A2B51E3780001DFE4 /* RxCocoa */; };
+		F5C6E41D2B51E3780001DFE4 /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = F5C6E41C2B51E3780001DFE4 /* RxRelay */; };
+		F5C6E41F2B51E3780001DFE4 /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = F5C6E41E2B51E3780001DFE4 /* RxSwift */; };
+		F5C6E4252B51E7090001DFE4 /* Lato-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F5C6E4212B51E7090001DFE4 /* Lato-Bold.ttf */; };
+		F5C6E4262B51E7090001DFE4 /* Lato-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F5C6E4222B51E7090001DFE4 /* Lato-Black.ttf */; };
+		F5C6E4272B51E7090001DFE4 /* Lato-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F5C6E4232B51E7090001DFE4 /* Lato-Regular.ttf */; };
+		F5C6E4282B51E7090001DFE4 /* Lato-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F5C6E4242B51E7090001DFE4 /* Lato-Light.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +59,10 @@
 		F5C6E3F32B51CF260001DFE4 /* CurrencyConverterUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CurrencyConverterUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F5C6E3F72B51CF260001DFE4 /* CurrencyConverterUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyConverterUITests.swift; sourceTree = "<group>"; };
 		F5C6E4062B51CFC40001DFE4 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		F5C6E4212B51E7090001DFE4 /* Lato-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Bold.ttf"; sourceTree = "<group>"; };
+		F5C6E4222B51E7090001DFE4 /* Lato-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Black.ttf"; sourceTree = "<group>"; };
+		F5C6E4232B51E7090001DFE4 /* Lato-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Regular.ttf"; sourceTree = "<group>"; };
+		F5C6E4242B51E7090001DFE4 /* Lato-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Light.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +70,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F5C6E41F2B51E3780001DFE4 /* RxSwift in Frameworks */,
+				F5C6E41D2B51E3780001DFE4 /* RxRelay in Frameworks */,
+				F5C6E4182B51E2B20001DFE4 /* SnapKit in Frameworks */,
+				F5C6E4152B51E2A30001DFE4 /* XCoordinatorRx in Frameworks */,
+				F5C6E41B2B51E3780001DFE4 /* RxCocoa in Frameworks */,
+				F5C6E4132B51E2A30001DFE4 /* XCoordinator in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -128,8 +148,9 @@
 		F5C6E4082B51D39F0001DFE4 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				F5C6E3DC2B51CF250001DFE4 /* CurrencyConverter.xcdatamodeld */,
+				F5C6E4202B51E7090001DFE4 /* Fonts */,
 				F5C6E3DF2B51CF260001DFE4 /* Assets.xcassets */,
+				F5C6E3DC2B51CF250001DFE4 /* CurrencyConverter.xcdatamodeld */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -151,6 +172,17 @@
 			path = MainScreen;
 			sourceTree = "<group>";
 		};
+		F5C6E4202B51E7090001DFE4 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				F5C6E4212B51E7090001DFE4 /* Lato-Bold.ttf */,
+				F5C6E4222B51E7090001DFE4 /* Lato-Black.ttf */,
+				F5C6E4232B51E7090001DFE4 /* Lato-Regular.ttf */,
+				F5C6E4242B51E7090001DFE4 /* Lato-Light.ttf */,
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -167,6 +199,14 @@
 			dependencies = (
 			);
 			name = CurrencyConverter;
+			packageProductDependencies = (
+				F5C6E4122B51E2A30001DFE4 /* XCoordinator */,
+				F5C6E4142B51E2A30001DFE4 /* XCoordinatorRx */,
+				F5C6E4172B51E2B20001DFE4 /* SnapKit */,
+				F5C6E41A2B51E3780001DFE4 /* RxCocoa */,
+				F5C6E41C2B51E3780001DFE4 /* RxRelay */,
+				F5C6E41E2B51E3780001DFE4 /* RxSwift */,
+			);
 			productName = CurrencyConverter;
 			productReference = F5C6E3D02B51CF250001DFE4 /* CurrencyConverter.app */;
 			productType = "com.apple.product-type.application";
@@ -239,6 +279,11 @@
 				Base,
 			);
 			mainGroup = F5C6E3C72B51CF250001DFE4;
+			packageReferences = (
+				F5C6E4112B51E2A30001DFE4 /* XCRemoteSwiftPackageReference "XCoordinator" */,
+				F5C6E4162B51E2B20001DFE4 /* XCRemoteSwiftPackageReference "SnapKit" */,
+				F5C6E4192B51E3780001DFE4 /* XCRemoteSwiftPackageReference "RxSwift" */,
+			);
 			productRefGroup = F5C6E3D12B51CF250001DFE4 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -256,8 +301,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				F5C6E4072B51CFC40001DFE4 /* .gitignore in Resources */,
+				F5C6E4272B51E7090001DFE4 /* Lato-Regular.ttf in Resources */,
 				F5C6E3E32B51CF260001DFE4 /* LaunchScreen.storyboard in Resources */,
 				F5C6E3E02B51CF260001DFE4 /* Assets.xcassets in Resources */,
+				F5C6E4262B51E7090001DFE4 /* Lato-Black.ttf in Resources */,
+				F5C6E4252B51E7090001DFE4 /* Lato-Bold.ttf in Resources */,
+				F5C6E4282B51E7090001DFE4 /* Lato-Light.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -647,6 +696,66 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		F5C6E4112B51E2A30001DFE4 /* XCRemoteSwiftPackageReference "XCoordinator" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/QuickBirdEng/XCoordinator";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.2.1;
+			};
+		};
+		F5C6E4162B51E2B20001DFE4 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.7.0;
+			};
+		};
+		F5C6E4192B51E3780001DFE4 /* XCRemoteSwiftPackageReference "RxSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ReactiveX/RxSwift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.6.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		F5C6E4122B51E2A30001DFE4 /* XCoordinator */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F5C6E4112B51E2A30001DFE4 /* XCRemoteSwiftPackageReference "XCoordinator" */;
+			productName = XCoordinator;
+		};
+		F5C6E4142B51E2A30001DFE4 /* XCoordinatorRx */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F5C6E4112B51E2A30001DFE4 /* XCRemoteSwiftPackageReference "XCoordinator" */;
+			productName = XCoordinatorRx;
+		};
+		F5C6E4172B51E2B20001DFE4 /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F5C6E4162B51E2B20001DFE4 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+		F5C6E41A2B51E3780001DFE4 /* RxCocoa */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F5C6E4192B51E3780001DFE4 /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxCocoa;
+		};
+		F5C6E41C2B51E3780001DFE4 /* RxRelay */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F5C6E4192B51E3780001DFE4 /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxRelay;
+		};
+		F5C6E41E2B51E3780001DFE4 /* RxSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F5C6E4192B51E3780001DFE4 /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		F5C6E3DC2B51CF250001DFE4 /* CurrencyConverter.xcdatamodeld */ = {
