@@ -8,6 +8,7 @@
 import UIKit
 import RxSwift
 import RxCocoa
+import XCoordinator
 
 final class MainViewController: UIViewController {
     let mainView = MainView()
@@ -26,10 +27,10 @@ final class MainViewController: UIViewController {
     }
     
     required init?(coder: NSCoder) {
-        self.viewModel = MainViewModel()
+        assert(false, "init(coder:) must not be used")
+        viewModel = MainViewModel(router: AppCoordinator().weakRouter)
         super.init(coder: coder)
     }
-    
     
     // MARK: - ViewController Lifecycle
     override func loadView() {
@@ -47,6 +48,7 @@ final class MainViewController: UIViewController {
         bindFavoriteCurrenciesToFavoriteCurrenciesTableView()
         subscribeToTapRecognizerEvent()
         subscribeToPriceButtonsTap()
+        subscribeToAddCurrencyButtonTap()
         addRxObservers()
     }
     
@@ -72,6 +74,17 @@ final class MainViewController: UIViewController {
                 .disposed(by: self.disposeBag)
         }
     }
+    
+    // MARK: Navigation
+    private func subscribeToAddCurrencyButtonTap() {
+        mainView.addCurrencyButton.rx
+            .controlEvent(.touchUpInside)
+            .subscribe(onNext: { [weak self] _ in
+                self?.view.endEditing(true)
+                self?.viewModel.prepareForTransition()
+            })
+            .disposed(by: disposeBag)
+    }
 }
 
 // MARK: - UICollectionViewDataSource
@@ -80,7 +93,7 @@ extension MainViewController {
         viewModel.favoriteCurrencies
             .bind(to: mainView.favoriteCurrenciesTableView.rx
                 .items(cellIdentifier: FavoriteCurrencyCell.reuseIdentifier, cellType: FavoriteCurrencyCell.self)) { _, currency, cell in
-                    cell.viewModel = FavoriteCurrencyCellViewModel(currency: currency)
+                    cell.viewModel = CurrencyCellViewModel(currency: currency)
                 }
                 .disposed(by: disposeBag)
     }

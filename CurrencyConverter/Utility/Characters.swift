@@ -1,5 +1,5 @@
 //
-//  CharacterConstants.swift
+//  Characters.swift
 //  CurrencyConverter
 //
 //  Created by Vladyslav Petrenko on 13/01/2024.
@@ -8,9 +8,9 @@
 import Foundation
 
 /// Constants for commonly used character strings and symbols.
-enum CharacterConstants {
-    /// Returns a string representing the minus sign
-    static let minusSign = "-"
+enum Characters {
+    /// Returns a string representing the hyphen sign
+    static let hyphen = "-"
     
     /// Returns a string representing whitespace
     static let whitespace = " "

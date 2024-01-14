@@ -19,6 +19,7 @@ final class WindowView: UIView {
     }
     
     required init?(coder: NSCoder) {
+        assert(false, "init(coder:) must not be used")
         super.init(coder: coder)
     }
     

@@ -91,4 +91,3 @@ enum Currency: String, CaseIterable {
         return string
     }
 }
-

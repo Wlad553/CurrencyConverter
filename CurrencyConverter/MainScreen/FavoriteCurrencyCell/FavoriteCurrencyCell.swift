@@ -20,7 +20,7 @@ final class FavoriteCurrencyCell: UITableViewCell {
         
     private let disposeBag = DisposeBag()
     
-    var viewModel: FavoriteCurrencyCellViewModelType? {
+    var viewModel: CurrencyCellViewModelType? {
         didSet {
             subscribeToCurrency()
         }
@@ -37,6 +37,7 @@ final class FavoriteCurrencyCell: UITableViewCell {
     }
     
     required init?(coder: NSCoder) {
+        assert(false, "init(coder:) must not be used")
         super.init(coder: coder)
     }
     

@@ -8,7 +8,7 @@
 import Foundation
 import RxSwift
 
-final class FavoriteCurrencyCellViewModel: FavoriteCurrencyCellViewModelType {
+final class CurrencyCellViewModel: CurrencyCellViewModelType {
     let currency: Observable<Currency>
     
     // MARK: - Init
