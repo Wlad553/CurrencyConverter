@@ -6,7 +6,8 @@
 //
 
 import Foundation
+import RxSwift
 
 protocol MainViewModelType: AnyObject {
-    
+    var favoriteCurrencies: BehaviorSubject<[Currency]> { get }
 }

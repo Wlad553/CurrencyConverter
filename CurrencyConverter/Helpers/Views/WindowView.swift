@@ -9,18 +9,20 @@ import UIKit
 import SnapKit
 
 final class WindowView: UIView {
+    // MARK: - Inits
     override init(frame: CGRect) {
         super.init(frame: frame)
         layer.shadowOpacity = 0.5
         layer.shadowRadius = 5
         layer.cornerRadius = 15
-        backgroundColor = .white
+        backgroundColor = .systemBackground
     }
     
     required init?(coder: NSCoder) {
-        super.init(frame: .zero)
+        super.init(coder: coder)
     }
     
+    // MARK: - Overridden Methods
     override func layoutSubviews() {
         super.layoutSubviews()
         layer.shadowPath = CGPath(rect:CGRect(x: 5,

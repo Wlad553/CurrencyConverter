@@ -6,7 +6,13 @@
 //
 
 import Foundation
+import RxSwift
 
 final class MainViewModel: MainViewModelType {
+    var favoriteCurrencies: BehaviorSubject<[Currency]>
     
+    // MARK: - Init
+    init() {
+        favoriteCurrencies = BehaviorSubject(value: [.usd, .eur, .pln, .rub])
+    }
 }

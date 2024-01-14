@@ -6,7 +6,8 @@
 //
 
 import Foundation
+import RxSwift
 
 protocol FavoriteCurrencyCellViewModelType: AnyObject {
-    
+    var currency: Observable<Currency> { get }
 }

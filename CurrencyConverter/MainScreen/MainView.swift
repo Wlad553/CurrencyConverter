@@ -21,14 +21,15 @@ final class MainView: UIView {
     let addCurrencyButton = UIButton()
     let shareButton = UIButton(type: .system)
     
+    private let bottomLabelsVStack = UIStackView()
+    private let lastUpdatedLabel = UILabel()
+    let lastUpdatedSublabel = UILabel()
+    
+    let tapRecognizer = UITapGestureRecognizer()
+    
     private var selectedButton: UIButton {
         bidButton.isEnabled ? askButton : bidButton
     }
-//    private let tapRecognizer = UITapGestureRecognizer()
-    
-    private let bottomLabelsVStack = UIStackView()
-    let lastUpdatedLabel = UILabel()
-    let lastUpdatedSublabel = UILabel()
     
     // MARK: - Inits
     override init(frame: CGRect) {
@@ -43,7 +44,7 @@ final class MainView: UIView {
     }
     
     required init?(coder: NSCoder) {
-        super.init(frame: .zero)
+        super.init(coder: coder)
     }
     
     // MARK: - Overridden Methods
@@ -61,7 +62,7 @@ final class MainView: UIView {
         addSubview(scrollView)
         scrollView.delaysContentTouches = false
         scrollView.showsVerticalScrollIndicator = false
-//        scrollView.addGestureRecognizer(tapRecognizer)
+        scrollView.addGestureRecognizer(tapRecognizer)
     }
     
     private func setUpBottomLabelsVStack() {
@@ -92,7 +93,7 @@ final class MainView: UIView {
         lastUpdatedLabel.text = "Last updated"
         
         // lastUpdatedSublabel
-        lastUpdatedSublabel.text = "--"
+        lastUpdatedSublabel.text = CharacterConstants.doubleHyphen
     }
     
     // MARK: - windowView Subviews' setup
@@ -164,6 +165,7 @@ final class MainView: UIView {
         favoriteCurrenciesTableView.separatorStyle = .none
         favoriteCurrenciesTableView.allowsSelection = false
         favoriteCurrenciesTableView.alwaysBounceVertical = false
+        favoriteCurrenciesTableView.showsVerticalScrollIndicator = false
         favoriteCurrenciesTableView.accessibilityIdentifier = "mainWindowViewTableView"
         favoriteCurrenciesTableView.register(FavoriteCurrencyCell.self,
                                              forCellReuseIdentifier: FavoriteCurrencyCell.reuseIdentifier)
@@ -255,6 +257,19 @@ extension MainView {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 button.isEnabled = true
             }
+        }
+    }
+    
+    func toggleScrollViewContentOffset(notification: Notification) {
+        guard let userInfo = notification.userInfo as? [String: Any],
+              let keyboardFrame = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue
+        else { return }
+        
+        if notification.name == UIResponder.keyboardWillHideNotification {
+            scrollView.contentInset = UIEdgeInsets.zero
+        } else {
+            scrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardFrame.height, right: 0)
+            scrollView.scrollIndicatorInsets = scrollView.contentInset
         }
     }
 }

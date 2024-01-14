@@ -7,22 +7,33 @@
 
 import UIKit
 import SnapKit
+import RxSwift
 
 final class FavoriteCurrencyCell: UITableViewCell {
     static let reuseIdentifier = "FavoriteCurrencyCell"
     
-    let textField = UITextField()
+    let amountTextField = UITextField()
     
     private let hStack = UIStackView()
     let currencyLabel = UILabel()
     let chevronImageView = UIImageView(image: UIImage(systemName: "chevron.right"))
+        
+    private let disposeBag = DisposeBag()
+    
+    var viewModel: FavoriteCurrencyCellViewModelType? {
+        didSet {
+            subscribeToCurrency()
+        }
+    }
     
     // MARK: - Inits
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        contentView.isUserInteractionEnabled = false
         setUpHStackViews()
         setUpTextField()
         addConstraints()
+        subscribeToTextFieldEvents()
     }
     
     required init?(coder: NSCoder) {
@@ -54,22 +65,22 @@ final class FavoriteCurrencyCell: UITableViewCell {
     }
     
     private func setUpTextField() {
-        addSubview(textField)
+        addSubview(amountTextField)
 
-        textField.accessibilityIdentifier = "cellTextField"
-        textField.textColor = .deepDarkGray
-        textField.backgroundColor = .gainsboro
+        amountTextField.accessibilityIdentifier = "cellTextField"
+        amountTextField.textColor = .deepDarkGray
+        amountTextField.backgroundColor = .gainsboro
         
-        textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 8, height: textField.frame.size.height))
-        textField.leftViewMode = .always
-        textField.rightView = UIView(frame: CGRect(x: 0, y: 0, width: 8, height: textField.frame.size.height))
-        textField.rightViewMode = .always
+        amountTextField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 8, height: amountTextField.frame.size.height))
+        amountTextField.leftViewMode = .always
+        amountTextField.rightView = UIView(frame: CGRect(x: 0, y: 0, width: 8, height: amountTextField.frame.size.height))
+        amountTextField.rightViewMode = .always
         
-        textField.layer.borderColor = UIColor.dodgerBlue.cgColor
-        textField.layer.cornerRadius = 5
+        amountTextField.layer.borderColor = UIColor.dodgerBlue.cgColor
+        amountTextField.layer.cornerRadius = 5
         
-        textField.borderStyle = .none
-        textField.keyboardType = .decimalPad
+        amountTextField.borderStyle = .none
+        amountTextField.keyboardType = .decimalPad
     }
     
     // MARK: - Constraints
@@ -77,14 +88,63 @@ final class FavoriteCurrencyCell: UITableViewCell {
         hStack.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.leading.equalToSuperview().offset(32)
-            make.width.equalTo(40)
+            make.width.equalTo(60)
         }
         
-        textField.snp.makeConstraints { make in
+        amountTextField.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.leading.equalTo(hStack.snp.trailing).offset(60)
             make.trailing.equalToSuperview().inset(32)
             make.height.equalTo(40)
         }
+    }
+    
+    // MARK: - Subscriptions
+    private func subscribeToCurrency() {
+        viewModel?.currency
+            .subscribe(onNext: { [weak self] currency in
+                self?.currencyLabel.text = currency.code
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    private func subscribeToTextFieldEvents() {
+        amountTextField.rx
+            .controlEvent(.editingDidBegin)
+            .subscribe(onNext: { [weak self] event in
+                guard let parentTableView = self?.superview as? UITableView, !parentTableView.isEditing
+                else {
+                    self?.amountTextField.resignFirstResponder()
+                    return
+                }
+                
+                self?.amountTextField.layer.borderWidth = 1
+                self?.amountTextField.textColor = .darkBlue
+            })
+            .disposed(by: disposeBag)
+        
+        amountTextField.rx
+            .controlEvent(.editingDidEnd)
+            .subscribe(onNext: { [weak self] event in
+                self?.amountTextField.layer.borderWidth = 0
+                self?.amountTextField.textColor = .deepDarkGray
+            })
+            .disposed(by: disposeBag)
+        
+        amountTextField.rx
+            .controlEvent(.editingDidEndOnExit)
+            .subscribe(onNext: { [weak self] event in
+                self?.amountTextField.resignFirstResponder()
+            })
+            .disposed(by: disposeBag)
+        
+        amountTextField.rx.text
+            .orEmpty
+            .scan(String(), accumulator: { previousText, newText in
+                let formatter = ConverterNumberFormatter()
+                return formatter.applyFormat(previousText: previousText, currentText: newText)
+            })
+            .bind(to: amountTextField.rx.text)
+            .disposed(by: disposeBag)
     }
 }

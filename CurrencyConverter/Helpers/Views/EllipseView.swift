@@ -31,6 +31,7 @@ final class EllipseView: UIView {
                                  height: bounds.height * 1.4),transform: nil)
     }
     
+    // MARK: - Inits
     override init(frame: CGRect) {
         super.init(frame: frame)
         bottomSublayer = layoutEllipseShapeLayer(
@@ -52,13 +53,15 @@ final class EllipseView: UIView {
         super.init(coder: coder)
     }
     
+    // MARK: - Overridden Methods
     override func layoutSubviews() {
         super.layoutSubviews()
         bottomSublayer.path = bottomSublayersPath
         middleSublayer.path = middleSublayersPath
         topSublayer.path = topSublayersPath
     }
-
+    
+    // MARK: - Layers setup
     private func layoutEllipseShapeLayer(path: CGPath, color: CGColor) -> CAShapeLayer {
         let shapeLayer = CAShapeLayer()
         shapeLayer.path = path

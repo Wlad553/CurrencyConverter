@@ -6,7 +6,13 @@
 //
 
 import Foundation
+import RxSwift
 
 final class FavoriteCurrencyCellViewModel: FavoriteCurrencyCellViewModelType {
+    let currency: Observable<Currency>
     
+    // MARK: - Init
+    init(currency: Currency) {
+        self.currency = .just(currency)
+    }
 }
