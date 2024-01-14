@@ -14,7 +14,7 @@ final class MainView: UIView {
     private let appNameLabel = UILabel()
     
     private let windowView = WindowView()
-    private var windowHStack = UIStackView()
+    private var priceButtonsHStack = UIStackView()
     let askButton = UIButton(type: .system)
     let bidButton = UIButton(type: .system)
     let favoriteCurrenciesTableView = UITableView()
@@ -27,15 +27,11 @@ final class MainView: UIView {
     
     let tapRecognizer = UITapGestureRecognizer()
     
-    private var selectedButton: UIButton {
-        bidButton.isEnabled ? askButton : bidButton
-    }
-    
     // MARK: - Inits
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .systemBackground
-        setUpElipseView()
+        insertSubview(elipseView, at: 0)
         setUpScrollView()
         setUpBottomLabelsVStack()
         setUpLabels()
@@ -50,14 +46,10 @@ final class MainView: UIView {
     // MARK: - Overridden Methods
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        setWindowHStackSpacingForTraitCollection(traitCollection)
+        setPriceButtonsHStackSpacingForTraitCollection(traitCollection)
     }
     
     // MARK: - Subviews' setup
-    private func setUpElipseView() {
-        insertSubview(elipseView, at: 0)
-    }
-    
     private func setUpScrollView() {
         addSubview(scrollView)
         scrollView.delaysContentTouches = false
@@ -99,34 +91,33 @@ final class MainView: UIView {
     // MARK: - windowView Subviews' setup
     private func setUpWindowView() {
         scrollView.addSubview(windowView)
-        setUpWindowStackView()
+        setUpPriceButtonsHStack()
         setUpWindowViewButtons()
         setUpFavoriteCurrenciesTableView()
         addWindowSubviewsConstraints()
     }
     
-    private func setUpWindowStackView() {
-        windowView.addSubview(windowHStack)
-        windowHStack.axis = .horizontal
-        windowHStack.alignment = .fill
-        windowHStack.distribution = .fillEqually
-        setWindowHStackSpacingForTraitCollection(traitCollection)
+    private func setUpPriceButtonsHStack() {
+        windowView.addSubview(priceButtonsHStack)
+        priceButtonsHStack.axis = .horizontal
+        priceButtonsHStack.alignment = .fill
+        priceButtonsHStack.distribution = .fillEqually
+        setPriceButtonsHStackSpacingForTraitCollection(traitCollection)
     }
     
-    private func setWindowHStackSpacingForTraitCollection(_ traitCollection: UITraitCollection) {
-            if traitCollection.horizontalSizeClass == .regular {
-                windowHStack.spacing = 200
-            } else if traitCollection.horizontalSizeClass == .compact && traitCollection.verticalSizeClass == .compact {
-                windowHStack.spacing = 80
-            } else {
-                windowHStack.spacing = 44
-            }
+    private func setPriceButtonsHStackSpacingForTraitCollection(_ traitCollection: UITraitCollection) {
+        if traitCollection.horizontalSizeClass == .compact &&
+            traitCollection.verticalSizeClass == .regular {
+            priceButtonsHStack.spacing = 44
+        } else {
+            priceButtonsHStack.spacing = 80
         }
+    }
     
     private func setUpWindowViewButtons() {
         // Bid&Ask Buttons
         [bidButton, askButton].forEach { button in
-            windowHStack.addArrangedSubview(button)
+            priceButtonsHStack.addArrangedSubview(button)
             button.layer.cornerRadius = 10
             button.titleLabel?.font = UIFont(name: Fonts.Lato.regular, size: 18)
             button.setTitleColor(.white, for: .disabled)
@@ -173,13 +164,13 @@ final class MainView: UIView {
     
     // MARK: windowView Subviews' Constraints
     private func addWindowSubviewsConstraints() {
-        windowHStack.snp.makeConstraints { make in
+        priceButtonsHStack.snp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview().inset(16)
             make.height.equalTo(44)
         }
         
         favoriteCurrenciesTableView.snp.makeConstraints { make in
-            make.top.equalTo(windowHStack.snp.bottom).offset(16)
+            make.top.equalTo(priceButtonsHStack.snp.bottom).offset(16)
             make.centerX.equalToSuperview()
             make.leading.trailing.equalToSuperview().priority(999)
             make.width.lessThanOrEqualTo(361)
@@ -221,12 +212,14 @@ final class MainView: UIView {
         }
         
         appNameLabel.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(24)
+            make.leading.equalTo(windowView.snp.leading).offset(8)
             make.top.lessThanOrEqualTo(scrollView.frameLayoutGuide).offset(64)
         }
         
         windowView.snp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview().inset(16)
+            make.leading.trailing.equalToSuperview().inset(16).priority(999)
+            make.centerX.equalToSuperview()
+            make.width.equalTo(550).priority(999)
             make.top.equalToSuperview().offset(120)
             make.height.equalTo(390)
             make.top.greaterThanOrEqualTo(appNameLabel.snp.bottom).offset(16)
@@ -234,23 +227,24 @@ final class MainView: UIView {
         
         bottomLabelsVStack.snp.makeConstraints { make in
             make.top.equalTo(windowView.snp.bottom).offset(16)
-            make.leading.equalToSuperview().offset(16)
+            make.leading.equalTo(windowView.snp.leading).offset(4)
         }
     }
 }
 
 // MARK: Animations
 extension MainView {
-    func buttonsUIUpdateAction(sender: UIButton) {
+    func animatePriceButtonsTap(sender: UIButton) {
         UIView.animate(withDuration: 0.2) {
             sender.layer.backgroundColor = UIColor.dodgerBlue.cgColor
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.075) {
             // disable a button in the middle of animation duration so that the color smoothly changed from black to white
             sender.isEnabled = false
         }
-        for button in [bidButton, askButton] {
-            guard button != sender  else { continue }
+        [bidButton, askButton].forEach { button in
+            guard button != sender  else { return }
             UIView.animate(withDuration: 0.2) {
                 button.layer.backgroundColor = UIColor.white.cgColor
             }

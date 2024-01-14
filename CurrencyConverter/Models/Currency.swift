@@ -8,6 +8,11 @@
 import Foundation
 
 enum Currency: String, CaseIterable {
+    enum Price {
+        case bid
+        case ask
+    }
+    
     case aed
     case aoa
     case ars

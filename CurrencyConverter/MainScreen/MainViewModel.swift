@@ -7,12 +7,15 @@
 
 import Foundation
 import RxSwift
+import RxRelay
 
 final class MainViewModel: MainViewModelType {
-    var favoriteCurrencies: BehaviorSubject<[Currency]>
+    let favoriteCurrencies: BehaviorSubject<[Currency]>
+    let selectedPrice: BehaviorRelay<Currency.Price>
     
     // MARK: - Init
     init() {
         favoriteCurrencies = BehaviorSubject(value: [.usd, .eur, .pln, .rub])
+        selectedPrice = BehaviorRelay(value: .bid)
     }
 }

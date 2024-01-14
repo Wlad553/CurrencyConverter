@@ -15,6 +15,10 @@ final class MainViewController: UIViewController {
     
     private let disposeBag = DisposeBag()
     
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        .lightContent
+    }
+    
     // MARK: - Inits
     init(viewModel: MainViewModelType) {
         self.viewModel = viewModel
@@ -42,6 +46,7 @@ final class MainViewController: UIViewController {
     private func makeSubscriptions() {
         bindFavoriteCurrenciesToFavoriteCurrenciesTableView()
         subscribeToTapRecognizerEvent()
+        subscribeToPriceButtonsTap()
         addRxObservers()
     }
     
@@ -52,6 +57,20 @@ final class MainViewController: UIViewController {
                 self?.view.endEditing(true)
             }
             .disposed(by: disposeBag)
+    }
+    
+    private func subscribeToPriceButtonsTap() {
+        [mainView.bidButton, mainView.askButton].forEach { [weak self] button in
+            guard let self = self else { return }
+            button.rx
+                .controlEvent(.touchUpInside)
+                .subscribe (onNext: { _ in
+                    let newSelectedPrice: Currency.Price = self.mainView.bidButton.isEnabled ? .bid : .ask
+                    self.viewModel.selectedPrice.accept(newSelectedPrice)
+                    self.mainView.animatePriceButtonsTap(sender: button)
+                })
+                .disposed(by: self.disposeBag)
+        }
     }
 }
 

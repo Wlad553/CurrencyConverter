@@ -7,7 +7,9 @@
 
 import Foundation
 import RxSwift
+import RxRelay
 
 protocol MainViewModelType: AnyObject {
     var favoriteCurrencies: BehaviorSubject<[Currency]> { get }
+    var selectedPrice: BehaviorRelay<Currency.Price> { get }
 }
