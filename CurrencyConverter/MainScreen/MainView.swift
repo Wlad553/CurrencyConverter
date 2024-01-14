@@ -15,11 +15,11 @@ final class MainView: UIView {
     
     private let windowView = WindowView()
     private var priceButtonsHStack = UIStackView()
-    let askButton = UIButton(type: .system)
-    let bidButton = UIButton(type: .system)
+    let askButton = ConfigurationButton()
+    let bidButton = ConfigurationButton()
     let favoriteCurrenciesTableView = UITableView()
-    let addCurrencyButton = UIButton()
-    let shareButton = UIButton(type: .system)
+    let addCurrencyButton = ConfigurationButton()
+    let shareButton = ConfigurationButton()
     
     private let bottomLabelsVStack = UIStackView()
     private let lastUpdatedLabel = UILabel()
@@ -122,6 +122,7 @@ final class MainView: UIView {
             button.titleLabel?.font = UIFont(name: Fonts.Lato.regular, size: 18)
             button.setTitleColor(.white, for: .disabled)
             button.setTitleColor(.black, for: .normal)
+            button.tintColor = .black
         }
         
         // bidButton
@@ -139,15 +140,18 @@ final class MainView: UIView {
         addCurrencyButton.setTitle("Add Currency", for: .normal)
         addCurrencyButton.titleLabel?.font = UIFont(name: Fonts.Lato.regular, size: 17)
         addCurrencyButton.setImage(UIImage(systemName: "plus.circle.fill"), for: .normal)
-        
-        var addCurrencyButtonConfiguration = UIButton.Configuration.plain()
-        addCurrencyButtonConfiguration.imagePadding = 5
-        addCurrencyButton.configuration = addCurrencyButtonConfiguration
+        addCurrencyButton.configuration?.imagePadding = 5
         
         // shareButton
         windowView.addSubview(shareButton)
         shareButton.tintColor = .darkGray
-        shareButton.setBackgroundImage(UIImage(systemName: "square.and.arrow.up"), for: .normal)
+        shareButton.setImage(UIImage(systemName: "square.and.arrow.up"), for: .normal)
+        shareButton.configuration?.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 16, trailing: 8)
+        shareButton.imageView?.contentMode = .scaleAspectFit
+        shareButton.imageView?.snp.makeConstraints { make in
+            make.width.equalTo(32)
+            make.height.equalTo(36)
+        }
     }
     
     private func setUpFavoriteCurrenciesTableView() {
@@ -183,9 +187,7 @@ final class MainView: UIView {
         
         shareButton.snp.makeConstraints { make in
             make.top.equalTo(addCurrencyButton.snp.bottom).offset(8)
-            make.trailing.bottom.equalToSuperview().inset(16)
-            make.width.equalTo(32)
-            make.height.equalTo(36)
+            make.bottom.trailing.equalToSuperview().inset(16)
         }
     }
     
@@ -221,7 +223,7 @@ final class MainView: UIView {
             make.centerX.equalToSuperview()
             make.width.equalTo(550).priority(999)
             make.top.equalToSuperview().offset(120)
-            make.height.equalTo(390)
+            make.height.equalTo(380)
             make.top.greaterThanOrEqualTo(appNameLabel.snp.bottom).offset(16)
         }
         
@@ -235,21 +237,15 @@ final class MainView: UIView {
 // MARK: Animations
 extension MainView {
     func animatePriceButtonsTap(sender: UIButton) {
+        sender.isEnabled = false
         UIView.animate(withDuration: 0.2) {
             sender.layer.backgroundColor = UIColor.dodgerBlue.cgColor
         }
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.075) {
-            // disable a button in the middle of animation duration so that the color smoothly changed from black to white
-            sender.isEnabled = false
-        }
         [bidButton, askButton].forEach { button in
             guard button != sender  else { return }
-            UIView.animate(withDuration: 0.2) {
+            button.isEnabled = true
+            UIView.animate(withDuration: 0.1) {
                 button.layer.backgroundColor = UIColor.white.cgColor
-            }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                button.isEnabled = true
             }
         }
     }
