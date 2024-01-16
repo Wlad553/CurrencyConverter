@@ -12,4 +12,7 @@ import RxRelay
 protocol MainViewModelType: AnyObject {
     var favoriteCurrencies: BehaviorSubject<[Currency]> { get }
     var selectedPrice: BehaviorRelay<Currency.Price> { get }
+    
+    func appendCurrencyToFavorites(_ currency: Currency)
+    func prepareForTransition()
 }

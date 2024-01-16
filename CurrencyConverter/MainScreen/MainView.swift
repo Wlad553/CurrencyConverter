@@ -40,6 +40,7 @@ final class MainView: UIView {
     }
     
     required init?(coder: NSCoder) {
+        assert(false, "init(coder:) must not be used")
         super.init(coder: coder)
     }
     
@@ -85,7 +86,7 @@ final class MainView: UIView {
         lastUpdatedLabel.text = "Last updated"
         
         // lastUpdatedSublabel
-        lastUpdatedSublabel.text = CharacterConstants.doubleHyphen
+        lastUpdatedSublabel.text = Characters.doubleHyphen
     }
     
     // MARK: - windowView Subviews' setup
