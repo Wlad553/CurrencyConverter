@@ -10,7 +10,8 @@ import XCoordinator
 
 enum AppRoute: Route {
     case main
-    case currencies
+    case currencies(currenciesToExclude: [Currency])
+    case unwindMain(selectedCurrency: Currency)
 }
 
 final class AppCoordinator: NavigationCoordinator<AppRoute> {
@@ -32,11 +33,19 @@ final class AppCoordinator: NavigationCoordinator<AppRoute> {
             let viewController = MainViewController(viewModel: viewModel)
             return .push(viewController)
             
-        case .currencies:
-            let viewModel = CurrenciesViewModel(router: weakRouter)
+        case .currencies(let currenciesToExclude):
+            let viewModel = CurrenciesViewModel(excludedCurrencies: currenciesToExclude,
+                                                router: weakRouter)
             let viewController = CurrenciesViewController(viewModel: viewModel)
             let navController = UINavigationController(rootViewController: viewController)
             return .present(navController)
+            
+        case .unwindMain(let currency):
+            if let unwindViewController = navigationController.viewControllers
+                .first(where: { $0 is MainViewController }) as? MainViewController {
+                unwindViewController.viewModel.appendCurrencyToFavorites(currency)
+            }
+            return .dismiss()
         }
     }
 }

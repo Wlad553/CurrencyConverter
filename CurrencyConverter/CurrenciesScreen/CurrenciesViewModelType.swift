@@ -9,5 +9,9 @@ import Foundation
 import RxRelay
 
 protocol CurrenciesViewModelType: AnyObject {
-    var currencies: BehaviorRelay<[SectionOfCurrencies]> { get }
+    var availableCurrencies: [Currency] { get }
+    var displayedCurrencies: BehaviorRelay<[SectionOfCurrencies]> { get }
+    var searchControllerManager: SearchControllerManager { get }
+    
+    func triggerUnwind(selectedCurrency: Currency)
 }

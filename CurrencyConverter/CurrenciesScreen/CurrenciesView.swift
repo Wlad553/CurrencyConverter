@@ -10,7 +10,7 @@ import UIKit
 final class CurrenciesView: UIView {
     let currenciesTableView = UITableView(frame: .zero, style: .insetGrouped)
     
-    private let noSearchResultsStackView = UIStackView()
+    let noSearchResultsVStack = UIStackView()
     let noSearchResultsSublabel = UILabel()
     let noSearchResultsImageView = UIImageView()
     let noSearchResultsLabel = UILabel()
@@ -56,15 +56,15 @@ final class CurrenciesView: UIView {
         noSearchResultsSublabel.accessibilityIdentifier = "noSearchResultsLabelSublabel"
         
         [noSearchResultsImageView, noSearchResultsLabel, noSearchResultsSublabel].forEach { view in
-            noSearchResultsStackView.addArrangedSubview(view)
+            noSearchResultsVStack.addArrangedSubview(view)
         }
         
-        addSubview(noSearchResultsStackView)
-        noSearchResultsStackView.isHidden = true
-        noSearchResultsStackView.axis = .vertical
-        noSearchResultsStackView.spacing = 8
-        noSearchResultsStackView.distribution = .equalSpacing
-        noSearchResultsStackView.alignment = .center
+        addSubview(noSearchResultsVStack)
+        noSearchResultsVStack.isHidden = true
+        noSearchResultsVStack.axis = .vertical
+        noSearchResultsVStack.spacing = 8
+        noSearchResultsVStack.distribution = .equalSpacing
+        noSearchResultsVStack.alignment = .center
     }
     
     private func addConstraints() {
@@ -77,8 +77,35 @@ final class CurrenciesView: UIView {
             make.width.equalTo(48)
         }
         
-        noSearchResultsStackView.snp.makeConstraints { make in
+        noSearchResultsVStack.snp.makeConstraints { make in
             make.centerX.centerY.equalToSuperview()
+        }
+    }
+}
+
+// MARK: Animations
+extension CurrenciesView {
+    func animateSearchResultsVStack(notification: Notification) {
+        guard let userInfo = notification.userInfo as? [String: Any],
+              let keyboardFrame = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue
+        else { return }
+        
+        let viewToKeyboardHeightRatio = (frame.height / keyboardFrame.height)
+        let visibleViewCenter = (frame.height / viewToKeyboardHeightRatio)
+        let centerYAnchorOffset = 16 - (visibleViewCenter / 2)
+        
+        if notification.name == UIResponder.keyboardWillShowNotification {
+            self.noSearchResultsVStack.snp.updateConstraints { make in
+                make.centerY.equalToSuperview().offset(centerYAnchorOffset)
+            }
+        } else if notification.name == UIResponder.keyboardWillHideNotification {
+            self.noSearchResultsVStack.snp.updateConstraints { make in
+                make.centerY.equalToSuperview()
+            }
+        }
+        
+        UIView.animate(withDuration: 1) {
+            self.layoutIfNeeded()
         }
     }
 }

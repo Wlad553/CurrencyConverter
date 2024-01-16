@@ -34,6 +34,7 @@
 		F52977D82B5313600099F5CC /* Characters.swift in Sources */ = {isa = PBXBuildFile; fileRef = F52977D72B5313600099F5CC /* Characters.swift */; };
 		F52977DC2B5314720099F5CC /* String+isValidWithRegex.swift in Sources */ = {isa = PBXBuildFile; fileRef = F52977DB2B5314720099F5CC /* String+isValidWithRegex.swift */; };
 		F52977DE2B5315820099F5CC /* Array+safeSubscript.swift in Sources */ = {isa = PBXBuildFile; fileRef = F52977DD2B5315820099F5CC /* Array+safeSubscript.swift */; };
+		F59A46ED2B5587EF009A23AD /* SearchControllerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F59A46EC2B5587EF009A23AD /* SearchControllerManager.swift */; };
 		F5C6E3D42B51CF250001DFE4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C6E3D32B51CF250001DFE4 /* AppDelegate.swift */; };
 		F5C6E3D62B51CF250001DFE4 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C6E3D52B51CF250001DFE4 /* SceneDelegate.swift */; };
 		F5C6E3D82B51CF250001DFE4 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C6E3D72B51CF250001DFE4 /* MainViewController.swift */; };
@@ -98,6 +99,7 @@
 		F52977D72B5313600099F5CC /* Characters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Characters.swift; sourceTree = "<group>"; };
 		F52977DB2B5314720099F5CC /* String+isValidWithRegex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+isValidWithRegex.swift"; sourceTree = "<group>"; };
 		F52977DD2B5315820099F5CC /* Array+safeSubscript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+safeSubscript.swift"; sourceTree = "<group>"; };
+		F59A46EC2B5587EF009A23AD /* SearchControllerManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchControllerManager.swift; sourceTree = "<group>"; };
 		F5C6E3D02B51CF250001DFE4 /* CurrencyConverter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CurrencyConverter.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F5C6E3D32B51CF250001DFE4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F5C6E3D52B51CF250001DFE4 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -247,6 +249,14 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
+		F59A46EE2B558F04009A23AD /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				F59A46EC2B5587EF009A23AD /* SearchControllerManager.swift */,
+			);
+			path = Managers;
+			sourceTree = "<group>";
+		};
 		F5C6E3C72B51CF250001DFE4 = {
 			isa = PBXGroup;
 			children = (
@@ -274,6 +284,7 @@
 				F5C6E3D32B51CF250001DFE4 /* AppDelegate.swift */,
 				F5C6E3D52B51CF250001DFE4 /* SceneDelegate.swift */,
 				F51CFBD72B5422DB003B5CA8 /* AppCoordinator.swift */,
+				F59A46EE2B558F04009A23AD /* Managers */,
 				F52977C92B52CA370099F5CC /* Models */,
 				F5C6E40A2B51D42F0001DFE4 /* MainScreen */,
 				F51CFBCD2B541FAF003B5CA8 /* CurrenciesScreen */,
@@ -514,6 +525,7 @@
 				F51CFBCB2B5403F5003B5CA8 /* ConfigurationButton.swift in Sources */,
 				F51CFBD12B542036003B5CA8 /* CurrenciesView.swift in Sources */,
 				F52977D82B5313600099F5CC /* Characters.swift in Sources */,
+				F59A46ED2B5587EF009A23AD /* SearchControllerManager.swift in Sources */,
 				F52977C42B52BB760099F5CC /* MainViewModelType.swift in Sources */,
 				F5C6E3D42B51CF250001DFE4 /* AppDelegate.swift in Sources */,
 				F52977B12B5289C70099F5CC /* MainView.swift in Sources */,

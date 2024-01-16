@@ -11,10 +11,22 @@ import RxRelay
 
 final class CurrenciesViewModel: CurrenciesViewModelType {
     private let router: WeakRouter<AppRoute>
-    let currencies: BehaviorRelay<[SectionOfCurrencies]>
+    let availableCurrencies: [Currency]
+    let displayedCurrencies: BehaviorRelay<[SectionOfCurrencies]>
+    let searchControllerManager = SearchControllerManager()
     
-    init(router: WeakRouter<AppRoute>) {
+    // MARK: - Init
+    init(excludedCurrencies: [Currency], router: WeakRouter<AppRoute>) {
+        self.availableCurrencies = Currency.availableCurrencies().filter { currency in
+            !excludedCurrencies.contains(currency)
+        }
+        
         self.router = router
-        currencies = BehaviorRelay(value: SectionOfCurrencies.sectionsOfCurrenciesSorted())
+        displayedCurrencies = BehaviorRelay(value: availableCurrencies.alphabeticallyGroupedSections())
+    }
+    
+    // MARK: Navigation
+    func triggerUnwind(selectedCurrency: Currency) {
+        router.trigger(.unwindMain(selectedCurrency: selectedCurrency))
     }
 }

@@ -24,7 +24,8 @@ final class CurrenciesViewController: UIViewController {
     
     required init?(coder: NSCoder) {
         assert(false, "init(coder:) must not be used")
-        viewModel = CurrenciesViewModel(router: AppCoordinator().weakRouter)
+        viewModel = CurrenciesViewModel(excludedCurrencies: [],
+                                        router: AppCoordinator().weakRouter)
         super.init(coder: coder)
     }
     
@@ -37,8 +38,7 @@ final class CurrenciesViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpNavigationItem()
-        bindCurrenciesToTableView()
-        subscribeToCancelBarButtonTap()
+        makeSubscriptions()
     }
     
     // MARK: - NavigationItem setup
@@ -47,7 +47,6 @@ final class CurrenciesViewController: UIViewController {
         viewController.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel")
         
         navigationItem.searchController = searchController
-        searchController.searchResultsUpdater = self
         searchController.automaticallyShowsCancelButton = true
         searchController.searchBar.placeholder = "Search Currency"
         searchController.searchBar.searchTextField.font = UIFont(name: Fonts.Lato.regular, size: 17)
@@ -55,13 +54,24 @@ final class CurrenciesViewController: UIViewController {
     }
     
     // MARK: - Subscriptions
+    private func makeSubscriptions() {
+        bindCurrenciesToTableView()
+        subscribeToCancelBarButtonTap()
+        subscribeToWillBeginDragging()
+        subscribeToSearchResultsUpdate()
+        addNotificationCenterRxObservers()
+        subscribeToRowSelection()
+    }
+    
+    // TableView Data
     private func bindCurrenciesToTableView() {
-        viewModel.currencies
+        viewModel.displayedCurrencies
             .bind(to: currenciesView.currenciesTableView.rx
                 .items(dataSource: tableViewDataSource()))
             .disposed(by: disposeBag)
     }
     
+    // Cancel Button
     private func subscribeToCancelBarButtonTap() {
         navigationItem.leftBarButtonItem?.rx
             .tap
@@ -70,9 +80,32 @@ final class CurrenciesViewController: UIViewController {
             })
             .disposed(by: disposeBag)
     }
+    
+    // ScrollView
+    private func subscribeToWillBeginDragging() {
+        currenciesView.currenciesTableView.rx
+            .willBeginDragging
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                if self.searchController.searchBar.searchTextField.isFirstResponder {
+                    self.searchController.searchBar.searchTextField.resignFirstResponder()
+                }
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    // Navigation
+    private func subscribeToRowSelection() {
+        currenciesView.currenciesTableView.rx
+            .modelSelected(Currency.self)
+            .subscribe { [weak self] currency in
+                self?.viewModel.triggerUnwind(selectedCurrency: currency)
+            }
+            .disposed(by: disposeBag)
+    }
 }
 
-// MARK: - UICollectionViewDataSource
+// MARK: - TableView DataSource
 extension CurrenciesViewController {
     private func tableViewDataSource() -> RxTableViewSectionedReloadDataSource<SectionOfCurrencies> {
         let dataSource = RxTableViewSectionedReloadDataSource<SectionOfCurrencies> { _, tableView, indexPath, currency in
@@ -81,17 +114,81 @@ extension CurrenciesViewController {
             return cell
         }
         
-    titleForHeaderInSection: { _, section in
-        guard let headerTitleCharacter = self.viewModel.currencies.value[section].items.first?.code.first else { return nil }
-        return String(headerTitleCharacter)
+    titleForHeaderInSection: { [weak self] _, section in
+        guard let displayedCurrencies = self?.viewModel.displayedCurrencies.value[section].items else { return nil }
+        if let searchText = self?.searchController.searchBar.text,
+           !searchText.isEmpty && !displayedCurrencies.isEmpty {
+            return "Top results"
+        }
+        
+        if let headerTitleCharacter = displayedCurrencies.first?.code.first {
+            return String(headerTitleCharacter)
+        }
+        
+        return nil
     }
         return dataSource
     }
 }
 
-// MARK: UISearchResultsUpdating
-extension CurrenciesViewController: UISearchResultsUpdating {
-    func updateSearchResults(for searchController: UISearchController) {
+// MARK: SearchResultsUpdate
+extension CurrenciesViewController {
+    private func subscribeToSearchResultsUpdate() {
+        searchController.searchBar.rx.text.orEmpty
+            .subscribe(onNext: { [weak self] searchText in
+                guard let self = self else { return }
+                if searchText.isEmpty {
+                    currenciesView.noSearchResultsVStack.isHidden = true
+                    viewModel.displayedCurrencies.accept(
+                        viewModel.availableCurrencies.alphabeticallyGroupedSections()
+                    )
+                    return
+                }
+                
+                let filteredResults = viewModel.searchControllerManager.filteredResultsWith(searchText,
+                                                                                            arrayToFilter: viewModel.availableCurrencies)
+                viewModel.displayedCurrencies.accept(
+                    [SectionOfCurrencies(items: filteredResults)]
+                )
+
+                if filteredResults.isEmpty {
+                    currenciesView.noSearchResultsVStack.isHidden = false
+                    currenciesView.noSearchResultsLabel.text = #"No results for "\#(searchText)""#
+                } else {
+                    currenciesView.noSearchResultsVStack.isHidden = true
+                }
+            })
+            .disposed(by: disposeBag)
+        
+        searchController.searchBar.rx
+            .cancelButtonClicked
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                currenciesView.noSearchResultsVStack.isHidden = true
+                viewModel.displayedCurrencies.accept(
+                    viewModel.availableCurrencies.alphabeticallyGroupedSections()
+                )
+            })
+            .disposed(by: disposeBag)
+    }
+}
+
+// MARK: NotificationCenter Subscriptions
+extension CurrenciesViewController {
+    private func addNotificationCenterRxObservers() {
+        NotificationCenter.default.rx
+            .notification(UIResponder.keyboardWillShowNotification)
+            .subscribe(onNext: { [weak self] notification in
+                self?.currenciesView.animateSearchResultsVStack(notification: notification)
+            })
+            .disposed(by: disposeBag)
+        
+        NotificationCenter.default.rx
+            .notification(UIResponder.keyboardWillHideNotification)
+            .subscribe(onNext: { [weak self] notification in
+                self?.currenciesView.animateSearchResultsVStack(notification: notification)
+            })
+            .disposed(by: disposeBag)
     }
 }
 

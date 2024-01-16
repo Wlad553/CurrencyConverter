@@ -49,7 +49,7 @@ final class MainViewController: UIViewController {
         subscribeToTapRecognizerEvent()
         subscribeToPriceButtonsTap()
         subscribeToAddCurrencyButtonTap()
-        addRxObservers()
+        addNotificationCenterRxObservers()
     }
     
     // MARK: Subscriptions
@@ -92,7 +92,8 @@ extension MainViewController {
     private func bindFavoriteCurrenciesToFavoriteCurrenciesTableView() {
         viewModel.favoriteCurrencies
             .bind(to: mainView.favoriteCurrenciesTableView.rx
-                .items(cellIdentifier: FavoriteCurrencyCell.reuseIdentifier, cellType: FavoriteCurrencyCell.self)) { _, currency, cell in
+                .items(cellIdentifier: FavoriteCurrencyCell.reuseIdentifier,
+                       cellType: FavoriteCurrencyCell.self)) { _, currency, cell in
                     cell.viewModel = CurrencyCellViewModel(currency: currency)
                 }
                 .disposed(by: disposeBag)
@@ -101,7 +102,7 @@ extension MainViewController {
 
 // MARK: NotificationCenter Subscriptions
 extension MainViewController {
-    private func addRxObservers() {
+    private func addNotificationCenterRxObservers() {
         NotificationCenter.default.rx
            .notification(UIResponder.keyboardWillShowNotification)
             .subscribe(onNext: { [weak self] notification in

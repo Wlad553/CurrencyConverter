@@ -19,12 +19,20 @@ final class MainViewModel: MainViewModelType {
     // MARK: - Init
     init(router: WeakRouter<AppRoute>) {
         self.router = router
-        favoriteCurrencies = BehaviorSubject(value: [.usd, .eur, .pln, .rub])
+        favoriteCurrencies = BehaviorSubject(value: [.usd, .eur, .pln])
         selectedPrice = BehaviorRelay(value: .bid)
+    }
+    
+    // MARK: Data manipulation
+    func appendCurrencyToFavorites(_ currency: Currency) {
+        guard var newCurrencyList = try? favoriteCurrencies.value() else { return }
+        newCurrencyList.append(currency)
+        favoriteCurrencies.onNext(newCurrencyList)
     }
     
     // MARK: Navigation
     func prepareForTransition() {
-        router.trigger(.currencies)
+        guard let currencies = try? favoriteCurrencies.value() else { return }
+        router.trigger(.currencies(currenciesToExclude: currencies))
     }
 }
