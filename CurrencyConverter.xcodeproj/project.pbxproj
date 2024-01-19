@@ -35,6 +35,8 @@
 		F52977DC2B5314720099F5CC /* String+isValidWithRegex.swift in Sources */ = {isa = PBXBuildFile; fileRef = F52977DB2B5314720099F5CC /* String+isValidWithRegex.swift */; };
 		F52977DE2B5315820099F5CC /* Array+safeSubscript.swift in Sources */ = {isa = PBXBuildFile; fileRef = F52977DD2B5315820099F5CC /* Array+safeSubscript.swift */; };
 		F59A46ED2B5587EF009A23AD /* SearchControllerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F59A46EC2B5587EF009A23AD /* SearchControllerManager.swift */; };
+		F5AD14C02B581EE70056143C /* CurrencyArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5AD14BF2B581EE70056143C /* CurrencyArray.swift */; };
+		F5AD14C32B581F110056143C /* CurrencyProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5AD14C22B581F110056143C /* CurrencyProtocol.swift */; };
 		F5C6E3D42B51CF250001DFE4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C6E3D32B51CF250001DFE4 /* AppDelegate.swift */; };
 		F5C6E3D62B51CF250001DFE4 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C6E3D52B51CF250001DFE4 /* SceneDelegate.swift */; };
 		F5C6E3D82B51CF250001DFE4 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C6E3D72B51CF250001DFE4 /* MainViewController.swift */; };
@@ -100,6 +102,8 @@
 		F52977DB2B5314720099F5CC /* String+isValidWithRegex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+isValidWithRegex.swift"; sourceTree = "<group>"; };
 		F52977DD2B5315820099F5CC /* Array+safeSubscript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+safeSubscript.swift"; sourceTree = "<group>"; };
 		F59A46EC2B5587EF009A23AD /* SearchControllerManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchControllerManager.swift; sourceTree = "<group>"; };
+		F5AD14BF2B581EE70056143C /* CurrencyArray.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyArray.swift; sourceTree = "<group>"; };
+		F5AD14C22B581F110056143C /* CurrencyProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyProtocol.swift; sourceTree = "<group>"; };
 		F5C6E3D02B51CF250001DFE4 /* CurrencyConverter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CurrencyConverter.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F5C6E3D32B51CF250001DFE4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F5C6E3D52B51CF250001DFE4 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -215,6 +219,8 @@
 			children = (
 				F52977CA2B52CA400099F5CC /* Currency.swift */,
 				F51CFBE72B543B6B003B5CA8 /* SectionOfCurrencies.swift */,
+				F5AD14BF2B581EE70056143C /* CurrencyArray.swift */,
+				F5AD14C22B581F110056143C /* CurrencyProtocol.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -520,6 +526,7 @@
 				F52977C62B52BC390099F5CC /* CurrencyCellViewModel.swift in Sources */,
 				F52977B82B528BD80099F5CC /* EllipseView.swift in Sources */,
 				F5C6E3D82B51CF250001DFE4 /* MainViewController.swift in Sources */,
+				F5AD14C32B581F110056143C /* CurrencyProtocol.swift in Sources */,
 				F5C6E3DE2B51CF250001DFE4 /* CurrencyConverter.xcdatamodeld in Sources */,
 				F52977CB2B52CA400099F5CC /* Currency.swift in Sources */,
 				F51CFBCB2B5403F5003B5CA8 /* ConfigurationButton.swift in Sources */,
@@ -531,6 +538,7 @@
 				F52977B12B5289C70099F5CC /* MainView.swift in Sources */,
 				F52977BD2B52938B0099F5CC /* WindowView.swift in Sources */,
 				F5C6E3D62B51CF250001DFE4 /* SceneDelegate.swift in Sources */,
+				F5AD14C02B581EE70056143C /* CurrencyArray.swift in Sources */,
 				F52977C82B52BC490099F5CC /* CurrencyCellViewModelType.swift in Sources */,
 				F52977B52B528A780099F5CC /* ScrollView.swift in Sources */,
 				F52977C22B52BB580099F5CC /* MainViewModel.swift in Sources */,

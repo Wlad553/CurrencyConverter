@@ -6,13 +6,9 @@
 //
 
 import Foundation
+import Differentiator
 
-public protocol CurrencyProtocol {
-    var code: String { get }
-    var localizedName: String { get }
-}
-
-enum Currency: String, CaseIterable, CurrencyProtocol {
+enum Currency: String, CaseIterable {
     enum Price {
         case bid
         case ask
@@ -71,14 +67,6 @@ enum Currency: String, CaseIterable, CurrencyProtocol {
     case xpt
     case zar
     
-    var code: String {
-        rawValue.uppercased()
-    }
-    
-    var localizedName: String {
-        NSLocalizedString(code, comment: "Localized name")
-    }
-    
     // minus 1 since we don't have such a pair like USD/USD
     static let availableCurrencyPairsNumer = allCases.count - 1
     
@@ -97,21 +85,20 @@ enum Currency: String, CaseIterable, CurrencyProtocol {
     }
 }
 
-// MARK: - Array of Currency
-extension Array<Currency> {
-    func alphabeticallyGroupedSections() -> [SectionOfCurrencies] {
-        var alphabeticallySorted2DArray = [SectionOfCurrencies(items: [])]
-        var section = 0
-        self.forEach { currency in
-            if alphabeticallySorted2DArray[section].items.isEmpty ||
-                alphabeticallySorted2DArray[section].items.first?.code.first == currency.code.first {
-                alphabeticallySorted2DArray[section].items.append(currency)
-            } else {
-                section += 1
-                alphabeticallySorted2DArray.append(SectionOfCurrencies(items: .init()))
-                alphabeticallySorted2DArray[section].items.append(currency)
-            }
-        }
-        return alphabeticallySorted2DArray
+// CurrencyProtocol
+extension Currency: CurrencyProtocol {
+    var code: String {
+        rawValue.uppercased()
+    }
+    
+    var localizedName: String {
+        NSLocalizedString(code, comment: "Localized name")
+    }
+}
+
+// IdentifiableType
+extension Currency: IdentifiableType {
+    var identity: String {
+        return code
     }
 }

@@ -7,9 +7,11 @@
 
 import UIKit
 import SnapKit
+import RxSwift
+import RxRelay
 
 final class MainView: UIView {
-    let scrollView = ScrollView()
+    private let scrollView = ScrollView()
     private let elipseView = EllipseView()
     private let appNameLabel = UILabel()
     
@@ -19,6 +21,7 @@ final class MainView: UIView {
     let bidButton = ConfigurationButton()
     let favoriteCurrenciesTableView = UITableView()
     let addCurrencyButton = ConfigurationButton()
+    let editButton = ConfigurationButton()
     let shareButton = ConfigurationButton()
     
     private let bottomLabelsVStack = UIStackView()
@@ -27,16 +30,23 @@ final class MainView: UIView {
     
     let tapRecognizer = UITapGestureRecognizer()
     
+    private var isTraitCollectionChangedOnce = false
+    let isTableViewEditing = BehaviorRelay(value: false)
+    
+    private let disposeBag = DisposeBag()
+    
     // MARK: - Inits
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .systemBackground
         insertSubview(elipseView, at: 0)
         setUpScrollView()
+        setUpTapGestureRecognizer()
         setUpBottomLabelsVStack()
         setUpLabels()
         setUpWindowView()
         addConstraints()
+        bindIsTableViewEditingToTableViewIsEditing()
     }
     
     required init?(coder: NSCoder) {
@@ -47,7 +57,20 @@ final class MainView: UIView {
     // MARK: - Overridden Methods
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
+        fitTableViewHeightToNumberOfRows(animated: true)
         setPriceButtonsHStackSpacingForTraitCollection(traitCollection)
+        if !isTraitCollectionChangedOnce {
+            isTraitCollectionChangedOnce = true
+        }
+    }
+    
+    override var frame: CGRect {
+        didSet {
+            if oldValue.height == frame.width &&
+                traitCollection.horizontalSizeClass == .regular && traitCollection.verticalSizeClass == .regular {
+                fitTableViewHeightToNumberOfRows(animated: true)
+            }
+        }
     }
     
     // MARK: - Subviews' setup
@@ -55,7 +78,11 @@ final class MainView: UIView {
         addSubview(scrollView)
         scrollView.delaysContentTouches = false
         scrollView.showsVerticalScrollIndicator = false
+    }
+    
+    private func setUpTapGestureRecognizer() {
         scrollView.addGestureRecognizer(tapRecognizer)
+        tapRecognizer.cancelsTouchesInView = false
     }
     
     private func setUpBottomLabelsVStack() {
@@ -143,16 +170,17 @@ final class MainView: UIView {
         addCurrencyButton.setImage(UIImage(systemName: "plus.circle.fill"), for: .normal)
         addCurrencyButton.configuration?.imagePadding = 5
         
+        // editButton
+        windowView.addSubview(editButton)
+        editButton.tintColor = .tintColor
+        editButton.setTitle("Edit", for: .normal)
+        editButton.titleLabel?.font = UIFont(name: Fonts.Lato.regular, size: 17)
+        
         // shareButton
         windowView.addSubview(shareButton)
         shareButton.tintColor = .darkGray
-        shareButton.setImage(UIImage(systemName: "square.and.arrow.up"), for: .normal)
-        shareButton.configuration?.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 16, trailing: 8)
-        shareButton.imageView?.contentMode = .scaleAspectFit
-        shareButton.imageView?.snp.makeConstraints { make in
-            make.width.equalTo(32)
-            make.height.equalTo(36)
-        }
+        shareButton.configuration?.background = .clear()
+        shareButton.configuration?.background.image = UIImage(systemName: "square.and.arrow.up")
     }
     
     private func setUpFavoriteCurrenciesTableView() {
@@ -179,6 +207,7 @@ final class MainView: UIView {
             make.centerX.equalToSuperview()
             make.leading.trailing.equalToSuperview().priority(999)
             make.width.lessThanOrEqualTo(361)
+            make.height.equalTo(70)
         }
         
         addCurrencyButton.snp.makeConstraints { make in
@@ -186,9 +215,15 @@ final class MainView: UIView {
             make.centerX.equalToSuperview()
         }
         
-        shareButton.snp.makeConstraints { make in
+        editButton.snp.makeConstraints { make in
             make.top.equalTo(addCurrencyButton.snp.bottom).offset(8)
             make.bottom.trailing.equalToSuperview().inset(16)
+        }
+        
+        shareButton.snp.makeConstraints { make in
+            make.leading.bottom.equalToSuperview().inset(16)
+            make.width.equalTo(32)
+            make.height.equalTo(36)
         }
     }
     
@@ -224,7 +259,6 @@ final class MainView: UIView {
             make.centerX.equalToSuperview()
             make.width.equalTo(550).priority(999)
             make.top.equalToSuperview().offset(120)
-            make.height.equalTo(380)
             make.top.greaterThanOrEqualTo(appNameLabel.snp.bottom).offset(16)
         }
         
@@ -233,10 +267,18 @@ final class MainView: UIView {
             make.leading.equalTo(windowView.snp.leading).offset(4)
         }
     }
+
+    // MARK: - Subscriptions
+    private func bindIsTableViewEditingToTableViewIsEditing() {
+        isTableViewEditing
+            .bind(to: favoriteCurrenciesTableView.rx.isEditing)
+            .disposed(by: disposeBag)
+    }
 }
 
-// MARK: Animations
+// MARK: - Animations
 extension MainView {
+    // Bid & Ask Buttons
     func animatePriceButtonsTap(sender: UIButton) {
         sender.isEnabled = false
         UIView.animate(withDuration: 0.2) {
@@ -251,6 +293,57 @@ extension MainView {
         }
     }
     
+    // TableView
+    func fitTableViewHeightToNumberOfRows(animated: Bool) {
+        let numberOfRows = favoriteCurrenciesTableView.numberOfRows(inSection: 0)
+        let maxNumberOfCellsToFit: Int
+        let numberOfCellsToPass: Int
+        
+        if traitCollection.verticalSizeClass == .compact {
+            let zeroCellsWindowViewHeight = windowView.frame.height - favoriteCurrenciesTableView.frame.height
+            maxNumberOfCellsToFit = Int((frame.height - zeroCellsWindowViewHeight) / favoriteCurrenciesTableView.rowHeight)
+        } else {
+            let zeroCellsViewBottomElementYCoordinate = bottomLabelsVStack.frame.origin.y + bottomLabelsVStack.frame.height - favoriteCurrenciesTableView.frame.height
+            let viewHeight = frame.height - safeAreaInsets.top - 16
+            maxNumberOfCellsToFit = Int((viewHeight - zeroCellsViewBottomElementYCoordinate) / favoriteCurrenciesTableView.rowHeight)
+        }
+        
+        numberOfCellsToPass = isTraitCollectionChangedOnce ? min(numberOfRows, maxNumberOfCellsToFit) : numberOfRows
+        
+        favoriteCurrenciesTableView.snp.updateConstraints { make in
+            make.height.equalTo(CGFloat(numberOfCellsToPass) * favoriteCurrenciesTableView.rowHeight)
+        }
+        
+        guard isTraitCollectionChangedOnce else { return }
+        UIView.animate(withDuration: animated ? 0.3 : 0.0) {
+            self.layoutIfNeeded()
+        }
+    }
+    
+    func toggleTableViewIsEditing() {
+        var cells: [FavoriteCurrencyCell] = []
+        (0..<favoriteCurrenciesTableView.numberOfRows(inSection: 0)).forEach { row in
+            guard let cell = favoriteCurrenciesTableView.cellForRow(at: IndexPath(row: row, section: 0)) as? FavoriteCurrencyCell else { return }
+            cells.append(cell)
+        }
+        
+        if favoriteCurrenciesTableView.isEditing {
+            favoriteCurrenciesTableView.setEditing(false, animated: true)
+            isTableViewEditing.accept(false)
+            cells.forEach { cell in
+                cell.isEditingToggle(animated: true, isTableViewEditing:  false)
+            }
+        } else {
+            endEditing(true)
+            cells.forEach { cell in
+                cell.isEditingToggle(animated: true, isTableViewEditing:  true)
+            }
+            self.favoriteCurrenciesTableView.setEditing(true, animated: true)
+            self.isTableViewEditing.accept(true)
+        }
+    }
+    
+    // ScrollView Offset
     func toggleScrollViewContentOffset(notification: Notification) {
         guard let userInfo = notification.userInfo as? [String: Any],
               let keyboardFrame = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue
