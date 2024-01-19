@@ -8,7 +8,7 @@
 import UIKit
 import RxSwift
 import RxCocoa
-import XCoordinator
+import RxDataSources
 
 final class MainViewController: UIViewController {
     let mainView = MainView()
@@ -43,12 +43,19 @@ final class MainViewController: UIViewController {
         makeSubscriptions()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        mainView.fitTableViewHeightToNumberOfRows(animated: false)
+    }
+    
     // MARK: - Subscription List
     private func makeSubscriptions() {
-        bindFavoriteCurrenciesToFavoriteCurrenciesTableView()
         subscribeToTapRecognizerEvent()
-        subscribeToPriceButtonsTap()
+        subscribeToViewButtonsTap()
         subscribeToAddCurrencyButtonTap()
+        bindFavoriteCurrenciesToFavoriteCurrenciesTableView()
+        subscribeToTableViewEvents()
+        subscribeToFavoriteCurrencies()
         addNotificationCenterRxObservers()
     }
     
@@ -61,11 +68,12 @@ final class MainViewController: UIViewController {
             .disposed(by: disposeBag)
     }
     
-    private func subscribeToPriceButtonsTap() {
+    private func subscribeToViewButtonsTap() {
+        // Bid & Ask buttons
         [mainView.bidButton, mainView.askButton].forEach { [weak self] button in
             guard let self = self else { return }
             button.rx
-                .controlEvent(.touchUpInside)
+                .tap
                 .subscribe (onNext: { _ in
                     let newSelectedPrice: Currency.Price = self.mainView.bidButton.isEnabled ? .bid : .ask
                     self.viewModel.selectedPrice.accept(newSelectedPrice)
@@ -73,30 +81,81 @@ final class MainViewController: UIViewController {
                 })
                 .disposed(by: self.disposeBag)
         }
+        
+        // Edit button
+        mainView.editButton.rx
+            .tap
+            .subscribe(onNext: { [weak self] _ in
+                self?.mainView.toggleTableViewIsEditing()
+            })
+            .disposed(by: disposeBag)
     }
     
     // MARK: Navigation
     private func subscribeToAddCurrencyButtonTap() {
         mainView.addCurrencyButton.rx
-            .controlEvent(.touchUpInside)
+            .tap
             .subscribe(onNext: { [weak self] _ in
-                self?.view.endEditing(true)
-                self?.viewModel.prepareForTransition()
+                guard let self = self else { return }
+                view.endEditing(true)
+                if mainView.favoriteCurrenciesTableView.isEditing {
+                    mainView.toggleTableViewIsEditing()
+                }
+                viewModel.prepareForTransition()
             })
             .disposed(by: disposeBag)
     }
 }
 
-// MARK: - UICollectionViewDataSource
+// MARK: - UICollectionViewDataSource & Subscriptions
 extension MainViewController {
+    private func tableViewDataSource() -> RxTableViewSectionedAnimatedDataSource<SectionOfCurrencies> {
+        let animationConfiguration = AnimationConfiguration(insertAnimation: .fade,
+                                                            reloadAnimation: .fade,
+                                                            deleteAnimation: .fade)
+        let dataSource = RxTableViewSectionedAnimatedDataSource<SectionOfCurrencies>(animationConfiguration: animationConfiguration,
+                                                                                     configureCell: { [weak self] _, tableView, indexPath, currency in
+            guard let self = self else { return UITableViewCell() }
+            let cell = tableView.dequeueReusableCell(withIdentifier: FavoriteCurrencyCell.reuseIdentifier, for: indexPath)
+            (cell as? FavoriteCurrencyCell)?.viewModel = CurrencyCellViewModel(currency: currency)
+            (cell as? FavoriteCurrencyCell)?.isEditingToggle(animated: false, isTableViewEditing: mainView.isTableViewEditing.value)
+            return cell
+        },
+                                                                                     canEditRowAtIndexPath: { _, _ in true },
+                                                                                     canMoveRowAtIndexPath: { _, _ in true})
+        return dataSource
+    }
+    
     private func bindFavoriteCurrenciesToFavoriteCurrenciesTableView() {
         viewModel.favoriteCurrencies
             .bind(to: mainView.favoriteCurrenciesTableView.rx
-                .items(cellIdentifier: FavoriteCurrencyCell.reuseIdentifier,
-                       cellType: FavoriteCurrencyCell.self)) { _, currency, cell in
-                    cell.viewModel = CurrencyCellViewModel(currency: currency)
-                }
-                .disposed(by: disposeBag)
+                .items(dataSource: tableViewDataSource()))
+            .disposed(by: disposeBag)
+    }
+    
+    private func subscribeToTableViewEvents() {
+        mainView.favoriteCurrenciesTableView.rx
+            .modelDeleted(Currency.self)
+            .subscribe (onNext: { [weak self] currency in
+                self?.viewModel.deleteCurrencyFromFavorites(currency)
+            })
+            .disposed(by: disposeBag)
+        
+        mainView.favoriteCurrenciesTableView.rx
+            .itemMoved
+            .subscribe(onNext: { [weak self] sourceIndexPath, destinationIndexPath in
+                self?.viewModel.moveCurrency(from: sourceIndexPath, to: destinationIndexPath)
+                
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    private func subscribeToFavoriteCurrencies() {
+        viewModel.favoriteCurrencies
+            .subscribe(onNext: { [weak self] _ in
+                self?.mainView.fitTableViewHeightToNumberOfRows(animated: true)
+            })
+            .disposed(by: disposeBag)
     }
 }
 

@@ -14,7 +14,7 @@ final class FavoriteCurrencyCell: UITableViewCell {
     
     let amountTextField = UITextField()
     
-    private let hStack = UIStackView()
+    let hStack = UIStackView()
     let currencyLabel = UILabel()
     let chevronImageView = UIImageView(image: UIImage(systemName: "chevron.right"))
         
@@ -147,5 +147,21 @@ final class FavoriteCurrencyCell: UITableViewCell {
             })
             .bind(to: amountTextField.rx.text)
             .disposed(by: disposeBag)
+    }
+}
+
+// MARK: - Animations
+extension FavoriteCurrencyCell {
+    func isEditingToggle(animated: Bool, isTableViewEditing: Bool) {
+        hStack.snp.updateConstraints { make in
+            make.leading.equalToSuperview().offset(isTableViewEditing ? 56 : 32)
+        }
+        amountTextField.snp.updateConstraints { make in
+            make.trailing.equalToSuperview().inset(isTableViewEditing ? 56 : 32)
+        }
+        
+        UIView.animate(withDuration: animated ? 0.3 : 0.0) {
+            self.layoutIfNeeded()
+        }
     }
 }

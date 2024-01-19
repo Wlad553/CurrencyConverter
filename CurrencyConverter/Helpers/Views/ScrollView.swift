@@ -10,6 +10,6 @@ import UIKit
 final class ScrollView: UIScrollView {
     override func touchesShouldCancel(in view: UIView) -> Bool {
         super.touchesShouldCancel(in: view)
-        return true
+        return false
     }
 }
