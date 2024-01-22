@@ -30,7 +30,7 @@ final class MainView: UIView {
     
     let tapRecognizer = UITapGestureRecognizer()
     
-    private var isTraitCollectionChangedOnce = false
+    private var isWindowViewAnimationEnabled = false
     let isTableViewEditing = BehaviorRelay(value: false)
     
     private let disposeBag = DisposeBag()
@@ -57,19 +57,15 @@ final class MainView: UIView {
     // MARK: - Overridden Methods
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        fitTableViewHeightToNumberOfRows(animated: true)
         setPriceButtonsHStackSpacingForTraitCollection(traitCollection)
-        if !isTraitCollectionChangedOnce {
-            isTraitCollectionChangedOnce = true
-        }
     }
     
-    override var frame: CGRect {
-        didSet {
-            if oldValue.height == frame.width &&
-                traitCollection.horizontalSizeClass == .regular && traitCollection.verticalSizeClass == .regular {
-                fitTableViewHeightToNumberOfRows(animated: true)
-            }
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        fitTableViewHeightToNumberOfRows(animated: true)
+        toggleTableViewCellsIsEditing(animated: true, isTableViewEditing: isTableViewEditing.value)
+        if !isWindowViewAnimationEnabled {
+            isWindowViewAnimationEnabled = true
         }
     }
     
@@ -206,7 +202,6 @@ final class MainView: UIView {
             make.top.equalTo(priceButtonsHStack.snp.bottom).offset(16)
             make.centerX.equalToSuperview()
             make.leading.trailing.equalToSuperview().priority(999)
-            make.width.lessThanOrEqualTo(361)
             make.height.equalTo(70)
         }
         
@@ -308,36 +303,40 @@ extension MainView {
             maxNumberOfCellsToFit = Int((viewHeight - zeroCellsViewBottomElementYCoordinate) / favoriteCurrenciesTableView.rowHeight)
         }
         
-        numberOfCellsToPass = isTraitCollectionChangedOnce ? min(numberOfRows, maxNumberOfCellsToFit) : numberOfRows
+        numberOfCellsToPass = isWindowViewAnimationEnabled ? min(numberOfRows, maxNumberOfCellsToFit) : numberOfRows
         
         favoriteCurrenciesTableView.snp.updateConstraints { make in
             make.height.equalTo(CGFloat(numberOfCellsToPass) * favoriteCurrenciesTableView.rowHeight)
         }
         
-        guard isTraitCollectionChangedOnce else { return }
+        guard isWindowViewAnimationEnabled else { return }
         UIView.animate(withDuration: animated ? 0.3 : 0.0) {
             self.layoutIfNeeded()
+        } completion: { _ in
+            self.windowView.isShadowPathAnimationEnabled = true
         }
     }
     
-    func toggleTableViewIsEditing() {
+    func toggleTableViewCellsIsEditing(animated: Bool, isTableViewEditing: Bool) {
         var cells: [FavoriteCurrencyCell] = []
         (0..<favoriteCurrenciesTableView.numberOfRows(inSection: 0)).forEach { row in
             guard let cell = favoriteCurrenciesTableView.cellForRow(at: IndexPath(row: row, section: 0)) as? FavoriteCurrencyCell else { return }
             cells.append(cell)
         }
         
+        cells.forEach { cell in
+            cell.isEditingToggle(animated: animated, isTableViewEditing:  isTableViewEditing)
+        }
+    }
+    
+    func toggleTableViewIsEditing() {
         if favoriteCurrenciesTableView.isEditing {
             favoriteCurrenciesTableView.setEditing(false, animated: true)
             isTableViewEditing.accept(false)
-            cells.forEach { cell in
-                cell.isEditingToggle(animated: true, isTableViewEditing:  false)
-            }
+            toggleTableViewCellsIsEditing(animated: true, isTableViewEditing: false)
         } else {
             endEditing(true)
-            cells.forEach { cell in
-                cell.isEditingToggle(animated: true, isTableViewEditing:  true)
-            }
+            toggleTableViewCellsIsEditing(animated: true, isTableViewEditing: true)
             self.favoriteCurrenciesTableView.setEditing(true, animated: true)
             self.isTableViewEditing.accept(true)
         }

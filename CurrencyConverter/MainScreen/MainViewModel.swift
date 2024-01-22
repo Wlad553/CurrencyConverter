@@ -19,7 +19,7 @@ final class MainViewModel: MainViewModelType {
     // MARK: - Init
     init(router: WeakRouter<AppRoute>) {
         self.router = router
-        favoriteCurrencies = BehaviorSubject(value: [SectionOfCurrencies(items: [.usd, .eur, .pln, .ron])])
+        favoriteCurrencies = BehaviorSubject(value: [SectionOfCurrencies(items: [.usd, .eur, .pln])])
         selectedPrice = BehaviorRelay(value: .bid)
     }
     

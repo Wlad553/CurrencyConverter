@@ -110,9 +110,9 @@ final class MainViewController: UIViewController {
 // MARK: - UICollectionViewDataSource & Subscriptions
 extension MainViewController {
     private func tableViewDataSource() -> RxTableViewSectionedAnimatedDataSource<SectionOfCurrencies> {
-        let animationConfiguration = AnimationConfiguration(insertAnimation: .fade,
-                                                            reloadAnimation: .fade,
-                                                            deleteAnimation: .fade)
+        let animationConfiguration = AnimationConfiguration(insertAnimation: .top,
+                                                            reloadAnimation: .top,
+                                                            deleteAnimation: .top)
         let dataSource = RxTableViewSectionedAnimatedDataSource<SectionOfCurrencies>(animationConfiguration: animationConfiguration,
                                                                                      configureCell: { [weak self] _, tableView, indexPath, currency in
             guard let self = self else { return UITableViewCell() }
