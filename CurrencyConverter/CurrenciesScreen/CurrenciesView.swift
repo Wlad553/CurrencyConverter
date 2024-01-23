@@ -93,6 +93,9 @@ extension CurrenciesView {
         let viewToKeyboardHeightRatio = (frame.height / keyboardFrame.height)
         let visibleViewCenter = (frame.height / viewToKeyboardHeightRatio)
         let centerYAnchorOffset = 16 - (visibleViewCenter / 2)
+        let freeSpace = frame.height - keyboardFrame.height - 50
+        
+        guard freeSpace >= noSearchResultsVStack.frame.height else { return }
         
         if notification.name == UIResponder.keyboardWillShowNotification {
             self.noSearchResultsVStack.snp.updateConstraints { make in

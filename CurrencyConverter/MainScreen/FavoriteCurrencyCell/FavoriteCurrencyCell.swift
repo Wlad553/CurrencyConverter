@@ -108,7 +108,7 @@ final class FavoriteCurrencyCell: UITableViewCell {
         
         amountTextField.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.leading.equalTo(hStack.snp.trailing).offset(45)
+            make.leading.equalTo(hStack.snp.trailing).offset(40)
             make.trailing.equalToSuperview().inset(32)
             make.height.equalTo(40)
         }
