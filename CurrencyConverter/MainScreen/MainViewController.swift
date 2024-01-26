@@ -28,7 +28,9 @@ final class MainViewController: UIViewController {
     
     required init?(coder: NSCoder) {
         assert(false, "init(coder:) must not be used")
-        viewModel = MainViewModel(router: AppCoordinator().weakRouter)
+        viewModel = MainViewModel(router: AppCoordinator().weakRouter,
+                                  coreDataManager: CoreDataManager())
+        
         super.init(coder: coder)
     }
     
@@ -40,7 +42,7 @@ final class MainViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        makeSubscriptions()
+        makeSubscriptions()        
     }
     
     override func viewDidAppear(_ animated: Bool) {

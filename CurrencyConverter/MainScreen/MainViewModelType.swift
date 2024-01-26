@@ -13,6 +13,8 @@ protocol MainViewModelType: AnyObject {
     var favoriteCurrencies: BehaviorSubject<[SectionOfCurrencies]> { get }
     var selectedPrice: BehaviorRelay<Currency.Price> { get }
     
+    var coreDataManager: CoreDataManager { get }
+        
     func appendCurrencyToFavorites(_ currency: Currency)
     func deleteCurrencyFromFavorites(_ currency: Currency)
     func moveCurrency(from sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath)

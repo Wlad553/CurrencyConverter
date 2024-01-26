@@ -9,42 +9,54 @@ import Foundation
 import XCoordinator
 import RxSwift
 import RxRelay
+import OSLog
 
 final class MainViewModel: MainViewModelType {
     private let router: WeakRouter<AppRoute>
 
-    let favoriteCurrencies: BehaviorSubject<[SectionOfCurrencies]>
-    let selectedPrice: BehaviorRelay<Currency.Price>
+    let favoriteCurrencies = BehaviorSubject<[SectionOfCurrencies]>(value: [])
+    let selectedPrice = BehaviorRelay<Currency.Price>(value: .bid)
+    
+    let coreDataManager: CoreDataManager
     
     // MARK: - Init
-    init(router: WeakRouter<AppRoute>) {
+    init(router: WeakRouter<AppRoute>, coreDataManager: CoreDataManager) {
         self.router = router
-        favoriteCurrencies = BehaviorSubject(value: [SectionOfCurrencies(items: [.usd, .eur, .pln])])
-        selectedPrice = BehaviorRelay(value: .bid)
+        self.coreDataManager = coreDataManager
+        
+        favoriteCurrencies.onNext([SectionOfCurrencies(items: coreDataManager.getFavouriteCurrencies())])
     }
     
-    // MARK: Data manipulation
+    // MARK: - Utility Methods
+    
+    // MARK: Manipulation with Favorite Currencies
     func appendCurrencyToFavorites(_ currency: Currency) {
-        guard var newCurrencyList = try? favoriteCurrencies.value() else { return }
-        newCurrencyList[0].items.append(currency)
-        favoriteCurrencies.onNext(newCurrencyList)
+        guard var newCurrencyList = try? favoriteCurrencies.value()[safe: 0] else { return }
+        newCurrencyList.items.append(currency)
+        favoriteCurrencies.onNext([newCurrencyList])
+        
+        coreDataManager.saveFavoriteCurrency(currency: currency)
     }
     
     func deleteCurrencyFromFavorites(_ currency: Currency) {
-        guard var newCurrencyList = try? favoriteCurrencies.value() else { return }
-        newCurrencyList[0].items.removeAll { checkedCurrency in
+        guard var newCurrencyList = try? favoriteCurrencies.value()[safe: 0] else { return }
+        newCurrencyList.items.removeAll { checkedCurrency in
             checkedCurrency == currency
         }
-        favoriteCurrencies.onNext(newCurrencyList)
+        favoriteCurrencies.onNext([newCurrencyList])
+        
+        coreDataManager.deleteFavoriteCurrency(currency: currency)
     }
     
     func moveCurrency(from sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        guard var newCurrencyList = try? favoriteCurrencies.value(),
-              let sourceCurrency = newCurrencyList[0].items[safe: sourceIndexPath.row]
+        guard var newCurrencyList = try? favoriteCurrencies.value()[safe: 0],
+              let sourceCurrency = newCurrencyList.items[safe: sourceIndexPath.row]
         else { return }
-        newCurrencyList[0].items.remove(at: sourceIndexPath.row)
-        newCurrencyList[0].items.insert(sourceCurrency, at: destinationIndexPath.row)
-        favoriteCurrencies.onNext(newCurrencyList)
+        newCurrencyList.items.remove(at: sourceIndexPath.row)
+        newCurrencyList.items.insert(sourceCurrency, at: destinationIndexPath.row)
+        favoriteCurrencies.onNext([newCurrencyList])
+        
+        coreDataManager.moveFavoriteCurrency(newCurrenciesList: newCurrencyList.items)
     }
     
     // MARK: Navigation

@@ -8,6 +8,10 @@
 import Foundation
 import Differentiator
 
+enum CurrencyError: Error {
+    case nonExistingCurrency
+}
+
 enum Currency: String, CaseIterable {
     enum Price {
         case bid
@@ -68,7 +72,7 @@ enum Currency: String, CaseIterable {
     case zar
     
     // minus 1 since we don't have such a pair like USD/USD
-    static let availableCurrencyPairsNumer = allCases.count - 1
+    static let availableCurrencyPairsNumber = allCases.count - 1
     
     static func availableCurrencies() -> [Currency] {
         return allCases.sorted { $0.code < $1.code }
@@ -82,6 +86,10 @@ enum Currency: String, CaseIterable {
         }
         string.removeLast()
         return string
+    }
+    
+    init?(code: String) {
+        self.init(rawValue: code.lowercased())
     }
 }
 
