@@ -29,8 +29,8 @@ final class MainViewController: UIViewController {
     required init?(coder: NSCoder) {
         assert(false, "init(coder:) must not be used")
         viewModel = MainViewModel(router: AppCoordinator().weakRouter,
-                                  coreDataManager: CoreDataManager())
-        
+                                  coreDataManager: CoreDataManager(),
+                                  networkCurrenciesDataManager: NetworkRatesDataManager())
         super.init(coder: coder)
     }
     
@@ -42,7 +42,9 @@ final class MainViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        makeSubscriptions()        
+        makeSubscriptions()
+        
+        viewModel.fetchRatesDataIfNeeded()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -52,6 +54,7 @@ final class MainViewController: UIViewController {
     
     // MARK: - Subscription List
     private func makeSubscriptions() {
+        subscribeToRatesDataError()
         subscribeToTapRecognizerEvent()
         subscribeToViewButtonsTap()
         subscribeToAddCurrencyButtonTap()
@@ -61,7 +64,18 @@ final class MainViewController: UIViewController {
         addNotificationCenterRxObservers()
     }
     
-    // MARK: Subscriptions
+    // MARK: ViewModel Subscriptions
+    private func subscribeToRatesDataError() {
+        viewModel.ratesData
+            .observe(on: MainScheduler.instance)
+            .subscribe(onError: { [weak self] error in
+                self?.presentOkActionAlertController(title: "Currency Rates Download Error",
+                                                     message: "Unable to download currency rates, please check your network connection or try again later")
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    // MARK: UIView Events Subscriptions
     private func subscribeToTapRecognizerEvent() {
         mainView.tapRecognizer.rx.event
             .subscribe { [weak self] _ in
@@ -93,7 +107,6 @@ final class MainViewController: UIViewController {
             .disposed(by: disposeBag)
     }
     
-    // MARK: Navigation
     private func subscribeToAddCurrencyButtonTap() {
         mainView.addCurrencyButton.rx
             .tap
@@ -107,7 +120,16 @@ final class MainViewController: UIViewController {
             })
             .disposed(by: disposeBag)
     }
-}
+    
+    private func presentOkActionAlertController(title: String, message: String) {
+        let alertController = UIAlertController(title: title,
+                                                message: message,
+                                                preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "Ok", style: .cancel)
+        okAction.accessibilityIdentifier = "okAction"
+        alertController.addAction(okAction)
+        present(alertController, animated: true)
+    }}
 
 // MARK: - UICollectionViewDataSource & Subscriptions
 extension MainViewController {

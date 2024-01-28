@@ -16,18 +16,39 @@ final class MainViewModel: MainViewModelType {
 
     let favoriteCurrencies = BehaviorSubject<[SectionOfCurrencies]>(value: [])
     let selectedPrice = BehaviorRelay<Currency.Price>(value: .bid)
+    let ratesData = BehaviorSubject<[CurrencyRateData]>(value: [])
     
     let coreDataManager: CoreDataManager
+    let networkCurrenciesDataManager: NetworkRatesDataManagerProtocol
     
     // MARK: - Init
-    init(router: WeakRouter<AppRoute>, coreDataManager: CoreDataManager) {
+    init(router: WeakRouter<AppRoute>,
+         coreDataManager: CoreDataManager,
+         networkCurrenciesDataManager: NetworkRatesDataManagerProtocol) {
         self.router = router
         self.coreDataManager = coreDataManager
+        self.networkCurrenciesDataManager = networkCurrenciesDataManager
         
-        favoriteCurrencies.onNext([SectionOfCurrencies(items: coreDataManager.getFavouriteCurrencies())])
+        favoriteCurrencies.onNext([SectionOfCurrencies(items: coreDataManager.getFavoriteCurrencies())])
+        ratesData.onNext(coreDataManager.getCurrencyRatesData())
     }
     
     // MARK: - Utility Methods
+    func fetchRatesDataIfNeeded() {
+        Task {
+            do {
+                let ratesData = try await networkCurrenciesDataManager.fetchDataIfNeeded(savedRatesData: coreDataManager.getCurrencyRatesData())
+                self.ratesData.onNext(ratesData)
+                coreDataManager.updateCurrencyRatesSavedDataObjects(with: ratesData)
+            } catch {
+                Task.detached {
+                    await MainActor.run {
+                        self.ratesData.onError(error)
+                    }
+                }
+            }
+        }
+    }
     
     // MARK: Manipulation with Favorite Currencies
     func appendCurrencyToFavorites(_ currency: Currency) {

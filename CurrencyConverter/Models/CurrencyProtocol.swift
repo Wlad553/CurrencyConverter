@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Differentiator
 
 public protocol CurrencyProtocol {
     var code: String { get }

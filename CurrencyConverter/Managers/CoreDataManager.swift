@@ -31,11 +31,19 @@ public class CoreDataManager {
         return favoriteCurrencies
     }
     
+    private var currencyRatesSavedData: [CurrencyRateSavedData]? {
+        guard let currencyRatesSavedData = try? appMainContext.fetch(CurrencyRateSavedData.fetchRequest()) else {
+            logger.error("\(CoreDataError.objectsFetching.localizedDescription)")
+            return nil
+        }
+        return currencyRatesSavedData
+    }
+    
     // MARK: Logger
     private let logger = Logger()
     
     // MARK: - Objects deleting support
-    func deleteObjects<T: NSManagedObject>(from request: NSFetchRequest<T>) where T: NSFetchRequestResult {
+    func deleteAllObjects<T: NSManagedObject>(from request: NSFetchRequest<T>) where T: NSFetchRequestResult {
         guard let objects = try? appMainContext.fetch(request) else { return }
         objects.forEach { object in
             appMainContext.delete(object)
@@ -43,10 +51,9 @@ public class CoreDataManager {
     }
     
     // MARK: - Favorite currencies saving support
-    func getFavouriteCurrencies() -> [Currency] {
+    func getFavoriteCurrencies() -> [Currency] {
         let userDefaults = UserDefaults.standard
-        guard let favoriteCurrencies = favoriteCurrencies, userDefaults.bool(forKey: "isAppAlreadyLauchedOnce")
-        else {
+        guard let favoriteCurrencies = favoriteCurrencies, userDefaults.bool(forKey: "isAppAlreadyLauchedOnce") else {
             userDefaults.set(true, forKey: "isAppAlreadyLauchedOnce")
             [Currency.usd,
              Currency.eur,
@@ -95,9 +102,66 @@ public class CoreDataManager {
     }
     
     func moveFavoriteCurrency(newCurrenciesList: [Currency]) {
-        deleteObjects(from: FavoriteCurrency.fetchRequest())
+        deleteAllObjects(from: FavoriteCurrency.fetchRequest())
         newCurrenciesList.forEach { currency in
             saveFavoriteCurrency(currency: currency)
+        }
+    }
+    
+    // MARK: - Rates data saving support
+    func getCurrencyRatesData() -> [CurrencyRateData] {
+        guard let currencySavedRatesData = currencyRatesSavedData else { return [] }
+        var currencyRatesData: [CurrencyRateData] = []
+        
+        currencySavedRatesData.forEach { currencySavedRateData in
+            do {
+                let currencyRateData = try CurrencyRateData(currencyRateSavedData: currencySavedRateData)
+                currencyRatesData.append(currencyRateData)
+            } catch {
+                logger.error("\(error.localizedDescription)")
+                return
+            }
+        }
+        
+        return currencyRatesData
+    }
+    
+    private func saveCurrencyRatesData(data: [CurrencyRateData]) {
+        guard let entity = NSEntityDescription.entity(forEntityName: "CurrencyRateSavedData", in: appMainContext) else { return }
+        for singleRateData in data {
+            let currencyDataObject = CurrencyRateSavedData(entity: entity, insertInto: appMainContext)
+            currencyDataObject.quoteCurrency = singleRateData.quoteCurrency.code
+            currencyDataObject.bidPrice = singleRateData.bidPrice
+            currencyDataObject.askPrice = singleRateData.askPrice
+            currencyDataObject.requestTimestamp = singleRateData.requestTimestamp
+        }
+        
+        saveContext()
+    }
+
+    func updateCurrencyRatesSavedDataObjects(with currencyParsedData: [CurrencyRateData]) {
+        guard let currencyRatesDataObjects = currencyRatesSavedData else { return }
+        
+        if currencyRatesDataObjects.count == Currency.availableCurrencyPairsNumber && currencyRatesDataObjects.allSatisfy({ currency in
+                guard let quoteCurrency = Currency(code: currency.quoteCurrency ?? String()) else { return false }
+                return Currency.availableCurrencies().contains(quoteCurrency)
+            }) {
+            
+            currencyRatesDataObjects.forEach { object in
+                let newCurrencyData = currencyParsedData.first { currencyParsedData in
+                    currencyParsedData.quoteCurrency.code == object.quoteCurrency
+                }
+                if let newCurrencyData = newCurrencyData {
+                    object.askPrice = newCurrencyData.askPrice
+                    object.bidPrice = newCurrencyData.bidPrice
+                    object.requestTimestamp = newCurrencyData.requestTimestamp
+                }
+            }
+            
+            saveContext()
+        } else {
+            deleteAllObjects(from: CurrencyRateSavedData.fetchRequest())
+            saveCurrencyRatesData(data: currencyParsedData)
         }
     }
     
