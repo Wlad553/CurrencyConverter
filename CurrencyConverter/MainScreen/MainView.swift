@@ -35,6 +35,15 @@ final class MainView: UIView {
     
     private let disposeBag = DisposeBag()
     
+    var visibleCells: [FavoriteCurrencyCell] {
+        var cells: [FavoriteCurrencyCell] = []
+            (0..<favoriteCurrenciesTableView.numberOfRows(inSection: 0)).forEach { row in
+                guard let cell = favoriteCurrenciesTableView.cellForRow(at: IndexPath(row: row, section: 0)) as? FavoriteCurrencyCell else { return }
+                cells.append(cell)
+        }
+        return cells
+    }
+    
     // MARK: - Inits
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -318,13 +327,7 @@ extension MainView {
     }
     
     func toggleTableViewCellsIsEditing(animated: Bool, isTableViewEditing: Bool) {
-        var cells: [FavoriteCurrencyCell] = []
-        (0..<favoriteCurrenciesTableView.numberOfRows(inSection: 0)).forEach { row in
-            guard let cell = favoriteCurrenciesTableView.cellForRow(at: IndexPath(row: row, section: 0)) as? FavoriteCurrencyCell else { return }
-            cells.append(cell)
-        }
-        
-        cells.forEach { cell in
+        visibleCells.forEach { cell in
             cell.isEditingToggle(animated: animated, isTableViewEditing:  isTableViewEditing)
         }
     }
