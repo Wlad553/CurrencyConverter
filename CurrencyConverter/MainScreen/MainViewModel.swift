@@ -15,12 +15,15 @@ final class MainViewModel: MainViewModelType {
     private let router: WeakRouter<AppRoute>
 
     let favoriteCurrencies = BehaviorSubject<[SectionOfCurrencies]>(value: [])
-    let selectedPrice = BehaviorRelay<Currency.Price>(value: .bid)
     let ratesData = BehaviorSubject<[CurrencyRateData]>(value: [])
+    let convertedAmounts = BehaviorRelay<[Currency: Double]>(value: [:])
+    
+    var selectedPrice: Currency.Price = .bid
+    private var convertedCurrency: Currency?
     
     let coreDataManager: CoreDataManager
     let networkCurrenciesDataManager: NetworkRatesDataManagerProtocol
-    
+        
     // MARK: - Init
     init(router: WeakRouter<AppRoute>,
          coreDataManager: CoreDataManager,
@@ -50,6 +53,48 @@ final class MainViewModel: MainViewModelType {
         }
     }
     
+    func convert(amount: Double, convertedCurrency: Currency) {
+        guard let ratesData = try? self.ratesData.value(),
+              let favoriteCurrencies = try? self.favoriteCurrencies.value() else { return }
+        var convertedAmounts: [Currency: Double] = [:]
+        
+        let baseCurrencySumToConvert: Double
+        if convertedCurrency == .usd {
+            baseCurrencySumToConvert = amount
+        } else {
+            guard let baseCurrencyCurrencyDataObject = ratesData.first(where: { dataObject in
+                dataObject.quoteCurrency == convertedCurrency
+            }) else { return }
+            let convertedCurrencyPriceCoefficient = selectedPrice == .bid ? baseCurrencyCurrencyDataObject.bidPrice : baseCurrencyCurrencyDataObject.askPrice
+            baseCurrencySumToConvert = amount / convertedCurrencyPriceCoefficient
+        }
+        
+        if let usdCurrency = favoriteCurrencies.first?.items.first(where: { $0 == .usd }) {
+            convertedAmounts[usdCurrency] = baseCurrencySumToConvert
+        }
+        
+        ratesData.forEach { rateDataObject in
+            guard favoriteCurrencies[0].items.contains(rateDataObject.quoteCurrency) else { return }
+            let convertedCurrencyPriceCoefficient = selectedPrice == .bid ? rateDataObject.bidPrice : rateDataObject.askPrice
+            convertedAmounts[rateDataObject.quoteCurrency] = baseCurrencySumToConvert * convertedCurrencyPriceCoefficient
+        }
+        
+        self.convertedAmounts.accept(convertedAmounts)
+        self.convertedCurrency = convertedCurrency
+    }
+    
+    func updateConvertedAmountsIfNeeded() {
+        guard let convertedCurrency = convertedCurrency,
+              let convertedCurrencyAmount = convertedAmounts.value[convertedCurrency] else { return }
+        
+        convert(amount: convertedCurrencyAmount, convertedCurrency: convertedCurrency)
+        
+        if !convertedAmounts.value.keys.contains(convertedCurrency) {
+            self.convertedCurrency = nil
+            self.convertedAmounts.accept([:])
+        }
+    }
+    
     // MARK: Manipulation with Favorite Currencies
     func appendCurrencyToFavorites(_ currency: Currency) {
         guard var newCurrencyList = try? favoriteCurrencies.value()[safe: 0] else { return }
@@ -57,6 +102,7 @@ final class MainViewModel: MainViewModelType {
         favoriteCurrencies.onNext([newCurrencyList])
         
         coreDataManager.saveFavoriteCurrency(currency: currency)
+        updateConvertedAmountsIfNeeded()
     }
     
     func deleteCurrencyFromFavorites(_ currency: Currency) {
@@ -67,6 +113,7 @@ final class MainViewModel: MainViewModelType {
         favoriteCurrencies.onNext([newCurrencyList])
         
         coreDataManager.deleteFavoriteCurrency(currency: currency)
+        updateConvertedAmountsIfNeeded()
     }
     
     func moveCurrency(from sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {

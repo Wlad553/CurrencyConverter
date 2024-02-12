@@ -20,11 +20,17 @@ final class FavoriteCurrencyCell: UITableViewCell {
     let chevronImageView = UIImageView(image: UIImage(systemName: "chevron.right"))
         
     private let disposeBag = DisposeBag()
+    private var allowsTextFieldRxTextScan = true
     
     var viewModel: CurrencyCellViewModelType? {
         didSet {
             subscribeToCurrency()
         }
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        amountTextField.text = String()
     }
     
     // MARK: - Inits
@@ -135,14 +141,28 @@ final class FavoriteCurrencyCell: UITableViewCell {
                 
                 self?.amountTextField.layer.borderWidth = 1
                 self?.amountTextField.textColor = .darkBlue
+                
+                if let textFieldText = self?.amountTextField.text {
+                    self?.allowsTextFieldRxTextScan = false
+                    let formatter = ConverterNumberFormatter()
+                    self?.amountTextField.text = formatter.applyConvertingFormat(previousText: textFieldText, currentText: textFieldText)
+                }
             })
             .disposed(by: disposeBag)
         
         amountTextField.rx
             .controlEvent(.editingDidEnd)
             .subscribe(onNext: { [weak self] event in
+                self?.allowsTextFieldRxTextScan = false
+
                 self?.amountTextField.layer.borderWidth = 0
                 self?.amountTextField.textColor = .deepDarkGray
+                
+                if let textFieldText = self?.amountTextField.text {
+                    let formatter = ConverterNumberFormatter()
+                    guard let textFieldTextNumber = formatter.number(from: textFieldText) else { return }
+                    self?.amountTextField.text = formatter.convertToString(double: textFieldTextNumber.doubleValue)
+                }
             })
             .disposed(by: disposeBag)
         
@@ -155,9 +175,14 @@ final class FavoriteCurrencyCell: UITableViewCell {
         
         amountTextField.rx.text
             .orEmpty
-            .scan(String(), accumulator: { previousText, newText in
+            .scan(String(), accumulator: { [self] previousText, newText in
+                guard allowsTextFieldRxTextScan else {
+                    allowsTextFieldRxTextScan.toggle()
+                    return newText
+                }
+                
                 let formatter = ConverterNumberFormatter()
-                return formatter.applyFormat(previousText: previousText, currentText: newText)
+                return formatter.applyConvertingFormat(previousText: previousText, currentText: newText)
             })
             .bind(to: amountTextField.rx.text)
             .disposed(by: disposeBag)

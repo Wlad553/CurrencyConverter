@@ -6,13 +6,13 @@
 //
 
 import Foundation
-import RxSwift
+import RxRelay
 
 final class CurrencyCellViewModel: CurrencyCellViewModelType {
-    let currency: Observable<Currency>
+    let currency: BehaviorRelay<Currency>
     
     // MARK: - Init
     init(currency: Currency) {
-        self.currency = .just(currency)
+        self.currency = BehaviorRelay(value: currency)
     }
 }

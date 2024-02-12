@@ -9,8 +9,8 @@ import Foundation
 import OSLog
 
 public struct CurrencyRateData {
-    let baseCurrency: CurrencyProtocol = Currency.usd
-    let quoteCurrency: CurrencyProtocol
+    let baseCurrency: Currency = .usd
+    let quoteCurrency: Currency
     let askPrice: Double
     let bidPrice: Double
     let requestTimestamp: Double

@@ -55,6 +55,7 @@ final class MainViewController: UIViewController {
     // MARK: - Subscription List
     private func makeSubscriptions() {
         subscribeToRatesDataError()
+        subscribeToConvertedAmounts()
         subscribeToTapRecognizerEvent()
         subscribeToViewButtonsTap()
         subscribeToAddCurrencyButtonTap()
@@ -68,9 +69,36 @@ final class MainViewController: UIViewController {
     private func subscribeToRatesDataError() {
         viewModel.ratesData
             .observe(on: MainScheduler.instance)
-            .subscribe(onError: { [weak self] error in
+            .subscribe(onNext: { [weak self] ratesData in
+                guard let firstRateObject = ratesData.first else { return }
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "dd MMM yyyy h:mm a"
+                dateFormatter.timeZone = .current
+                dateFormatter.locale = Locale(identifier: "en_US")
+                self?.mainView.lastUpdatedSublabel.text = dateFormatter.string(from: Date(timeIntervalSince1970: firstRateObject.requestTimestamp))
+            },
+                       onError: { [weak self] error in
                 self?.presentOkActionAlertController(title: "Currency Rates Download Error",
                                                      message: "Unable to download currency rates, please check your network connection or try again later")
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    private func subscribeToConvertedAmounts() {
+        viewModel.convertedAmounts
+            .subscribe(onNext: { [weak self] double in
+                guard let self = self else { return }
+                mainView.visibleCells.forEach { cell in
+                    guard let currency = cell.viewModel?.currency.value,
+                          let convertedAmount = self.viewModel.convertedAmounts.value[currency]
+                    else {
+                        cell.amountTextField.text = String()
+                        return
+                    }
+                    if !cell.amountTextField.isFirstResponder {
+                        cell.amountTextField.text = ConverterNumberFormatter().convertToString(double: convertedAmount)
+                    }
+                }
             })
             .disposed(by: disposeBag)
     }
@@ -92,8 +120,9 @@ final class MainViewController: UIViewController {
                 .tap
                 .subscribe (onNext: { _ in
                     let newSelectedPrice: Currency.Price = self.mainView.bidButton.isEnabled ? .bid : .ask
-                    self.viewModel.selectedPrice.accept(newSelectedPrice)
+                    self.viewModel.selectedPrice = newSelectedPrice
                     self.mainView.animatePriceButtonsTap(sender: button)
+                    self.viewModel.updateConvertedAmountsIfNeeded()
                 })
                 .disposed(by: self.disposeBag)
         }
@@ -103,6 +132,27 @@ final class MainViewController: UIViewController {
             .tap
             .subscribe(onNext: { [weak self] _ in
                 self?.mainView.toggleTableViewIsEditing()
+            })
+            .disposed(by: disposeBag)
+        
+        // Share button
+        mainView.shareButton.rx
+            .tap
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                var stringToShare = ""
+                let formatter = ConverterNumberFormatter()
+                viewModel.convertedAmounts.value.forEach { key, value in
+                    stringToShare.append(("\(key.code) \(formatter.convertToString(double: value))\n"))
+                }
+                    
+                if stringToShare.isEmpty {
+                    presentOkActionAlertController(title: "Nothing to share",
+                                                   message: "Please, type convert amount first")
+                    return
+                }
+                let activityViewController = UIActivityViewController(activityItems: [stringToShare], applicationActivities: nil)
+                present(activityViewController, animated: true, completion: nil)
             })
             .disposed(by: disposeBag)
     }
@@ -134,19 +184,36 @@ final class MainViewController: UIViewController {
 // MARK: - UICollectionViewDataSource & Subscriptions
 extension MainViewController {
     private func tableViewDataSource() -> RxTableViewSectionedAnimatedDataSource<SectionOfCurrencies> {
-        let animationConfiguration = AnimationConfiguration(insertAnimation: .top,
-                                                            reloadAnimation: .top,
-                                                            deleteAnimation: .top)
+        let animationConfiguration = AnimationConfiguration(insertAnimation: .fade,
+                                                            reloadAnimation: .fade,
+                                                            deleteAnimation: .fade)
         let dataSource = RxTableViewSectionedAnimatedDataSource<SectionOfCurrencies>(animationConfiguration: animationConfiguration,
                                                                                      configureCell: { [weak self] _, tableView, indexPath, currency in
-            guard let self = self else { return UITableViewCell() }
-            let cell = tableView.dequeueReusableCell(withIdentifier: FavoriteCurrencyCell.reuseIdentifier, for: indexPath)
-            (cell as? FavoriteCurrencyCell)?.viewModel = CurrencyCellViewModel(currency: currency)
-            (cell as? FavoriteCurrencyCell)?.isEditingToggle(animated: false, isTableViewEditing: mainView.isTableViewEditing.value)
+            guard let self = self,
+            let cell = tableView.dequeueReusableCell(withIdentifier: FavoriteCurrencyCell.reuseIdentifier, for: indexPath) as? FavoriteCurrencyCell
+            else { return UITableViewCell() }
+            cell.viewModel = CurrencyCellViewModel(currency: currency)
+            cell.isEditingToggle(animated: false, isTableViewEditing: mainView.isTableViewEditing.value)
+            let formatter = ConverterNumberFormatter()
+            if let convertedAmount = viewModel.convertedAmounts.value[currency] {
+                cell.amountTextField.text = formatter.convertToString(double: convertedAmount)
+            }
+            cell.amountTextField.rx
+                .controlEvent(.editingChanged)
+                .subscribe(onNext: { [weak self] _ in
+                    guard let newText = cell.amountTextField.text,
+                          let amount = ConverterNumberFormatter().number(from: newText)?.doubleValue
+                    else {
+                        self?.viewModel.convertedAmounts.accept([:])
+                        return
+                    }
+                    self?.viewModel.convert(amount: amount, convertedCurrency: currency)
+                })
+                .disposed(by: disposeBag)
             return cell
         },
                                                                                      canEditRowAtIndexPath: { _, _ in true },
-                                                                                     canMoveRowAtIndexPath: { _, _ in true})
+                                                                                     canMoveRowAtIndexPath: { _, _ in true })
         return dataSource
     }
     
@@ -169,7 +236,6 @@ extension MainViewController {
             .itemMoved
             .subscribe(onNext: { [weak self] sourceIndexPath, destinationIndexPath in
                 self?.viewModel.moveCurrency(from: sourceIndexPath, to: destinationIndexPath)
-                
             })
             .disposed(by: disposeBag)
     }
