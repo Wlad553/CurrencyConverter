@@ -30,7 +30,6 @@
 		F52977CB2B52CA400099F5CC /* Currency.swift in Sources */ = {isa = PBXBuildFile; fileRef = F52977CA2B52CA400099F5CC /* Currency.swift */; };
 		F52977CE2B52CE830099F5CC /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = F52977D02B52CE830099F5CC /* Localizable.strings */; };
 		F52977D42B52F8C90099F5CC /* ConverterNumberFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F52977D32B52F8C90099F5CC /* ConverterNumberFormatter.swift */; };
-		F52977D62B530FC00099F5CC /* RegexPattern.swift in Sources */ = {isa = PBXBuildFile; fileRef = F52977D52B530FC00099F5CC /* RegexPattern.swift */; };
 		F52977D82B5313600099F5CC /* Characters.swift in Sources */ = {isa = PBXBuildFile; fileRef = F52977D72B5313600099F5CC /* Characters.swift */; };
 		F52977DC2B5314720099F5CC /* String+isValidWithRegex.swift in Sources */ = {isa = PBXBuildFile; fileRef = F52977DB2B5314720099F5CC /* String+isValidWithRegex.swift */; };
 		F52977DE2B5315820099F5CC /* Array+safeSubscript.swift in Sources */ = {isa = PBXBuildFile; fileRef = F52977DD2B5315820099F5CC /* Array+safeSubscript.swift */; };
@@ -101,7 +100,6 @@
 		F52977CA2B52CA400099F5CC /* Currency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Currency.swift; sourceTree = "<group>"; };
 		F52977CF2B52CE830099F5CC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		F52977D32B52F8C90099F5CC /* ConverterNumberFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConverterNumberFormatter.swift; sourceTree = "<group>"; };
-		F52977D52B530FC00099F5CC /* RegexPattern.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegexPattern.swift; sourceTree = "<group>"; };
 		F52977D72B5313600099F5CC /* Characters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Characters.swift; sourceTree = "<group>"; };
 		F52977DB2B5314720099F5CC /* String+isValidWithRegex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+isValidWithRegex.swift"; sourceTree = "<group>"; };
 		F52977DD2B5315820099F5CC /* Array+safeSubscript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+safeSubscript.swift"; sourceTree = "<group>"; };
@@ -238,7 +236,6 @@
 			isa = PBXGroup;
 			children = (
 				F52977D32B52F8C90099F5CC /* ConverterNumberFormatter.swift */,
-				F52977D52B530FC00099F5CC /* RegexPattern.swift */,
 				F52977D72B5313600099F5CC /* Characters.swift */,
 			);
 			path = Utility;
@@ -531,7 +528,6 @@
 				F51CFBE82B543B6B003B5CA8 /* SectionOfCurrencies.swift in Sources */,
 				F51CFBD32B54203D003B5CA8 /* CurrenciesViewModel.swift in Sources */,
 				F51CFBDA2B542E3E003B5CA8 /* CurrencyCell.swift in Sources */,
-				F52977D62B530FC00099F5CC /* RegexPattern.swift in Sources */,
 				F52977DE2B5315820099F5CC /* Array+safeSubscript.swift in Sources */,
 				F52977BA2B528FA80099F5CC /* Fonts.swift in Sources */,
 				F52977D42B52F8C90099F5CC /* ConverterNumberFormatter.swift in Sources */,
