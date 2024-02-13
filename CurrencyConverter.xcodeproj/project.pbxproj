@@ -31,7 +31,6 @@
 		F52977CE2B52CE830099F5CC /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = F52977D02B52CE830099F5CC /* Localizable.strings */; };
 		F52977D42B52F8C90099F5CC /* ConverterNumberFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F52977D32B52F8C90099F5CC /* ConverterNumberFormatter.swift */; };
 		F52977D82B5313600099F5CC /* Characters.swift in Sources */ = {isa = PBXBuildFile; fileRef = F52977D72B5313600099F5CC /* Characters.swift */; };
-		F52977DC2B5314720099F5CC /* String+isValidWithRegex.swift in Sources */ = {isa = PBXBuildFile; fileRef = F52977DB2B5314720099F5CC /* String+isValidWithRegex.swift */; };
 		F52977DE2B5315820099F5CC /* Array+safeSubscript.swift in Sources */ = {isa = PBXBuildFile; fileRef = F52977DD2B5315820099F5CC /* Array+safeSubscript.swift */; };
 		F5996BFE2B5E938C00C26A35 /* CurrencyRateData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5996BFD2B5E938C00C26A35 /* CurrencyRateData.swift */; };
 		F5996C002B5E94CE00C26A35 /* CurrencyPriceAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5996BFF2B5E94CE00C26A35 /* CurrencyPriceAPI.swift */; };
@@ -101,7 +100,6 @@
 		F52977CF2B52CE830099F5CC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		F52977D32B52F8C90099F5CC /* ConverterNumberFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConverterNumberFormatter.swift; sourceTree = "<group>"; };
 		F52977D72B5313600099F5CC /* Characters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Characters.swift; sourceTree = "<group>"; };
-		F52977DB2B5314720099F5CC /* String+isValidWithRegex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+isValidWithRegex.swift"; sourceTree = "<group>"; };
 		F52977DD2B5315820099F5CC /* Array+safeSubscript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+safeSubscript.swift"; sourceTree = "<group>"; };
 		F5996BFD2B5E938C00C26A35 /* CurrencyRateData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencyRateData.swift; sourceTree = "<group>"; };
 		F5996BFF2B5E94CE00C26A35 /* CurrencyPriceAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyPriceAPI.swift; sourceTree = "<group>"; };
@@ -255,7 +253,6 @@
 		F52977DA2B5314570099F5CC /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				F52977DB2B5314720099F5CC /* String+isValidWithRegex.swift */,
 				F52977DD2B5315820099F5CC /* Array+safeSubscript.swift */,
 			);
 			path = Extensions;
@@ -520,7 +517,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F52977DC2B5314720099F5CC /* String+isValidWithRegex.swift in Sources */,
 				F51CFBCF2B541FD4003B5CA8 /* CurrenciesViewController.swift in Sources */,
 				F51CFBD82B5422DB003B5CA8 /* AppCoordinator.swift in Sources */,
 				F51CFBD52B542044003B5CA8 /* CurrenciesViewModelType.swift in Sources */,

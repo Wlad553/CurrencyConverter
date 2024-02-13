@@ -70,12 +70,8 @@ final class MainViewController: UIViewController {
         viewModel.ratesData
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] ratesData in
-                guard let firstRateObject = ratesData.first else { return }
-                let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "dd MMM yyyy h:mm a"
-                dateFormatter.timeZone = .current
-                dateFormatter.locale = Locale(identifier: "en_US")
-                self?.mainView.lastUpdatedSublabel.text = dateFormatter.string(from: Date(timeIntervalSince1970: firstRateObject.requestTimestamp))
+                guard let self = self, let firstRateObject = ratesData.first else { return }
+                mainView.lastUpdatedSublabel.text = viewModel.dateFormattedRequestTime(requestTimestamp: firstRateObject.requestTimestamp)
             },
                        onError: { [weak self] error in
                 self?.presentOkActionAlertController(title: "Currency Rates Download Error",
@@ -139,20 +135,14 @@ final class MainViewController: UIViewController {
         mainView.shareButton.rx
             .tap
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
-                var stringToShare = ""
-                let formatter = ConverterNumberFormatter()
-                viewModel.convertedAmounts.value.forEach { key, value in
-                    stringToShare.append(("\(key.code) \(formatter.convertToString(double: value))\n"))
-                }
-                    
-                if stringToShare.isEmpty {
-                    presentOkActionAlertController(title: "Nothing to share",
-                                                   message: "Please, type convert amount first")
+                guard let stringToShare = self?.viewModel.stringToShare(), !stringToShare.isEmpty else {
+                    self?.presentOkActionAlertController(title: "Nothing to share",
+                                                         message: "Please, type convert amount first")
                     return
                 }
+                
                 let activityViewController = UIActivityViewController(activityItems: [stringToShare], applicationActivities: nil)
-                present(activityViewController, animated: true, completion: nil)
+                self?.present(activityViewController, animated: true, completion: nil)
             })
             .disposed(by: disposeBag)
     }
@@ -202,7 +192,7 @@ extension MainViewController {
                 .controlEvent(.editingChanged)
                 .subscribe(onNext: { [weak self] _ in
                     guard let newText = cell.amountTextField.text,
-                          let amount = ConverterNumberFormatter().number(from: newText)?.doubleValue
+                          let amount = formatter.number(from: newText)?.doubleValue
                     else {
                         self?.viewModel.convertedAmounts.accept([:])
                         return

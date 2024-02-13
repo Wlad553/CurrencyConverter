@@ -28,5 +28,8 @@ protocol MainViewModelType: AnyObject {
     func deleteCurrencyFromFavorites(_ currency: Currency)
     func moveCurrency(from sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath)
     
+    func stringToShare() -> String?
+    func dateFormattedRequestTime(requestTimestamp: Double) -> String
+    
     func prepareForTransition()
 }

@@ -18,7 +18,7 @@ extension Array<Currency> {
                 alphabeticallySorted2DArray[section].items.append(currency)
             } else {
                 section += 1
-                alphabeticallySorted2DArray.append(SectionOfCurrencies(items: .init()))
+                alphabeticallySorted2DArray.append(SectionOfCurrencies(items: []))
                 alphabeticallySorted2DArray[section].items.append(currency)
             }
         }

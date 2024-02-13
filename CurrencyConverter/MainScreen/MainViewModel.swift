@@ -9,7 +9,6 @@ import Foundation
 import XCoordinator
 import RxSwift
 import RxRelay
-import OSLog
 
 final class MainViewModel: MainViewModelType {
     private let router: WeakRouter<AppRoute>
@@ -36,7 +35,7 @@ final class MainViewModel: MainViewModelType {
         ratesData.onNext(coreDataManager.getCurrencyRatesData())
     }
     
-    // MARK: - Utility Methods
+    // MARK: - Network
     func fetchRatesDataIfNeeded() {
         Task {
             do {
@@ -53,6 +52,7 @@ final class MainViewModel: MainViewModelType {
         }
     }
     
+    // MARK: Currency Converting
     func convert(amount: Double, convertedCurrency: Currency) {
         guard let ratesData = try? self.ratesData.value(),
               let favoriteCurrencies = try? self.favoriteCurrencies.value() else { return }
@@ -125,6 +125,29 @@ final class MainViewModel: MainViewModelType {
         favoriteCurrencies.onNext([newCurrencyList])
         
         coreDataManager.moveFavoriteCurrency(newCurrenciesList: newCurrencyList.items)
+    }
+    
+    // MARK: Utility Methods
+    func stringToShare() -> String? {
+        guard let currencies = try? favoriteCurrencies.value()[safe: 0]?.items else { return nil }
+        var stringToShare = ""
+        let formatter = ConverterNumberFormatter()
+        
+        currencies.forEach { currency in
+            guard let convertedCurrencyAmount = convertedAmounts.value[currency] else { return }
+            let formattedAmount = formatter.convertToString(double:  convertedCurrencyAmount)
+            stringToShare.append(("\(currency.code) \(formattedAmount)\n"))
+        }
+        
+        return stringToShare
+    }
+    
+    func dateFormattedRequestTime(requestTimestamp: Double) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd MMM yyyy h:mm a"
+        dateFormatter.timeZone = .current
+        dateFormatter.locale = Locale(identifier: "en_US")
+        return dateFormatter.string(from: Date(timeIntervalSince1970: requestTimestamp))
     }
     
     // MARK: Navigation
