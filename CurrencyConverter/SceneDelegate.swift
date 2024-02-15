@@ -9,17 +9,24 @@ import UIKit
 
 final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
+    let router = AppCoordinator().strongRouter
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
-        let viewController = MainViewController()
-        window?.rootViewController = viewController
-        window?.makeKeyAndVisible()
+        if let window = window {
+            router.setRoot(for: window)
+        }
+    }
+    
+    func sceneDidBecomeActive(_ scene: UIScene) {
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
+        appDelegate?.appLastOpenedDate = Date()
     }
     
     func sceneDidEnterBackground(_ scene: UIScene) {
-        (UIApplication.shared.delegate as? AppDelegate)?.saveContext()
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
+        appDelegate?.saveContext()
+        appDelegate?.scheduleBackgroundCurrenciesDataFetch()
     }
 }
-
