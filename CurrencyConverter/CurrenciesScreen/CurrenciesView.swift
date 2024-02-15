@@ -33,7 +33,7 @@ final class CurrenciesView: UIView {
         currenciesTableView.separatorStyle = .singleLine
         currenciesTableView.sectionHeaderHeight = 18
         currenciesTableView.sectionFooterHeight = 17
-        currenciesTableView.accessibilityIdentifier = "mainWindowViewTableView"
+        currenciesTableView.accessibilityIdentifier = "currenciesListTableView"
         currenciesTableView.setContentOffset(CGPoint(x: 0, y: -56), animated: false)
         currenciesTableView.register(CurrencyCell.self,
                                              forCellReuseIdentifier: CurrencyCell.reuseIdentifier)

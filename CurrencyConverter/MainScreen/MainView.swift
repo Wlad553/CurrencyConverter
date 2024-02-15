@@ -116,9 +116,11 @@ final class MainView: UIView {
         
         // lastUpdatedLabel
         lastUpdatedLabel.text = "Last updated"
+        lastUpdatedLabel.accessibilityIdentifier = "lastUpdatedLabel"
         
         // lastUpdatedSublabel
         lastUpdatedSublabel.text = Characters.doubleHyphen
+        lastUpdatedSublabel.accessibilityIdentifier = "lastUpdatedSublabel"
     }
     
     // MARK: - windowView Subviews' setup
@@ -128,6 +130,7 @@ final class MainView: UIView {
         setUpWindowViewButtons()
         setUpFavoriteCurrenciesTableView()
         addWindowSubviewsConstraints()
+        windowView.accessibilityIdentifier = "windowView"
     }
     
     private func setUpPriceButtonsHStack() {
@@ -162,11 +165,13 @@ final class MainView: UIView {
         bidButton.setTitle("Bid", for: .normal)
         bidButton.isEnabled = false
         bidButton.layer.backgroundColor = UIColor.dodgerBlue.cgColor
+        bidButton.accessibilityIdentifier = "bidButton"
         
         // askButton
         askButton.setTitle("Ask", for: .normal)
         askButton.setTitleColor(.black, for: .normal)
         askButton.layer.backgroundColor = UIColor.white.cgColor
+        askButton.accessibilityIdentifier = "askButton"
         
         // addCurrencyButton
         windowView.addSubview(addCurrencyButton)
@@ -174,18 +179,21 @@ final class MainView: UIView {
         addCurrencyButton.titleLabel?.font = UIFont(name: Fonts.Lato.regular, size: 17)
         addCurrencyButton.setImage(UIImage(systemName: "plus.circle.fill"), for: .normal)
         addCurrencyButton.configuration?.imagePadding = 5
+        addCurrencyButton.accessibilityIdentifier = "addCurrencyButton"
         
         // editButton
         windowView.addSubview(editButton)
         editButton.tintColor = .tintColor
         editButton.setTitle("Edit", for: .normal)
         editButton.titleLabel?.font = UIFont(name: Fonts.Lato.regular, size: 17)
+        editButton.accessibilityIdentifier = "editButton"
         
         // shareButton
         windowView.addSubview(shareButton)
         shareButton.tintColor = .darkGray
         shareButton.configuration?.background = .clear()
         shareButton.configuration?.background.image = UIImage(systemName: "square.and.arrow.up")
+        shareButton.accessibilityIdentifier = "shareButton" 
     }
     
     private func setUpFavoriteCurrenciesTableView() {
@@ -195,7 +203,7 @@ final class MainView: UIView {
         favoriteCurrenciesTableView.allowsSelection = false
         favoriteCurrenciesTableView.alwaysBounceVertical = false
         favoriteCurrenciesTableView.showsVerticalScrollIndicator = false
-        favoriteCurrenciesTableView.accessibilityIdentifier = "mainWindowViewTableView"
+        favoriteCurrenciesTableView.accessibilityIdentifier = "windowViewTableView"
         favoriteCurrenciesTableView.register(FavoriteCurrencyCell.self,
                                              forCellReuseIdentifier: FavoriteCurrencyCell.reuseIdentifier)
     }

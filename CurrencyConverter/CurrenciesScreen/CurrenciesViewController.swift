@@ -43,8 +43,9 @@ final class CurrenciesViewController: UIViewController {
     
     // MARK: - NavigationItem setup
     private func setUpNavigationItem() {
-        viewController.navigationItem.title = "Currencies"
-        viewController.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel")
+        navigationItem.title = "Currencies"
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel")
+        navigationItem.leftBarButtonItem?.accessibilityIdentifier = "cancelButton"
         
         navigationItem.searchController = searchController
         searchController.automaticallyShowsCancelButton = true
