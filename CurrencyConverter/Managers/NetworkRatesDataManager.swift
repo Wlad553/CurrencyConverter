@@ -16,14 +16,6 @@ enum CurrencyAPIError: Error {
     case wrongURL
 }
 
-protocol NetworkRatesDataManagerProtocol {
-    var urlSession: URLSession { get set }
-    func fetchCurrencyRatesData() async throws -> [CurrencyRateData]
-    func fetchCurrencyRatesData(urlSession: URLSession)
-    func parseJSON(withRatesData data: Data) throws -> [CurrencyRateData]
-    func fetchDataIfNeeded(savedRatesData: [CurrencyRateData]) async throws -> [CurrencyRateData]
-}
-
 open class NetworkRatesDataManager: NetworkRatesDataManagerProtocol {
     public var urlSession = URLSession(configuration: .default)
     
