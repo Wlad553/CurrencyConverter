@@ -129,7 +129,7 @@ open class CoreDataManager {
         return currencyRatesData
     }
     
-    private func saveCurrencyRatesData(data: [CurrencyRateData]) {
+    func saveCurrencyRatesData(data: [CurrencyRateData]) {
         guard let entity = NSEntityDescription.entity(forEntityName: "CurrencyRateSavedData", in: appMainContext) else { return }
         for singleRateData in data {
             let currencyDataObject = CurrencyRateSavedData(entity: entity, insertInto: appMainContext)

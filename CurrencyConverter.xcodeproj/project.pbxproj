@@ -46,7 +46,6 @@
 		F5C6E3DE2B51CF250001DFE4 /* CurrencyConverter.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F5C6E3DC2B51CF250001DFE4 /* CurrencyConverter.xcdatamodeld */; };
 		F5C6E3E02B51CF260001DFE4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F5C6E3DF2B51CF260001DFE4 /* Assets.xcassets */; };
 		F5C6E3E32B51CF260001DFE4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F5C6E3E12B51CF260001DFE4 /* LaunchScreen.storyboard */; };
-		F5C6E3EE2B51CF260001DFE4 /* CurrencyConverterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C6E3ED2B51CF260001DFE4 /* CurrencyConverterTests.swift */; };
 		F5C6E3F82B51CF260001DFE4 /* CurrencyConverterUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C6E3F72B51CF260001DFE4 /* CurrencyConverterUITests.swift */; };
 		F5C6E4072B51CFC40001DFE4 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = F5C6E4062B51CFC40001DFE4 /* .gitignore */; };
 		F5C6E4132B51E2A30001DFE4 /* XCoordinator in Frameworks */ = {isa = PBXBuildFile; productRef = F5C6E4122B51E2A30001DFE4 /* XCoordinator */; };
@@ -67,6 +66,7 @@
 		F5DE75C92B7E4FC7001961CA /* TestNetworkRatesDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5DE75C82B7E4FC7001961CA /* TestNetworkRatesDataManager.swift */; };
 		F5DE75CA2B7E52E8001961CA /* stubbedRatesDataSecond.json in Resources */ = {isa = PBXBuildFile; fileRef = F5DE75C42B7E48C1001961CA /* stubbedRatesDataSecond.json */; };
 		F5DE75CB2B7E52EB001961CA /* stubbedRatesData.json in Resources */ = {isa = PBXBuildFile; fileRef = F5DE75C52B7E48C2001961CA /* stubbedRatesData.json */; };
+		F5DE75CD2B7E5AEB001961CA /* CoreDataManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5DE75CC2B7E5AEB001961CA /* CoreDataManagerTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -127,7 +127,6 @@
 		F5C6E3E22B51CF260001DFE4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F5C6E3E42B51CF260001DFE4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F5C6E3E92B51CF260001DFE4 /* CurrencyConverterTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CurrencyConverterTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		F5C6E3ED2B51CF260001DFE4 /* CurrencyConverterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyConverterTests.swift; sourceTree = "<group>"; };
 		F5C6E3F32B51CF260001DFE4 /* CurrencyConverterUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CurrencyConverterUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F5C6E3F72B51CF260001DFE4 /* CurrencyConverterUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyConverterUITests.swift; sourceTree = "<group>"; };
 		F5C6E4062B51CFC40001DFE4 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
@@ -141,6 +140,7 @@
 		F5DE75C42B7E48C1001961CA /* stubbedRatesDataSecond.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = stubbedRatesDataSecond.json; sourceTree = "<group>"; };
 		F5DE75C52B7E48C2001961CA /* stubbedRatesData.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = stubbedRatesData.json; sourceTree = "<group>"; };
 		F5DE75C82B7E4FC7001961CA /* TestNetworkRatesDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestNetworkRatesDataManager.swift; sourceTree = "<group>"; };
+		F5DE75CC2B7E5AEB001961CA /* CoreDataManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManagerTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -329,7 +329,7 @@
 			children = (
 				F5DE75BD2B7E45F1001961CA /* Supporting Files */,
 				F5DE75C22B7E4786001961CA /* APICallTests.swift */,
-				F5C6E3ED2B51CF260001DFE4 /* CurrencyConverterTests.swift */,
+				F5DE75CC2B7E5AEB001961CA /* CoreDataManagerTests.swift */,
 			);
 			path = CurrencyConverterTests;
 			sourceTree = "<group>";
@@ -593,10 +593,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F5C6E3EE2B51CF260001DFE4 /* CurrencyConverterTests.swift in Sources */,
 				F5DE75C12B7E4630001961CA /* TestCoreDataManager.swift in Sources */,
 				F5DE75C32B7E4786001961CA /* APICallTests.swift in Sources */,
 				F5DE75C92B7E4FC7001961CA /* TestNetworkRatesDataManager.swift in Sources */,
+				F5DE75CD2B7E5AEB001961CA /* CoreDataManagerTests.swift in Sources */,
 				F5DE75BF2B7E4600001961CA /* MockURL.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
