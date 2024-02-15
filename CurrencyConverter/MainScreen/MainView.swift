@@ -30,10 +30,19 @@ final class MainView: UIView {
     
     let tapRecognizer = UITapGestureRecognizer()
     
-    private var isTraitCollectionChangedOnce = false
+    private var isWindowViewAnimationEnabled = false
     let isTableViewEditing = BehaviorRelay(value: false)
     
     private let disposeBag = DisposeBag()
+    
+    var visibleCells: [FavoriteCurrencyCell] {
+        var cells: [FavoriteCurrencyCell] = []
+            (0..<favoriteCurrenciesTableView.numberOfRows(inSection: 0)).forEach { row in
+                guard let cell = favoriteCurrenciesTableView.cellForRow(at: IndexPath(row: row, section: 0)) as? FavoriteCurrencyCell else { return }
+                cells.append(cell)
+        }
+        return cells
+    }
     
     // MARK: - Inits
     override init(frame: CGRect) {
@@ -57,19 +66,15 @@ final class MainView: UIView {
     // MARK: - Overridden Methods
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        fitTableViewHeightToNumberOfRows(animated: true)
         setPriceButtonsHStackSpacingForTraitCollection(traitCollection)
-        if !isTraitCollectionChangedOnce {
-            isTraitCollectionChangedOnce = true
-        }
     }
     
-    override var frame: CGRect {
-        didSet {
-            if oldValue.height == frame.width &&
-                traitCollection.horizontalSizeClass == .regular && traitCollection.verticalSizeClass == .regular {
-                fitTableViewHeightToNumberOfRows(animated: true)
-            }
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        fitTableViewHeightToNumberOfRows(animated: true)
+        toggleTableViewCellsIsEditing(animated: true, isTableViewEditing: isTableViewEditing.value)
+        if !isWindowViewAnimationEnabled {
+            isWindowViewAnimationEnabled = true
         }
     }
     
@@ -111,9 +116,11 @@ final class MainView: UIView {
         
         // lastUpdatedLabel
         lastUpdatedLabel.text = "Last updated"
+        lastUpdatedLabel.accessibilityIdentifier = "lastUpdatedLabel"
         
         // lastUpdatedSublabel
         lastUpdatedSublabel.text = Characters.doubleHyphen
+        lastUpdatedSublabel.accessibilityIdentifier = "lastUpdatedSublabel"
     }
     
     // MARK: - windowView Subviews' setup
@@ -123,6 +130,7 @@ final class MainView: UIView {
         setUpWindowViewButtons()
         setUpFavoriteCurrenciesTableView()
         addWindowSubviewsConstraints()
+        windowView.accessibilityIdentifier = "windowView"
     }
     
     private func setUpPriceButtonsHStack() {
@@ -157,11 +165,13 @@ final class MainView: UIView {
         bidButton.setTitle("Bid", for: .normal)
         bidButton.isEnabled = false
         bidButton.layer.backgroundColor = UIColor.dodgerBlue.cgColor
+        bidButton.accessibilityIdentifier = "bidButton"
         
         // askButton
         askButton.setTitle("Ask", for: .normal)
         askButton.setTitleColor(.black, for: .normal)
         askButton.layer.backgroundColor = UIColor.white.cgColor
+        askButton.accessibilityIdentifier = "askButton"
         
         // addCurrencyButton
         windowView.addSubview(addCurrencyButton)
@@ -169,18 +179,21 @@ final class MainView: UIView {
         addCurrencyButton.titleLabel?.font = UIFont(name: Fonts.Lato.regular, size: 17)
         addCurrencyButton.setImage(UIImage(systemName: "plus.circle.fill"), for: .normal)
         addCurrencyButton.configuration?.imagePadding = 5
+        addCurrencyButton.accessibilityIdentifier = "addCurrencyButton"
         
         // editButton
         windowView.addSubview(editButton)
         editButton.tintColor = .tintColor
         editButton.setTitle("Edit", for: .normal)
         editButton.titleLabel?.font = UIFont(name: Fonts.Lato.regular, size: 17)
+        editButton.accessibilityIdentifier = "editButton"
         
         // shareButton
         windowView.addSubview(shareButton)
         shareButton.tintColor = .darkGray
         shareButton.configuration?.background = .clear()
         shareButton.configuration?.background.image = UIImage(systemName: "square.and.arrow.up")
+        shareButton.accessibilityIdentifier = "shareButton" 
     }
     
     private func setUpFavoriteCurrenciesTableView() {
@@ -190,7 +203,7 @@ final class MainView: UIView {
         favoriteCurrenciesTableView.allowsSelection = false
         favoriteCurrenciesTableView.alwaysBounceVertical = false
         favoriteCurrenciesTableView.showsVerticalScrollIndicator = false
-        favoriteCurrenciesTableView.accessibilityIdentifier = "mainWindowViewTableView"
+        favoriteCurrenciesTableView.accessibilityIdentifier = "windowViewTableView"
         favoriteCurrenciesTableView.register(FavoriteCurrencyCell.self,
                                              forCellReuseIdentifier: FavoriteCurrencyCell.reuseIdentifier)
     }
@@ -206,7 +219,6 @@ final class MainView: UIView {
             make.top.equalTo(priceButtonsHStack.snp.bottom).offset(16)
             make.centerX.equalToSuperview()
             make.leading.trailing.equalToSuperview().priority(999)
-            make.width.lessThanOrEqualTo(361)
             make.height.equalTo(70)
         }
         
@@ -308,36 +320,34 @@ extension MainView {
             maxNumberOfCellsToFit = Int((viewHeight - zeroCellsViewBottomElementYCoordinate) / favoriteCurrenciesTableView.rowHeight)
         }
         
-        numberOfCellsToPass = isTraitCollectionChangedOnce ? min(numberOfRows, maxNumberOfCellsToFit) : numberOfRows
+        numberOfCellsToPass = isWindowViewAnimationEnabled ? min(numberOfRows, maxNumberOfCellsToFit) : numberOfRows
         
         favoriteCurrenciesTableView.snp.updateConstraints { make in
             make.height.equalTo(CGFloat(numberOfCellsToPass) * favoriteCurrenciesTableView.rowHeight)
         }
         
-        guard isTraitCollectionChangedOnce else { return }
+        guard isWindowViewAnimationEnabled else { return }
         UIView.animate(withDuration: animated ? 0.3 : 0.0) {
             self.layoutIfNeeded()
+        } completion: { _ in
+            self.windowView.isShadowPathAnimationEnabled = true
+        }
+    }
+    
+    func toggleTableViewCellsIsEditing(animated: Bool, isTableViewEditing: Bool) {
+        visibleCells.forEach { cell in
+            cell.isEditingToggle(animated: animated, isTableViewEditing:  isTableViewEditing)
         }
     }
     
     func toggleTableViewIsEditing() {
-        var cells: [FavoriteCurrencyCell] = []
-        (0..<favoriteCurrenciesTableView.numberOfRows(inSection: 0)).forEach { row in
-            guard let cell = favoriteCurrenciesTableView.cellForRow(at: IndexPath(row: row, section: 0)) as? FavoriteCurrencyCell else { return }
-            cells.append(cell)
-        }
-        
         if favoriteCurrenciesTableView.isEditing {
             favoriteCurrenciesTableView.setEditing(false, animated: true)
             isTableViewEditing.accept(false)
-            cells.forEach { cell in
-                cell.isEditingToggle(animated: true, isTableViewEditing:  false)
-            }
+            toggleTableViewCellsIsEditing(animated: true, isTableViewEditing: false)
         } else {
             endEditing(true)
-            cells.forEach { cell in
-                cell.isEditingToggle(animated: true, isTableViewEditing:  true)
-            }
+            toggleTableViewCellsIsEditing(animated: true, isTableViewEditing: true)
             self.favoriteCurrenciesTableView.setEditing(true, animated: true)
             self.isTableViewEditing.accept(true)
         }

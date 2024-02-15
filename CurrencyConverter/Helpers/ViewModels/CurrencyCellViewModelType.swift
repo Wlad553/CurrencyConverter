@@ -6,8 +6,8 @@
 //
 
 import Foundation
-import RxSwift
+import RxRelay
 
 protocol CurrencyCellViewModelType: AnyObject {
-    var currency: Observable<Currency> { get }
+    var currency: BehaviorRelay<Currency> { get }
 }

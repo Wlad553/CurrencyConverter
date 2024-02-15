@@ -29,7 +29,10 @@ final class AppCoordinator: NavigationCoordinator<AppRoute> {
     override func prepareTransition(for route: AppRoute) -> NavigationTransition {
         switch route {
         case .main:
-            let viewModel = MainViewModel(router: weakRouter)
+            let networkCurrenciesDataManager = NetworkRatesDataManager()
+            let viewModel = MainViewModel(router: weakRouter,
+                                          coreDataManager: CoreDataManager(),
+                                          networkCurrenciesDataManager: networkCurrenciesDataManager)
             let viewController = MainViewController(viewModel: viewModel)
             return .push(viewController)
             

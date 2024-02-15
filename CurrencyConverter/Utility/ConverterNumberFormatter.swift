@@ -12,7 +12,6 @@ final class ConverterNumberFormatter: NumberFormatter {
         super.init()
         numberStyle = .decimal
         maximumFractionDigits = 2
-        roundingMode = .down
         locale = .current
         groupingSeparator = String()
     }
@@ -21,34 +20,45 @@ final class ConverterNumberFormatter: NumberFormatter {
         super.init(coder: coder)
     }
     
-    func applyFormat(previousText: String, currentText: String) -> String {
-        let formatter = ConverterNumberFormatter()
-        guard let newTextLast = currentText.last else { return currentText }
-        
-        if !previousText.isEmpty &&
-            String(newTextLast) == formatter.decimalSeparator &&
-            currentText.components(separatedBy: formatter.decimalSeparator).count < 3 &&
-            previousText.components(separatedBy: formatter.decimalSeparator).count < 2 {
-            return currentText
+    func convertToString(double: Double) -> String {
+        var returnString = string(from: NSNumber(value: double)) ?? String()
+        groupingSeparator = nil
+    
+        if returnString.components(separatedBy: decimalSeparator).count == 1 {
+            minimumFractionDigits = 1
+        } else if returnString.components(separatedBy: decimalSeparator).count == 2 {
+            minimumFractionDigits = 2
         }
         
-        if let number = formatter.number(from: currentText),
-           let formattedText = formatter.string(from: number),
-           let textBeforeDecimalSeparator = formattedText.components(separatedBy: formatter.decimalSeparator)[safe: 0],
-           textBeforeDecimalSeparator.count <= 12 {
-            if currentText.isValidWith(regex: RegexPattern.exactZero(separator: formatter.decimalSeparator)) {
-                return formattedText + formatter.decimalSeparator + String(0)
-                
-            } else if currentText.isValidWith(regex: RegexPattern.twoToThreeZeros(separator: formatter.decimalSeparator)) {
-                return formattedText + formatter.decimalSeparator + String(0) + String(0)
-                
-            } else if currentText.isValidWith(regex: RegexPattern.zeroAtEnd(separator: formatter.decimalSeparator)) {
-                return formattedText + String(0)
-                
-            } else  {
-                return formattedText
+        returnString = string(from: NSNumber(value: double)) ?? String()
+        
+        if double > 0 && double < 0.01 {
+            let formatter = NumberFormatter()
+            formatter.numberStyle = .decimal
+            formatter.minimumFractionDigits = 20
+            
+            if let stringValue = formatter.string(from: NSNumber(value: double)),
+               let firstGreaterThanZeroCharacterIndex = stringValue.firstIndex(where: { $0 > "0" }) {
+                returnString = String(stringValue.prefix(through: firstGreaterThanZeroCharacterIndex))
             }
         }
-        return currentText.isEmpty ? currentText : previousText
+        
+        return returnString
+    }
+    
+    func applyConvertingFormat(previousText: String, currentText: String) -> String {
+        guard let number = number(from: currentText) else { return currentText.isEmpty ? currentText : previousText }
+        if currentText.components(separatedBy: decimalSeparator).count > 2 {
+            return previousText
+        }
+        
+        if number.doubleValue < 0.01 {
+            return currentText
+        }
+        if previousText == currentText {
+            return string(from: number) ?? currentText
+        } else {
+            return currentText
+        }
     }
 }

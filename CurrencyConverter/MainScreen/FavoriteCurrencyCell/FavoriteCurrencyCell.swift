@@ -14,11 +14,13 @@ final class FavoriteCurrencyCell: UITableViewCell {
     
     let amountTextField = UITextField()
     
+    let cellContentView = UIView()
     let hStack = UIStackView()
     let currencyLabel = UILabel()
     let chevronImageView = UIImageView(image: UIImage(systemName: "chevron.right"))
         
     private let disposeBag = DisposeBag()
+    private var allowsTextFieldRxTextScan = true
     
     var viewModel: CurrencyCellViewModelType? {
         didSet {
@@ -26,10 +28,16 @@ final class FavoriteCurrencyCell: UITableViewCell {
         }
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        amountTextField.text = String()
+    }
+    
     // MARK: - Inits
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.isUserInteractionEnabled = false
+        setUpCellContentView()
         setUpHStackViews()
         setUpTextField()
         addConstraints()
@@ -46,9 +54,13 @@ final class FavoriteCurrencyCell: UITableViewCell {
     }
     
     //MARK: - Subviews' setup
+    private func setUpCellContentView() {
+        addSubview(cellContentView)
+    }
+    
     private func setUpHStackViews() {
         // hStack
-        addSubview(hStack)
+        cellContentView.addSubview(hStack)
         hStack.spacing = 3
         hStack.distribution = .fill
         hStack.axis = .horizontal
@@ -66,7 +78,7 @@ final class FavoriteCurrencyCell: UITableViewCell {
     }
     
     private func setUpTextField() {
-        addSubview(amountTextField)
+        cellContentView.addSubview(amountTextField)
 
         amountTextField.accessibilityIdentifier = "cellTextField"
         amountTextField.textColor = .deepDarkGray
@@ -86,15 +98,23 @@ final class FavoriteCurrencyCell: UITableViewCell {
     
     // MARK: - Constraints
     private func addConstraints() {
+        cellContentView.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.centerX.equalToSuperview()
+            make.width.lessThanOrEqualTo(361)
+            make.trailing.leading.equalToSuperview().priority(999)
+            make.height.equalTo(40)
+        }
+        
         hStack.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.leading.equalToSuperview().offset(32)
+            make.leading.equalToSuperview().inset(32)
             make.width.equalTo(60)
         }
         
         amountTextField.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.leading.equalTo(hStack.snp.trailing).offset(60)
+            make.leading.equalTo(hStack.snp.trailing).offset(40)
             make.trailing.equalToSuperview().inset(32)
             make.height.equalTo(40)
         }
@@ -121,14 +141,28 @@ final class FavoriteCurrencyCell: UITableViewCell {
                 
                 self?.amountTextField.layer.borderWidth = 1
                 self?.amountTextField.textColor = .darkBlue
+                
+                if let textFieldText = self?.amountTextField.text {
+                    self?.allowsTextFieldRxTextScan = false
+                    let formatter = ConverterNumberFormatter()
+                    self?.amountTextField.text = formatter.applyConvertingFormat(previousText: textFieldText, currentText: textFieldText)
+                }
             })
             .disposed(by: disposeBag)
         
         amountTextField.rx
             .controlEvent(.editingDidEnd)
             .subscribe(onNext: { [weak self] event in
+                self?.allowsTextFieldRxTextScan = false
+
                 self?.amountTextField.layer.borderWidth = 0
                 self?.amountTextField.textColor = .deepDarkGray
+                
+                if let textFieldText = self?.amountTextField.text {
+                    let formatter = ConverterNumberFormatter()
+                    guard let textFieldTextNumber = formatter.number(from: textFieldText) else { return }
+                    self?.amountTextField.text = formatter.convertToString(double: textFieldTextNumber.doubleValue)
+                }
             })
             .disposed(by: disposeBag)
         
@@ -141,9 +175,14 @@ final class FavoriteCurrencyCell: UITableViewCell {
         
         amountTextField.rx.text
             .orEmpty
-            .scan(String(), accumulator: { previousText, newText in
+            .scan(String(), accumulator: { [self] previousText, newText in
+                guard allowsTextFieldRxTextScan else {
+                    allowsTextFieldRxTextScan.toggle()
+                    return newText
+                }
+                
                 let formatter = ConverterNumberFormatter()
-                return formatter.applyFormat(previousText: previousText, currentText: newText)
+                return formatter.applyConvertingFormat(previousText: previousText, currentText: newText)
             })
             .bind(to: amountTextField.rx.text)
             .disposed(by: disposeBag)
@@ -153,11 +192,18 @@ final class FavoriteCurrencyCell: UITableViewCell {
 // MARK: - Animations
 extension FavoriteCurrencyCell {
     func isEditingToggle(animated: Bool, isTableViewEditing: Bool) {
+        let cellFrameWidth = frame.width
+        let cellContentViewWidth = cellContentView.frame.width
+        var newInset: CGFloat = (48 - (cellFrameWidth - cellContentViewWidth)) / 2 + 32
+        if newInset <= 32 {
+            newInset = 32
+        }
+        
         hStack.snp.updateConstraints { make in
-            make.leading.equalToSuperview().offset(isTableViewEditing ? 56 : 32)
+            make.leading.equalToSuperview().offset(isTableViewEditing ? newInset : 32)
         }
         amountTextField.snp.updateConstraints { make in
-            make.trailing.equalToSuperview().inset(isTableViewEditing ? 56 : 32)
+            make.trailing.equalToSuperview().inset(isTableViewEditing ? newInset : 32)
         }
         
         UIView.animate(withDuration: animated ? 0.3 : 0.0) {
