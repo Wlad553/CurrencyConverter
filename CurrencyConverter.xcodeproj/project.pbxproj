@@ -59,6 +59,14 @@
 		F5C6E4262B51E7090001DFE4 /* Lato-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F5C6E4222B51E7090001DFE4 /* Lato-Black.ttf */; };
 		F5C6E4272B51E7090001DFE4 /* Lato-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F5C6E4232B51E7090001DFE4 /* Lato-Regular.ttf */; };
 		F5C6E4282B51E7090001DFE4 /* Lato-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F5C6E4242B51E7090001DFE4 /* Lato-Light.ttf */; };
+		F5DE75BF2B7E4600001961CA /* MockURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5DE75BE2B7E4600001961CA /* MockURL.swift */; };
+		F5DE75C12B7E4630001961CA /* TestCoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5DE75C02B7E4630001961CA /* TestCoreDataManager.swift */; };
+		F5DE75C32B7E4786001961CA /* APICallTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5DE75C22B7E4786001961CA /* APICallTests.swift */; };
+		F5DE75C62B7E48C2001961CA /* stubbedRatesDataSecond.json in Resources */ = {isa = PBXBuildFile; fileRef = F5DE75C42B7E48C1001961CA /* stubbedRatesDataSecond.json */; };
+		F5DE75C72B7E48C2001961CA /* stubbedRatesData.json in Resources */ = {isa = PBXBuildFile; fileRef = F5DE75C52B7E48C2001961CA /* stubbedRatesData.json */; };
+		F5DE75C92B7E4FC7001961CA /* TestNetworkRatesDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5DE75C82B7E4FC7001961CA /* TestNetworkRatesDataManager.swift */; };
+		F5DE75CA2B7E52E8001961CA /* stubbedRatesDataSecond.json in Resources */ = {isa = PBXBuildFile; fileRef = F5DE75C42B7E48C1001961CA /* stubbedRatesDataSecond.json */; };
+		F5DE75CB2B7E52EB001961CA /* stubbedRatesData.json in Resources */ = {isa = PBXBuildFile; fileRef = F5DE75C52B7E48C2001961CA /* stubbedRatesData.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -127,6 +135,12 @@
 		F5C6E4222B51E7090001DFE4 /* Lato-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Black.ttf"; sourceTree = "<group>"; };
 		F5C6E4232B51E7090001DFE4 /* Lato-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Regular.ttf"; sourceTree = "<group>"; };
 		F5C6E4242B51E7090001DFE4 /* Lato-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Light.ttf"; sourceTree = "<group>"; };
+		F5DE75BE2B7E4600001961CA /* MockURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockURL.swift; sourceTree = "<group>"; };
+		F5DE75C02B7E4630001961CA /* TestCoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestCoreDataManager.swift; sourceTree = "<group>"; };
+		F5DE75C22B7E4786001961CA /* APICallTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APICallTests.swift; sourceTree = "<group>"; };
+		F5DE75C42B7E48C1001961CA /* stubbedRatesDataSecond.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = stubbedRatesDataSecond.json; sourceTree = "<group>"; };
+		F5DE75C52B7E48C2001961CA /* stubbedRatesData.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = stubbedRatesData.json; sourceTree = "<group>"; };
+		F5DE75C82B7E4FC7001961CA /* TestNetworkRatesDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestNetworkRatesDataManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -313,6 +327,8 @@
 		F5C6E3EC2B51CF260001DFE4 /* CurrencyConverterTests */ = {
 			isa = PBXGroup;
 			children = (
+				F5DE75BD2B7E45F1001961CA /* Supporting Files */,
+				F5DE75C22B7E4786001961CA /* APICallTests.swift */,
 				F5C6E3ED2B51CF260001DFE4 /* CurrencyConverterTests.swift */,
 			);
 			path = CurrencyConverterTests;
@@ -366,6 +382,18 @@
 				F52977B92B528FA80099F5CC /* Fonts.swift */,
 			);
 			path = Fonts;
+			sourceTree = "<group>";
+		};
+		F5DE75BD2B7E45F1001961CA /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				F5DE75C52B7E48C2001961CA /* stubbedRatesData.json */,
+				F5DE75C42B7E48C1001961CA /* stubbedRatesDataSecond.json */,
+				F5DE75BE2B7E4600001961CA /* MockURL.swift */,
+				F5DE75C02B7E4630001961CA /* TestCoreDataManager.swift */,
+				F5DE75C82B7E4FC7001961CA /* TestNetworkRatesDataManager.swift */,
+			);
+			path = "Supporting Files";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -489,7 +517,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				F5C6E4072B51CFC40001DFE4 /* .gitignore in Resources */,
+				F5DE75CB2B7E52EB001961CA /* stubbedRatesData.json in Resources */,
 				F5C6E4272B51E7090001DFE4 /* Lato-Regular.ttf in Resources */,
+				F5DE75CA2B7E52E8001961CA /* stubbedRatesDataSecond.json in Resources */,
 				F5C6E3E32B51CF260001DFE4 /* LaunchScreen.storyboard in Resources */,
 				F5C6E3E02B51CF260001DFE4 /* Assets.xcassets in Resources */,
 				F5C6E4262B51E7090001DFE4 /* Lato-Black.ttf in Resources */,
@@ -503,6 +533,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F5DE75C62B7E48C2001961CA /* stubbedRatesDataSecond.json in Resources */,
+				F5DE75C72B7E48C2001961CA /* stubbedRatesData.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -562,6 +594,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				F5C6E3EE2B51CF260001DFE4 /* CurrencyConverterTests.swift in Sources */,
+				F5DE75C12B7E4630001961CA /* TestCoreDataManager.swift in Sources */,
+				F5DE75C32B7E4786001961CA /* APICallTests.swift in Sources */,
+				F5DE75C92B7E4FC7001961CA /* TestNetworkRatesDataManager.swift in Sources */,
+				F5DE75BF2B7E4600001961CA /* MockURL.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

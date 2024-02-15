@@ -1,0 +1,364 @@
+{
+  "endpoint": "live",
+  "quotes": [
+    {
+      "ask": 22.077,
+      "base_currency": "USD",
+      "bid": 21.912,
+      "mid": 21.9945,
+      "quote_currency": "CZK"
+    },
+    {
+      "ask": 0.8034323,
+      "base_currency": "USD",
+      "bid": 0.8034129,
+      "mid": 0.8034258,
+      "quote_currency": "GBP"
+    },
+    {
+      "ask": 6.8948,
+      "base_currency": "USD",
+      "bid": 6.89172,
+      "mid": 6.89326,
+      "quote_currency": "DKK"
+    },
+    {
+      "ask": 3.69459,
+      "base_currency": "USD",
+      "bid": 3.69459,
+      "mid": 3.69459,
+      "quote_currency": "PEN"
+    },
+    {
+      "ask": 17.78293,
+      "base_currency": "USD",
+      "bid": 17.77853,
+      "mid": 17.78073,
+      "quote_currency": "MXN"
+    },
+    {
+      "ask": 80,
+      "base_currency": "USD",
+      "bid": 80,
+      "mid": 80,
+      "quote_currency": "RUB"
+    },
+    {
+      "ask": 137.971,
+      "base_currency": "USD",
+      "bid": 137.967,
+      "mid": 137.969,
+      "quote_currency": "JPY"
+    },
+    {
+      "ask": 798.60391,
+      "base_currency": "USD",
+      "bid": 798.60391,
+      "mid": 798.60391,
+      "quote_currency": "CLP"
+    },
+    {
+      "ask": 0.89937,
+      "base_currency": "USD",
+      "bid": 0.89935,
+      "mid": 0.89936,
+      "quote_currency": "CHF"
+    },
+    {
+      "ask": 1.34987,
+      "base_currency": "USD",
+      "bid": 1.34984,
+      "mid": 1.34986,
+      "quote_currency": "CAD"
+    },
+    {
+      "ask": 14936,
+      "base_currency": "USD",
+      "bid": 14936,
+      "mid": 14936,
+      "quote_currency": "IDR"
+    },
+    {
+      "ask": 10.8814,
+      "base_currency": "USD",
+      "bid": 10.8778,
+      "mid": 10.8796,
+      "quote_currency": "NOK"
+    },
+    {
+      "ask": 0.30715,
+      "base_currency": "USD",
+      "bid": 0.30715,
+      "mid": 0.30715,
+      "quote_currency": "KWD"
+    },
+    {
+      "ask": 461.00034,
+      "base_currency": "USD",
+      "bid": 461.00034,
+      "mid": 461.00034,
+      "quote_currency": "NGN"
+    },
+    {
+      "ask": 0.9254889,
+      "base_currency": "USD",
+      "bid": 0.9254803,
+      "mid": 0.9254889,
+      "quote_currency": "EUR"
+    },
+    {
+      "ask": 7.0249,
+      "base_currency": "USD",
+      "bid": 7.02274,
+      "mid": 7.02382,
+      "quote_currency": "CNH"
+    },
+    {
+      "ask": 7.0076,
+      "base_currency": "USD",
+      "bid": 7.0076,
+      "mid": 7.0076,
+      "quote_currency": "CNY"
+    },
+    {
+      "ask": 4.99995,
+      "base_currency": "USD",
+      "bid": 4.99995,
+      "mid": 4.99995,
+      "quote_currency": "BRL"
+    },
+    {
+      "ask": 82.82289,
+      "base_currency": "USD",
+      "bid": 82.82289,
+      "mid": 82.82289,
+      "quote_currency": "INR"
+    },
+    {
+      "ask": 0.3843,
+      "base_currency": "USD",
+      "bid": 0.3843,
+      "mid": 0.3843,
+      "quote_currency": "OMR"
+    },
+    {
+      "ask": 1.80985,
+      "base_currency": "USD",
+      "bid": 1.80985,
+      "mid": 1.80985,
+      "quote_currency": "BGN"
+    },
+    {
+      "ask": 4.5355,
+      "base_currency": "USD",
+      "bid": 4.5355,
+      "mid": 4.5355,
+      "quote_currency": "MYR"
+    },
+    {
+      "ask": 232.4055,
+      "base_currency": "USD",
+      "bid": 232.40551,
+      "mid": 232.40551,
+      "quote_currency": "ARS"
+    },
+    {
+      "ask": 1325.2,
+      "base_currency": "USD",
+      "bid": 1325.20504,
+      "mid": 1325.20504,
+      "quote_currency": "KRW"
+    },
+    {
+      "ask": 4539.4702,
+      "base_currency": "USD",
+      "bid": 4539.4702,
+      "mid": 4539.4702,
+      "quote_currency": "COP"
+    },
+    {
+      "ask": 4.20332,
+      "base_currency": "USD",
+      "bid": 4.19348,
+      "mid": 4.1984,
+      "quote_currency": "PLN"
+    },
+    {
+      "ask": 347.956,
+      "base_currency": "USD",
+      "bid": 347.14,
+      "mid": 347.548,
+      "quote_currency": "HUF"
+    },
+    {
+      "ask": 3.648,
+      "base_currency": "USD",
+      "bid": 3.648,
+      "mid": 3.648,
+      "quote_currency": "ILS"
+    },
+    {
+      "ask": 55.63612,
+      "base_currency": "USD",
+      "bid": 55.63612,
+      "mid": 55.63612,
+      "quote_currency": "PHP"
+    },
+    {
+      "ask": 23470,
+      "base_currency": "USD",
+      "bid": 23470,
+      "mid": 23470,
+      "quote_currency": "VND"
+    },
+    {
+      "ask": 34.528,
+      "base_currency": "USD",
+      "bid": 34.248,
+      "mid": 34.388,
+      "quote_currency": "THB"
+    },
+    {
+      "ask": 0.0005057,
+      "base_currency": "USD",
+      "bid": 0.0005056,
+      "mid": 0.0005056,
+      "quote_currency": "XAU"
+    },
+    {
+      "ask": 1.34624,
+      "base_currency": "USD",
+      "bid": 1.34488,
+      "mid": 1.34556,
+      "quote_currency": "SGD"
+    },
+    {
+      "ask": 1.503782,
+      "base_currency": "USD",
+      "bid": 1.5037142,
+      "mid": 1.5037594,
+      "quote_currency": "AUD"
+    },
+    {
+      "ask": 19.4704,
+      "base_currency": "USD",
+      "bid": 19.44283,
+      "mid": 19.45661,
+      "quote_currency": "ZAR"
+    },
+    {
+      "ask": 140.05038,
+      "base_currency": "USD",
+      "bid": 140.05039,
+      "mid": 140.05039,
+      "quote_currency": "ISK"
+    },
+    {
+      "ask": 3.75031,
+      "base_currency": "USD",
+      "bid": 3.75031,
+      "mid": 3.75031,
+      "quote_currency": "SAR"
+    },
+    {
+      "ask": 6.94434,
+      "base_currency": "USD",
+      "bid": 6.94434,
+      "mid": 6.94434,
+      "quote_currency": "HRK"
+    },
+    {
+      "ask": 19.82105,
+      "base_currency": "USD",
+      "bid": 19.804,
+      "mid": 19.81253,
+      "quote_currency": "TRY"
+    },
+    {
+      "ask": 0.0009395,
+      "base_currency": "USD",
+      "bid": 0.0009366,
+      "mid": 0.000938,
+      "quote_currency": "XPT"
+    },
+    {
+      "ask": 1.5939303,
+      "base_currency": "USD",
+      "bid": 1.5938033,
+      "mid": 1.5938541,
+      "quote_currency": "NZD"
+    },
+    {
+      "ask": 10.5245,
+      "base_currency": "USD",
+      "bid": 10.5211,
+      "mid": 10.5228,
+      "quote_currency": "SEK"
+    },
+    {
+      "ask": 30.6355,
+      "base_currency": "USD",
+      "bid": 30.6355,
+      "mid": 30.6355,
+      "quote_currency": "TWD"
+    },
+    {
+      "ask": 4.60825,
+      "base_currency": "USD",
+      "bid": 4.60825,
+      "mid": 4.60825,
+      "quote_currency": "RON"
+    },
+    {
+      "ask": 0.000661,
+      "base_currency": "USD",
+      "bid": 0.000661,
+      "mid": 0.000661,
+      "quote_currency": "XPD"
+    },
+    {
+      "ask": 0.37631,
+      "base_currency": "USD",
+      "bid": 0.37631,
+      "mid": 0.37631,
+      "quote_currency": "BHD"
+    },
+    {
+      "ask": 3.6714,
+      "base_currency": "USD",
+      "bid": 3.6714,
+      "mid": 3.6714,
+      "quote_currency": "AED"
+    },
+    {
+      "ask": 10.2075,
+      "base_currency": "USD",
+      "bid": 10.2075,
+      "mid": 10.2075,
+      "quote_currency": "MAD"
+    },
+    {
+      "ask": 0.0419463,
+      "base_currency": "USD",
+      "bid": 0.0419217,
+      "mid": 0.041934,
+      "quote_currency": "XAG"
+    },
+    {
+      "ask": 540.50398,
+      "base_currency": "USD",
+      "bid": 540.50398,
+      "mid": 540.50398,
+      "quote_currency": "AOA"
+    },
+    {
+      "ask": 7.81548,
+      "base_currency": "USD",
+      "bid": 7.81521,
+      "mid": 7.81534,
+      "quote_currency": "HKD"
+    }
+  ],
+  "requested_time": "Sat, 20 May 2023 14:52:11 GMT",
+  "timestamp": 1684594332
+}
