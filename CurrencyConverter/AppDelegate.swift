@@ -8,6 +8,7 @@
 import UIKit
 import CoreData
 import BackgroundTasks
+import OSLog
 
 @main
 final class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -16,10 +17,13 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var backgroundProcessingTask: BGProcessingTask?
     var appLastOpenedDate: Date?
+    
+    let logger = Logger()
         
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         BGTaskScheduler.shared.register(forTaskWithIdentifier: "com.vladylslavpetrenko.fetchCurrenciesData", using: nil) { task in
-            self.handleAppRefreshTask(task: task as! BGProcessingTask)
+            guard let task = task as? BGProcessingTask else { return }
+            self.handleAppRefreshTask(task: task)
         }
         return true
     }
@@ -49,14 +53,14 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func scheduleBackgroundCurrenciesDataFetch(delayForBeginDate: TimeInterval = 0) {
         let currencyDataFetchTask = BGProcessingTaskRequest(identifier: "com.vladylslavpetrenko.fetchCurrenciesData")
-        let calendarCurrentComponents = Calendar.current.dateComponents([.minute], from: Date())
+        let currentMinutes = Calendar.current.dateComponents([.minute], from: Date()).minute ?? 0
         currencyDataFetchTask.requiresNetworkConnectivity = true
         // earliest update time in background is every hour e.g. at 7:00, 8:00 etc.
-        currencyDataFetchTask.earliestBeginDate = Date(/*timeIntervalSinceNow: delayForBeginDate + 60 * 60 - Double(calendarCurrentComponents.minute!) * 60*/)
+        currencyDataFetchTask.earliestBeginDate = Date(timeIntervalSinceNow: delayForBeginDate + 60 * 60 - Double(currentMinutes) * 60)
         do {
           try BGTaskScheduler.shared.submit(currencyDataFetchTask)
         } catch let error as NSError {
-          print("Unable to submit task: \(error.localizedDescription)")
+            logger.error("Unable to submit task: \(error.localizedDescription)")
         }
     }
 
@@ -68,9 +72,9 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     // MARK: - Core Data stack
     lazy var persistentContainer: NSPersistentContainer = {
         let container = NSPersistentContainer(name: "CurrencyConverter")
-        container.loadPersistentStores(completionHandler: { (storeDescription, error) in
+        container.loadPersistentStores(completionHandler: { [weak self] (storeDescription, error) in
             if let error = error as NSError? {
-                fatalError("Unresolved error \(error), \(error.userInfo)")
+                self?.logger.error("Unresolved error \(error), \(error.userInfo)")
             }
         })
         return container
@@ -84,7 +88,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
                 try context.save()
             } catch {
                 let nserror = error as NSError
-                fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+                logger.error("Unresolved error \(nserror), \(nserror.userInfo)")
             }
         }
     }
