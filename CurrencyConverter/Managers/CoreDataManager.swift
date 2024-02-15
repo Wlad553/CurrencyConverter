@@ -15,7 +15,7 @@ enum CoreDataError: Error {
     case objectsSaving
 }
 
-public class CoreDataManager {
+open class CoreDataManager {
     // MARK: AppMainContext
     lazy public var appMainContext: NSManagedObjectContext = {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
@@ -41,6 +41,9 @@ public class CoreDataManager {
     
     // MARK: Logger
     private let logger = Logger()
+    
+    // MARK: Init
+    public init() {}
     
     // MARK: - Objects deleting support
     func deleteAllObjects<T: NSManagedObject>(from request: NSFetchRequest<T>) where T: NSFetchRequestResult {

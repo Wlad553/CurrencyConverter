@@ -19,6 +19,7 @@ enum CurrencyAPIError: Error {
 protocol NetworkRatesDataManagerProtocol {
     var urlSession: URLSession { get }
     func fetchCurrencyRatesData() async throws -> [CurrencyRateData]
+    func fetchCurrencyRatesData(urlSession: URLSession)
     func parseJSON(withRatesData data: Data) throws -> [CurrencyRateData]
     func fetchDataIfNeeded(savedRatesData: [CurrencyRateData]) async throws -> [CurrencyRateData]
 }

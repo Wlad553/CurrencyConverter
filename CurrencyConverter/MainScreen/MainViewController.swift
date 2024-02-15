@@ -248,11 +248,19 @@ extension MainViewController {
                 self?.mainView.toggleScrollViewContentOffset(notification: notification)
             })
             .disposed(by: disposeBag)
-
+        
         NotificationCenter.default.rx
-           .notification(UIResponder.keyboardWillHideNotification)
+            .notification(UIResponder.keyboardWillHideNotification)
             .subscribe(onNext: { [weak self] notification in
                 self?.mainView.toggleScrollViewContentOffset(notification: notification)
+            })
+            .disposed(by: disposeBag)
+        
+        NotificationCenter.default.rx
+            .notification(.curreniesDataFetched)
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                viewModel.ratesData.onNext(viewModel.coreDataManager.getCurrencyRatesData())
             })
             .disposed(by: disposeBag)
     }

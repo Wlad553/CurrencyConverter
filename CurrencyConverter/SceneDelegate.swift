@@ -19,8 +19,14 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
     }
     
+    func sceneDidBecomeActive(_ scene: UIScene) {
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
+        appDelegate?.appLastOpenedDate = Date()
+    }
+    
     func sceneDidEnterBackground(_ scene: UIScene) {
-        (UIApplication.shared.delegate as? AppDelegate)?.saveContext()
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
+        appDelegate?.saveContext()
+        appDelegate?.scheduleBackgroundCurrenciesDataFetch()
     }
 }
-

@@ -32,6 +32,7 @@
 		F52977D42B52F8C90099F5CC /* ConverterNumberFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F52977D32B52F8C90099F5CC /* ConverterNumberFormatter.swift */; };
 		F52977D82B5313600099F5CC /* Characters.swift in Sources */ = {isa = PBXBuildFile; fileRef = F52977D72B5313600099F5CC /* Characters.swift */; };
 		F52977DE2B5315820099F5CC /* Array+safeSubscript.swift in Sources */ = {isa = PBXBuildFile; fileRef = F52977DD2B5315820099F5CC /* Array+safeSubscript.swift */; };
+		F54D33002B7BD41500D35719 /* Notification.Name.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54D32FF2B7BD41500D35719 /* Notification.Name.swift */; };
 		F5996BFE2B5E938C00C26A35 /* CurrencyRateData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5996BFD2B5E938C00C26A35 /* CurrencyRateData.swift */; };
 		F5996C002B5E94CE00C26A35 /* CurrencyPriceAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5996BFF2B5E94CE00C26A35 /* CurrencyPriceAPI.swift */; };
 		F5996C022B5E95A500C26A35 /* NetworkRatesDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5996C012B5E95A500C26A35 /* NetworkRatesDataManager.swift */; };
@@ -101,6 +102,7 @@
 		F52977D32B52F8C90099F5CC /* ConverterNumberFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConverterNumberFormatter.swift; sourceTree = "<group>"; };
 		F52977D72B5313600099F5CC /* Characters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Characters.swift; sourceTree = "<group>"; };
 		F52977DD2B5315820099F5CC /* Array+safeSubscript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+safeSubscript.swift"; sourceTree = "<group>"; };
+		F54D32FF2B7BD41500D35719 /* Notification.Name.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.Name.swift; sourceTree = "<group>"; };
 		F5996BFD2B5E938C00C26A35 /* CurrencyRateData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencyRateData.swift; sourceTree = "<group>"; };
 		F5996BFF2B5E94CE00C26A35 /* CurrencyPriceAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyPriceAPI.swift; sourceTree = "<group>"; };
 		F5996C012B5E95A500C26A35 /* NetworkRatesDataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkRatesDataManager.swift; sourceTree = "<group>"; };
@@ -254,6 +256,7 @@
 			isa = PBXGroup;
 			children = (
 				F52977DD2B5315820099F5CC /* Array+safeSubscript.swift */,
+				F54D32FF2B7BD41500D35719 /* Notification.Name.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -529,6 +532,7 @@
 				F52977D42B52F8C90099F5CC /* ConverterNumberFormatter.swift in Sources */,
 				F52977C62B52BC390099F5CC /* CurrencyCellViewModel.swift in Sources */,
 				F52977B82B528BD80099F5CC /* EllipseView.swift in Sources */,
+				F54D33002B7BD41500D35719 /* Notification.Name.swift in Sources */,
 				F5C6E3D82B51CF250001DFE4 /* MainViewController.swift in Sources */,
 				F5AD14C32B581F110056143C /* CurrencyProtocol.swift in Sources */,
 				F5C6E3DE2B51CF250001DFE4 /* CurrencyConverter.xcdatamodeld in Sources */,
@@ -738,6 +742,7 @@
 				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -771,6 +776,7 @@
 				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
