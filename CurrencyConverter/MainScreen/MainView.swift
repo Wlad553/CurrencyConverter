@@ -322,6 +322,10 @@ extension MainView {
         
         numberOfCellsToPass = isWindowViewAnimationEnabled ? min(numberOfRows, maxNumberOfCellsToFit) : numberOfRows
         
+        if numberOfRows >= maxNumberOfCellsToFit {
+            windowView.isShadowPathAnimationEnabled = false
+        }
+        
         favoriteCurrenciesTableView.snp.updateConstraints { make in
             make.height.equalTo(CGFloat(numberOfCellsToPass) * favoriteCurrenciesTableView.rowHeight)
         }
