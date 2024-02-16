@@ -41,8 +41,7 @@ https://github.com/Wlad553/CurrencyConverter/assets/142036699/5e0cdc75-804b-4cbb
 https://github.com/Wlad553/CurrencyConverter/assets/142036699/6f4c202c-864b-450a-bef5-bb6abcc01d25
 
 
-
-
+https://github.com/Wlad553/CurrencyConverter/assets/142036699/290b1a8c-df52-44c2-9303-127b218460f0
 
 
 # Author
