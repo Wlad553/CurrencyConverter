@@ -55,6 +55,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         let currencyDataFetchTask = BGProcessingTaskRequest(identifier: "com.vladylslavpetrenko.fetchCurrenciesData")
         let currentMinutes = Calendar.current.dateComponents([.minute], from: Date()).minute ?? 0
         currencyDataFetchTask.requiresNetworkConnectivity = true
+        currencyDataFetchTask.requiresExternalPower = false
         // earliest update time in background is every hour e.g. at 7:00, 8:00 etc.
         currencyDataFetchTask.earliestBeginDate = Date(timeIntervalSinceNow: delayForBeginDate + 60 * 60 - Double(currentMinutes) * 60)
         do {
