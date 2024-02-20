@@ -32,7 +32,7 @@ Application for converting currencies, which uses forex rates
 
 # Videos
 
-https://github.com/Wlad553/CurrencyConverter/assets/142036699/9b292a2b-58ca-4b63-8caf-72d22700ac31
+https://github.com/Wlad553/CurrencyConverter/assets/142036699/19e460ac-6063-43a0-9841-509742e486a9
 
 
 https://github.com/Wlad553/CurrencyConverter/assets/142036699/5e0cdc75-804b-4cbb-86fa-7744c0fa0b09
