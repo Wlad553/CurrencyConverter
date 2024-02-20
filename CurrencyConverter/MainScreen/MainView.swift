@@ -56,6 +56,7 @@ final class MainView: UIView {
         setUpWindowView()
         addConstraints()
         bindIsTableViewEditingToTableViewIsEditing()
+        subscribeToIsTableViewEditing()
     }
     
     required init?(coder: NSCoder) {
@@ -285,6 +286,14 @@ final class MainView: UIView {
         isTableViewEditing
             .bind(to: favoriteCurrenciesTableView.rx.isEditing)
             .disposed(by: disposeBag)
+    }
+    
+    private func subscribeToIsTableViewEditing() {
+        isTableViewEditing.subscribe(onNext: { [weak self] bool in
+            self?.windowView.isShadowPathAnimationEnabled = false
+            self?.editButton.setTitle(bool ? "Done" : "Edit", for: .normal)
+        })
+        .disposed(by: disposeBag)
     }
 }
 

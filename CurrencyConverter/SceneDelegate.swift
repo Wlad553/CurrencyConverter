@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import BackgroundTasks
 
 final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
@@ -27,6 +28,11 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func sceneDidEnterBackground(_ scene: UIScene) {
         let appDelegate = UIApplication.shared.delegate as? AppDelegate
         appDelegate?.saveContext()
-        appDelegate?.scheduleBackgroundCurrenciesDataFetch()
+        
+        Task {
+            if await BGTaskScheduler.shared.pendingTaskRequests().first(where: { $0.identifier == "com.vladylslavpetrenko.fetchCurrenciesData" }) == nil {
+                appDelegate?.scheduleBackgroundCurrenciesDataFetch()
+            }
+        }
     }
 }
