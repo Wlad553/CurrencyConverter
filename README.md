@@ -1,17 +1,16 @@
 # CurrencyConverter
-Application for converting currencies, which uses forex rates
+CurrencyConverter is an iOS application designed for currency conversion, leveraging forex rates. It supports various orientations and works both online and offline, ensuring accessibility and convenience.
 
 # Features
 * Min iOS 15
 * iPadOS support
 * Landscape/Portrait orientation
-* Currency converting
-* 52 Currencies to convert
+* Convert between 52 different currencies.
 * Works online/offline
-* App updates currency rates once an hour in background and stores them on the device
+* App updates currency rates once an hour in background and stores them on-device
 * If user didn't open the app for more than 24 hours, then app updates rates once a day
 * Favourite currencies list saving
-* Favourite currencies list order saving after being moved 
+* Favourite currencies maintain their order after being rearranged.
 * Favourite currencies list consists of up to 52 currencies, which allows to convert simoultaniously to 51 other currencies
 * Share rates feature
 
