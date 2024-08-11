@@ -10,7 +10,8 @@ import BackgroundTasks
 
 final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
-    let router = AppCoordinator().strongRouter
+    let router = AppCoordinator().strongRouter    
+    let appDelegate = UIApplication.shared.delegate as? AppDelegate
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
@@ -21,18 +22,11 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     func sceneDidBecomeActive(_ scene: UIScene) {
-        let appDelegate = UIApplication.shared.delegate as? AppDelegate
-        appDelegate?.appLastOpenedDate = Date()
+        appDelegate?.backgroundTasksManager.appLastOpenedDate = Date()
     }
     
     func sceneDidEnterBackground(_ scene: UIScene) {
-        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         appDelegate?.saveContext()
-        
-        Task {
-            if await BGTaskScheduler.shared.pendingTaskRequests().first(where: { $0.identifier == "com.vladylslavpetrenko.fetchCurrenciesData" }) == nil {
-                appDelegate?.scheduleBackgroundCurrenciesDataFetch()
-            }
-        }
+        appDelegate?.backgroundTasksManager.scheduleBackgroundCurrenciesDataFetchIfNeeded()
     }
 }

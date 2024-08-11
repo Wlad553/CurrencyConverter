@@ -54,7 +54,7 @@ final class MainViewController: UIViewController {
     
     // MARK: - Subscription List
     private func makeSubscriptions() {
-        subscribeToRatesDataError()
+        subscribeToRatesData()
         subscribeToConvertedAmounts()
         subscribeToTapRecognizerEvent()
         subscribeToViewButtonsTap()
@@ -66,7 +66,7 @@ final class MainViewController: UIViewController {
     }
     
     // MARK: ViewModel Subscriptions
-    private func subscribeToRatesDataError() {
+    private func subscribeToRatesData() {
         viewModel.ratesData
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] ratesData in
