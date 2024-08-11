@@ -46,4 +46,4 @@ https://github.com/Wlad553/CurrencyConverter/assets/142036699/290b1a8c-df52-44c2
 # Author
 Vladyslav Petrenko
 
-t.me/VladP22
+t.me/VladP533
